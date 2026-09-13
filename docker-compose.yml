@@ -1,0 +1,29 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: meridian
+      POSTGRES_PASSWORD: meridian
+      POSTGRES_DB: meridian
+    ports:
+      - "5432:5432"
+    volumes:
+      - meridian_db_data:/var/lib/postgresql/data
+
+  api:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgresql://meridian:meridian@db:5432/meridian?schema=public
+      JWT_SECRET: change-me-in-production
+      PORT: 4000
+      CORS_ORIGIN: "*"
+    ports:
+      - "4000:4000"
+
+volumes:
+  meridian_db_data:

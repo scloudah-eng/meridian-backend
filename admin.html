@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mada Alhyat — Control Panel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Markazi+Text:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16233D; --ink-soft:#2B3A5A; --paper:#F3F1EA; --paper-raised:#FFFFFF;
+    --brass:#A9803F; --brass-deep:#8A6A34; --teal:#2E8B90; --teal-deep:#256F73; --line:#D8D3C4; --slate:#5B6373;
+    --green:#2F6D52; --red:#A13F3F; --radius:2px;
+    --serif:'Fraunces',Georgia,serif; --sans:'IBM Plex Sans',-apple-system,sans-serif;
+    --serif-ar:'Markazi Text',serif; --sans-ar:'IBM Plex Sans Arabic',sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:var(--sans);background:var(--paper);color:var(--ink);line-height:1.5;}
+  html[dir="rtl"] body{font-family:var(--sans-ar);}
+  button,input,select,textarea{font-family:inherit;}
+  a{color:inherit;}
+
+  .topbar{background:var(--ink);color:#EFEBDD;padding:14px 24px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;}
+  .topbar .brand{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-weight:600;font-size:18px;}
+  html[dir="rtl"] .topbar .brand{font-family:var(--serif-ar);}
+  .brand-mark{width:32px;height:32px;border-radius:50%;flex:none;object-fit:cover;box-shadow:0 0 0 1.5px var(--line);}
+  .topbar-right{display:flex;align-items:center;gap:12px;font-size:13px;}
+  .api-base{display:flex;align-items:center;gap:6px;}
+  .api-base input{width:190px;padding:7px 10px;border-radius:4px;border:1px solid #3A4666;background:#0F192C;color:#EFEBDD;font-size:12.5px;}
+  .role-pill{border:1px solid var(--brass);color:var(--brass);border-radius:14px;padding:3px 10px;font-size:11.5px;}
+  .btn{font-size:13.5px;font-weight:600;padding:9px 16px;border-radius:var(--radius);border:1px solid var(--ink);cursor:pointer;background:var(--ink);color:#fff;}
+  .btn.ghost{background:transparent;color:inherit;}
+  .btn.brass{background:var(--brass-deep);border-color:var(--brass-deep);}
+  .btn.small{padding:6px 12px;font-size:12.5px;}
+  .btn.danger{background:var(--red);border-color:var(--red);}
+  .btn:disabled{opacity:.45;cursor:not-allowed;}
+  .lang-toggle{background:none;border:1px solid #3A4666;color:#C7CBDA;border-radius:14px;padding:5px 12px;font-size:12px;cursor:pointer;}
+
+  .wrap{max-width:1100px;margin:0 auto;padding:32px 24px 80px;}
+
+  /* ---- Login screen ---- */
+  .login-screen{max-width:400px;margin:80px auto;background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:32px;}
+  .login-screen h1{font-family:var(--serif);font-size:22px;margin:0 0 6px;}
+  html[dir="rtl"] .login-screen h1{font-family:var(--serif-ar);}
+  .login-screen p.sub{color:var(--slate);font-size:13.5px;margin:0 0 24px;}
+  .field{margin-bottom:16px;}
+  .field label{display:block;font-size:12.5px;font-weight:600;color:var(--slate);margin-bottom:6px;}
+  .field input,.field select,.field textarea{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:var(--radius);font-size:14px;background:#fff;color:var(--ink);}
+  .field textarea{resize:vertical;min-height:70px;}
+  .form-error{color:var(--red);font-size:13px;margin:-6px 0 14px;}
+  .form-note{color:var(--slate);font-size:12px;margin-top:10px;}
+
+  /* ---- Tabs ---- */
+  .tabs{display:flex;gap:8px;border-bottom:1px solid var(--line);margin-bottom:28px;flex-wrap:wrap;}
+  .tab-btn{background:none;border:none;padding:12px 4px;margin-inline-end:22px;font-size:14px;font-weight:600;color:var(--slate);cursor:pointer;border-bottom:2px solid transparent;}
+  .tab-btn.active{color:var(--ink);border-bottom-color:var(--brass-deep);}
+  .panel{display:none;}
+  .panel.active{display:block;}
+
+  /* ---- Stat cards ---- */
+  .stat-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:30px;}
+  @media (max-width:760px){.stat-cards{grid-template-columns:repeat(2,1fr);}}
+  .stat-card{border:1px solid var(--line);background:var(--paper-raised);border-radius:var(--radius);padding:16px;}
+  .stat-card b{display:block;font-family:var(--serif);font-size:24px;font-weight:600;}
+  html[dir="rtl"] .stat-card b{font-family:var(--serif-ar);}
+  .stat-card span{font-size:12px;color:var(--slate);}
+
+  /* ---- Course list / cards ---- */
+  .toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;gap:12px;flex-wrap:wrap;}
+  .toolbar h2{font-family:var(--serif);font-size:20px;margin:0;font-weight:600;}
+  html[dir="rtl"] .toolbar h2{font-family:var(--serif-ar);}
+  .course-row{border:1px solid var(--line);background:var(--paper-raised);border-radius:var(--radius);margin-bottom:14px;overflow:hidden;}
+  .course-row-head{display:flex;justify-content:space-between;align-items:center;padding:16px 18px;gap:14px;flex-wrap:wrap;}
+  .course-row-head .ci-title{font-family:var(--serif);font-weight:600;font-size:16px;}
+  html[dir="rtl"] .course-row-head .ci-title{font-family:var(--serif-ar);}
+  .course-row-head .ci-meta{font-size:12px;color:var(--slate);margin-top:3px;}
+  .course-row-actions{display:flex;gap:8px;flex-wrap:wrap;}
+  .course-body{border-top:1px solid var(--line);padding:18px;display:none;background:#FBFAF6;}
+  .course-body.open{display:block;}
+
+  .module-block{border:1px solid var(--line);border-radius:var(--radius);background:#fff;margin-bottom:14px;}
+  .module-head{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:#EEEBE1;font-size:13.5px;font-weight:600;}
+  .module-head .m-actions{display:flex;gap:6px;}
+  .lesson-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-top:1px dashed var(--line);font-size:13px;gap:10px;flex-wrap:wrap;}
+  .lesson-row .l-left{display:flex;flex-direction:column;gap:2px;}
+  .lesson-row .l-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
+  .video-status{font-size:11px;padding:3px 8px;border-radius:12px;background:#EAF3EE;color:var(--green);}
+  .video-status.missing{background:#F6EAEA;color:var(--red);}
+  .add-row{padding:12px 14px;border-top:1px dashed var(--line);}
+  .inline-form{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+  .inline-form input{padding:8px 10px;border:1px solid var(--line);border-radius:4px;font-size:12.5px;}
+  .inline-form input[type=text]{flex:1;min-width:160px;}
+  .inline-form input[type=number]{width:90px;}
+
+  .settings-form{max-width:520px;}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120%);background:var(--ink);color:#EFEBDD;padding:13px 20px;border-radius:var(--radius);font-size:13.5px;transition:transform .25s ease;z-index:200;}
+  .toast.show{transform:translateX(-50%) translateY(0);}
+  .empty-note{color:var(--slate);font-size:13.5px;padding:20px 0;}
+  .video-upload-label{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);padding:5px 10px;border-radius:4px;font-size:12px;cursor:pointer;color:var(--ink-soft);}
+  .video-upload-label input{display:none;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand"><img class="brand-mark" src="logo-icon.jpeg" alt="Mada Alhyat"> <span data-i18n="brand">Mada Alhyat — Control Panel</span></div>
+  <div class="topbar-right" id="topbarRight">
+    <div class="api-base">
+      <label for="apiBaseInput" style="color:#9AA2B8;" data-i18n="apiBaseLabel">API base URL</label>
+      <input type="text" id="apiBaseInput" value="http://localhost:4000">
+    </div>
+    <button class="lang-toggle" onclick="toggleLang()" id="langBtn">العربية</button>
+  </div>
+</div>
+
+<div class="wrap" id="appRoot">
+
+  <!-- ================= LOGIN ================= -->
+  <div id="loginScreen" class="login-screen">
+    <h1 data-i18n="login.title">Log in to the control panel</h1>
+    <p class="sub" data-i18n="login.sub">For trainers and admins. Use an account created via the API (see the backend README) or the seeded demo accounts.</p>
+    <div class="field"><label data-i18n="login.nid">National ID / Iqama number</label><input type="text" id="loginNid" placeholder="1000000001"></div>
+    <div class="field"><label data-i18n="login.password">Password</label><input type="password" id="loginPassword" placeholder="••••••••"></div>
+    <div class="form-error" id="loginError" style="display:none;"></div>
+    <button class="btn brass" style="width:100%;" onclick="doLogin()" data-i18n="login.submit">Log in</button>
+    <p class="form-note" data-i18n="login.demoNote">Seeded demo logins (password ChangeMe123!): admin 1000000001 · trainer 1000000002.</p>
+  </div>
+
+  <!-- ================= APP (after login) ================= -->
+  <div id="appScreen" style="display:none;">
+    <div class="toolbar">
+      <div>
+        <h2 style="margin-bottom:2px;" id="greeting"></h2>
+        <span class="role-pill" id="rolePill" style="color:var(--brass-deep);border-color:var(--brass-deep);"></span>
+      </div>
+      <button class="btn ghost small" onclick="doLogout()" data-i18n="logout">Log out</button>
+    </div>
+
+    <div class="tabs" id="tabs"></div>
+
+    <!-- Overview (admin only) -->
+    <div class="panel" id="panel-overview">
+      <div class="stat-cards" id="overviewStats"></div>
+    </div>
+
+    <!-- Courses -->
+    <div class="panel" id="panel-courses">
+      <div class="toolbar">
+        <h2 data-i18n="courses.title">Courses</h2>
+        <button class="btn brass small" onclick="openNewCourseForm()" data-i18n="courses.new">+ New course</button>
+      </div>
+      <div id="newCourseForm" style="display:none;" class="course-row">
+        <div class="course-body open" style="display:block;">
+          <div class="field"><label data-i18n="courses.f.title">Title (English)</label><input type="text" id="ncTitle"></div>
+          <div class="field"><label data-i18n="courses.f.titleAr">Title (Arabic)</label><input type="text" id="ncTitleAr"></div>
+          <div class="field"><label data-i18n="courses.f.category">Category</label><input type="text" id="ncCategory" placeholder="Business"></div>
+          <div class="field"><label data-i18n="courses.f.description">Description</label><textarea id="ncDescription"></textarea></div>
+          <div class="field"><label data-i18n="courses.f.price">Price (SAR)</label><input type="number" id="ncPrice" min="0"></div>
+          <div style="display:flex;gap:10px;">
+            <button class="btn brass small" onclick="createCourse()" data-i18n="courses.create">Create course</button>
+            <button class="btn ghost small" onclick="closeNewCourseForm()" data-i18n="cancel">Cancel</button>
+          </div>
+        </div>
+      </div>
+      <div id="courseList"></div>
+    </div>
+
+    <!-- Settings (admin only) -->
+    <div class="panel" id="panel-settings">
+      <div class="toolbar"><h2 data-i18n="settings.title">Platform settings</h2></div>
+      <div class="settings-form">
+        <div class="field"><label data-i18n="settings.siteName">Site name (English)</label><input type="text" id="stSiteName"></div>
+        <div class="field"><label data-i18n="settings.siteNameAr">Site name (Arabic)</label><input type="text" id="stSiteNameAr"></div>
+        <div class="field"><label data-i18n="settings.description">Description (English)</label><textarea id="stDescription"></textarea></div>
+        <div class="field"><label data-i18n="settings.descriptionAr">Description (Arabic)</label><textarea id="stDescriptionAr"></textarea></div>
+        <div class="field"><label data-i18n="settings.logoUrl">Logo URL</label><input type="text" id="stLogoUrl" placeholder="https://..."></div>
+        <div class="field"><label data-i18n="settings.primaryColor">Primary color (hex)</label><input type="text" id="stPrimaryColor" placeholder="#8A6A34"></div>
+        <button class="btn brass" onclick="saveSettings()" data-i18n="settings.save">Save settings</button>
+      </div>
+    </div>
+
+    <!-- Applications (admin only) -->
+    <div class="panel" id="panel-applications">
+      <div class="toolbar"><h2 data-i18n="apps.title">Trainer / consultant applications</h2></div>
+      <div id="applicationsList"></div>
+    </div>
+
+    <!-- Subscription plans (admin only) -->
+    <div class="panel" id="panel-plans">
+      <div class="toolbar">
+        <h2 data-i18n="plans.title">Subscription plans</h2>
+        <button class="btn brass small" onclick="openNewPlanForm()" data-i18n="plans.new">+ New plan</button>
+      </div>
+      <div id="newPlanForm" style="display:none;" class="course-row">
+        <div class="course-body open" style="display:block;">
+          <div class="field"><label data-i18n="plans.f.tier">Tier key (e.g. gold)</label><input type="text" id="npTier"></div>
+          <div class="field"><label data-i18n="plans.f.name">Name (English)</label><input type="text" id="npName"></div>
+          <div class="field"><label data-i18n="plans.f.nameAr">Name (Arabic)</label><input type="text" id="npNameAr"></div>
+          <div class="field"><label data-i18n="plans.f.description">Description (English)</label><textarea id="npDescription"></textarea></div>
+          <div class="field"><label data-i18n="plans.f.durationDays">Duration (days)</label><input type="number" id="npDuration" min="1"></div>
+          <div class="field"><label data-i18n="plans.f.price">Price (SAR)</label><input type="number" id="npPrice" min="0"></div>
+          <div style="display:flex;gap:10px;">
+            <button class="btn brass small" onclick="createPlan()" data-i18n="plans.create">Create plan</button>
+            <button class="btn ghost small" onclick="closeNewPlanForm()" data-i18n="cancel">Cancel</button>
+          </div>
+        </div>
+      </div>
+      <div id="plansList"></div>
+    </div>
+
+    <!-- Consulting (consultant sees own, admin sees all) -->
+    <div class="panel" id="panel-consulting">
+      <div class="toolbar">
+        <h2 data-i18n="consulting.title">Consulting services</h2>
+        <button class="btn brass small" onclick="openNewServiceForm()" data-i18n="consulting.new">+ New service</button>
+      </div>
+      <div id="newServiceForm" style="display:none;" class="course-row">
+        <div class="course-body open" style="display:block;">
+          <div class="field"><label data-i18n="courses.f.title">Title (English)</label><input type="text" id="nsTitle"></div>
+          <div class="field"><label data-i18n="courses.f.titleAr">Title (Arabic)</label><input type="text" id="nsTitleAr"></div>
+          <div class="field"><label data-i18n="courses.f.category">Category</label><input type="text" id="nsCategory"></div>
+          <div class="field"><label data-i18n="courses.f.description">Description</label><textarea id="nsDescription"></textarea></div>
+          <div style="display:flex;gap:10px;">
+            <button class="btn brass small" onclick="createService()" data-i18n="consulting.create">Create service</button>
+            <button class="btn ghost small" onclick="closeNewServiceForm()" data-i18n="cancel">Cancel</button>
+          </div>
+        </div>
+      </div>
+      <h3 style="font-family:var(--serif);font-size:16px;margin:30px 0 10px;" data-i18n="consulting.servicesHeading">Services</h3>
+      <div id="servicesList"></div>
+      <h3 style="font-family:var(--serif);font-size:16px;margin:30px 0 10px;" data-i18n="consulting.leadsHeading">Inquiries</h3>
+      <div id="leadsList"></div>
+    </div>
+
+    <!-- Corporate packages (admin only) -->
+    <div class="panel" id="panel-corporate">
+      <div class="toolbar">
+        <h2 data-i18n="corp.title">Corporate packages</h2>
+        <button class="btn brass small" onclick="openNewCorpForm()" data-i18n="corp.new">+ New package</button>
+      </div>
+      <div id="newCorpForm" style="display:none;" class="course-row">
+        <div class="course-body open" style="display:block;">
+          <div class="field"><label data-i18n="plans.f.tier">Tier key</label><input type="text" id="ncpTier"></div>
+          <div class="field"><label data-i18n="plans.f.name">Name (English)</label><input type="text" id="ncpName"></div>
+          <div class="field"><label data-i18n="plans.f.nameAr">Name (Arabic)</label><input type="text" id="ncpNameAr"></div>
+          <div class="field"><label data-i18n="plans.f.description">Description (English)</label><textarea id="ncpDescription"></textarea></div>
+          <div class="field"><label data-i18n="corp.f.seats">Seats included</label><input type="number" id="ncpSeats" min="1"></div>
+          <div class="field"><label data-i18n="corp.f.priceFrom">Price from (SAR)</label><input type="number" id="ncpPrice" min="0"></div>
+          <div style="display:flex;gap:10px;">
+            <button class="btn brass small" onclick="createCorpPackage()" data-i18n="plans.create">Create package</button>
+            <button class="btn ghost small" onclick="closeNewCorpForm()" data-i18n="cancel">Cancel</button>
+          </div>
+        </div>
+      </div>
+      <div id="corpList"></div>
+      <h3 style="font-family:var(--serif);font-size:16px;margin:30px 0 10px;" data-i18n="corp.inquiries">Inquiries</h3>
+      <div id="corpInquiriesList"></div>
+    </div>
+
+    <!-- Blog (admin, trainer, consultant) -->
+    <div class="panel" id="panel-blog">
+      <div class="toolbar">
+        <h2 data-i18n="blog.title">Blog</h2>
+        <button class="btn brass small" onclick="openNewPostForm()" data-i18n="blog.new">+ New post</button>
+      </div>
+      <div id="newPostForm" style="display:none;" class="course-row">
+        <div class="course-body open" style="display:block;">
+          <div class="field"><label data-i18n="blog.f.title">Title (English)</label><input type="text" id="npTitle"></div>
+          <div class="field"><label data-i18n="blog.f.titleAr">Title (Arabic)</label><input type="text" id="npTitleAr"></div>
+          <div class="field"><label data-i18n="blog.f.category">Category</label><input type="text" id="npCategory"></div>
+          <div class="field"><label data-i18n="blog.f.excerpt">Excerpt</label><input type="text" id="npExcerpt"></div>
+          <div class="field"><label data-i18n="blog.f.body">Body</label><textarea id="npBody" rows="6"></textarea></div>
+          <div class="field"><label><input type="checkbox" id="npPublished"> <span data-i18n="blog.f.published">Publish immediately</span></label></div>
+          <div style="display:flex;gap:10px;">
+            <button class="btn brass small" onclick="createPost()" data-i18n="blog.create">Create post</button>
+            <button class="btn ghost small" onclick="closeNewPostForm()" data-i18n="cancel">Cancel</button>
+          </div>
+        </div>
+      </div>
+      <div id="postsList"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---------------- i18n ---------------- */
+const I18N = {
+  en:{
+    'brand':'Mada Alhyat — Control Panel',
+    'apiBaseLabel':'API base URL',
+    'login.title':'Log in to the control panel','login.sub':'For trainers and admins. Use an account created via the API (see the backend README) or the seeded demo accounts.',
+    'login.nid':'National ID / Iqama number','login.password':'Password','login.submit':'Log in',
+    'login.demoNote':'Seeded demo logins (password ChangeMe123!): admin 1000000001 · trainer 1000000002.',
+    'logout':'Log out','cancel':'Cancel',
+    'tab.overview':'Overview','tab.courses':'Courses','tab.settings':'Platform settings',
+    'stat.courses':'Courses','stat.students':'Trainees','stat.trainers':'Trainers','stat.revenue':'Revenue (succeeded payments)',
+    'courses.title':'Courses','courses.new':'+ New course','courses.create':'Create course',
+    'courses.f.title':'Title (English)','courses.f.titleAr':'Title (Arabic)','courses.f.category':'Category',
+    'courses.f.description':'Description','courses.f.price':'Price (SAR)',
+    'courses.manage':'Manage','courses.edit':'Edit','courses.delete':'Delete','courses.students':'students',
+    'courses.addModule':'+ Add module','module.title':'Module title','module.order':'Order','module.add':'Add',
+    'lesson.add':'+ Add lesson','lesson.title':'Lesson title','lesson.order':'Order','lesson.duration':'Duration (sec)',
+    'video.upload':'Upload video','video.present':'Video uploaded','video.missing':'No video yet',
+    'preview.title':'Free preview video (marketing)','preview.upload':'Upload preview video','preview.remove':'Remove preview video',
+    'preview.note':'This video is public — anyone can watch it without enrolling or paying, to help them decide.',
+    'live.title':'Live sessions','live.none':'No live sessions scheduled yet.',
+    'live.titleField':'Session title','live.when':'Date & time','live.duration':'Duration (min)',
+    'live.schedule':'Schedule session','live.hostLinkPrompt':'Host join link (copy it):',
+    'confirm.deleteCourse':'Delete this course? This cannot be undone.',
+    'confirm.deleteModule':'Delete this module and all its lessons?',
+    'confirm.deleteLesson':'Delete this lesson?',
+    'settings.title':'Platform settings','settings.siteName':'Site name (English)','settings.siteNameAr':'Site name (Arabic)',
+    'settings.description':'Description (English)','settings.descriptionAr':'Description (Arabic)',
+    'settings.logoUrl':'Logo URL','settings.primaryColor':'Primary color (hex)','settings.save':'Save settings',
+    'toast.loginFail':'Login failed — check the API base URL and credentials.',
+    'toast.saved':'Saved.','toast.created':'Created.','toast.deleted':'Deleted.','toast.uploaded':'Video uploaded.',
+    'toast.sessionCreated':'Live session created.',
+    'toast.networkErr':'Could not reach the API. Check the API base URL and that the server is running.',
+    'empty.courses':'No courses yet. Create one above.',
+    'no.access':'Your account role does not have access to this panel. This panel is for trainer, consultant, and admin accounts.',
+    'tab.applications':'Applications','tab.plans':'Subscription plans','tab.consulting':'Consulting',
+    'apps.title':'Trainer / consultant applications',
+    'apps.empty':'No applications yet.',
+    'apps.approve':'Approve','apps.reject':'Reject',
+    'apps.approved':'Approved — temporary password: {pw}',
+    'apps.rejected':'Application rejected.',
+    'plans.title':'Subscription plans','plans.new':'+ New plan','plans.create':'Create plan',
+    'plans.f.tier':'Tier key (e.g. gold)','plans.f.name':'Name (English)','plans.f.nameAr':'Name (Arabic)',
+    'plans.f.description':'Description (English)','plans.f.durationDays':'Duration (days)','plans.f.price':'Price (SAR)',
+    'plans.empty':'No subscription plans yet.',
+    'consulting.title':'Consulting services','consulting.new':'+ New service','consulting.create':'Create service',
+    'consulting.servicesHeading':'Services','consulting.leadsHeading':'Inquiries',
+    'consulting.empty':'No consulting services yet.','consulting.noLeads':'No inquiries yet.',
+    'consulting.markContacted':'Mark contacted','consulting.markClosed':'Mark closed',
+    'tab.corporate':'Corporate','tab.blog':'Blog',
+    'corp.title':'Corporate packages','corp.new':'+ New package','corp.inquiries':'Inquiries',
+    'corp.f.seats':'Seats included','corp.f.priceFrom':'Price from (SAR)','corp.empty':'No corporate packages yet.',
+    'corp.noInquiries':'No inquiries yet.',
+    'blog.title':'Blog','blog.new':'+ New post','blog.create':'Create post',
+    'blog.f.title':'Title (English)','blog.f.titleAr':'Title (Arabic)','blog.f.category':'Category',
+    'blog.f.excerpt':'Excerpt','blog.f.body':'Body','blog.f.published':'Publish immediately',
+    'blog.empty':'No posts yet.','blog.publish':'Publish','blog.unpublish':'Unpublish','blog.delete':'Delete',
+    'blog.published':'Published','blog.draft':'Draft'
+  },
+  ar:{
+    'brand':'مدى الحياة — لوحة التحكم',
+    'apiBaseLabel':'رابط الخادم (API)',
+    'login.title':'تسجيل الدخول إلى لوحة التحكم','login.sub':'للمدربين والمسؤولين. استخدم حسابًا أُنشئ عبر الواجهة البرمجية (راجع دليل الخادم) أو الحسابات التجريبية الجاهزة.',
+    'login.nid':'رقم الهوية / الإقامة','login.password':'كلمة المرور','login.submit':'تسجيل الدخول',
+    'login.demoNote':'حسابات تجريبية جاهزة (كلمة المرور ChangeMe123!): المسؤول 1000000001 · المدرب 1000000002.',
+    'logout':'تسجيل الخروج','cancel':'إلغاء',
+    'tab.overview':'نظرة عامة','tab.courses':'الدورات','tab.settings':'إعدادات المنصة',
+    'stat.courses':'الدورات','stat.students':'المتدربون','stat.trainers':'المدربون','stat.revenue':'الإيراد (مدفوعات ناجحة)',
+    'courses.title':'الدورات','courses.new':'+ دورة جديدة','courses.create':'إنشاء الدورة',
+    'courses.f.title':'العنوان (إنجليزي)','courses.f.titleAr':'العنوان (عربي)','courses.f.category':'التصنيف',
+    'courses.f.description':'الوصف','courses.f.price':'السعر (ر.س)',
+    'courses.manage':'إدارة','courses.edit':'تعديل','courses.delete':'حذف','courses.students':'متدرب',
+    'courses.addModule':'+ إضافة وحدة','module.title':'عنوان الوحدة','module.order':'الترتيب','module.add':'إضافة',
+    'lesson.add':'+ إضافة درس','lesson.title':'عنوان الدرس','lesson.order':'الترتيب','lesson.duration':'المدة (ثانية)',
+    'video.upload':'رفع فيديو','video.present':'تم رفع الفيديو','video.missing':'لا يوجد فيديو بعد',
+    'preview.title':'فيديو تعريفي مجاني (تسويقي)','preview.upload':'رفع فيديو تعريفي','preview.remove':'إزالة الفيديو التعريفي',
+    'preview.note':'هذا الفيديو عام — يمكن لأي شخص مشاهدته دون تسجيل أو دفع، لمساعدته على اتخاذ القرار.',
+    'live.title':'الجلسات المباشرة','live.none':'لا توجد جلسات مباشرة مجدولة بعد.',
+    'live.titleField':'عنوان الجلسة','live.when':'التاريخ والوقت','live.duration':'المدة (دقيقة)',
+    'live.schedule':'جدولة الجلسة','live.hostLinkPrompt':'رابط الاستضافة (انسخه):',
+    'confirm.deleteCourse':'حذف هذه الدورة؟ لا يمكن التراجع عن هذا الإجراء.',
+    'confirm.deleteModule':'حذف هذه الوحدة وجميع دروسها؟',
+    'confirm.deleteLesson':'حذف هذا الدرس؟',
+    'settings.title':'إعدادات المنصة','settings.siteName':'اسم الموقع (إنجليزي)','settings.siteNameAr':'اسم الموقع (عربي)',
+    'settings.description':'الوصف (إنجليزي)','settings.descriptionAr':'الوصف (عربي)',
+    'settings.logoUrl':'رابط الشعار','settings.primaryColor':'اللون الأساسي (Hex)','settings.save':'حفظ الإعدادات',
+    'toast.loginFail':'فشل تسجيل الدخول — تحقق من رابط الخادم وبيانات الدخول.',
+    'toast.saved':'تم الحفظ.','toast.created':'تم الإنشاء.','toast.deleted':'تم الحذف.','toast.uploaded':'تم رفع الفيديو.',
+    'toast.sessionCreated':'تم إنشاء الجلسة المباشرة.',
+    'toast.networkErr':'تعذّر الوصول إلى الخادم. تحقق من رابط الـ API ومن أن الخادم يعمل.',
+    'empty.courses':'لا توجد دورات بعد. أنشئ واحدة أعلاه.',
+    'no.access':'صلاحية حسابك لا تسمح بالوصول إلى هذه اللوحة. هذه اللوحة مخصصة لحسابات المدرب والمستشار والمسؤول.',
+    'tab.applications':'الطلبات','tab.plans':'باقات الاشتراك','tab.consulting':'الاستشارات',
+    'apps.title':'طلبات الانضمام كمدرب / مستشار',
+    'apps.empty':'لا توجد طلبات حتى الآن.',
+    'apps.approve':'قبول','apps.reject':'رفض',
+    'apps.approved':'تم القبول — كلمة المرور المؤقتة: {pw}',
+    'apps.rejected':'تم رفض الطلب.',
+    'plans.title':'باقات الاشتراك','plans.new':'+ باقة جديدة','plans.create':'إنشاء الباقة',
+    'plans.f.tier':'المعرّف (مثل gold)','plans.f.name':'الاسم (إنجليزي)','plans.f.nameAr':'الاسم (عربي)',
+    'plans.f.description':'الوصف (إنجليزي)','plans.f.durationDays':'المدة (بالأيام)','plans.f.price':'السعر (ر.س)',
+    'plans.empty':'لا توجد باقات اشتراك حتى الآن.',
+    'consulting.title':'الخدمات الاستشارية','consulting.new':'+ خدمة جديدة','consulting.create':'إنشاء الخدمة',
+    'consulting.servicesHeading':'الخدمات','consulting.leadsHeading':'الاستفسارات',
+    'consulting.empty':'لا توجد خدمات استشارية حتى الآن.','consulting.noLeads':'لا توجد استفسارات حتى الآن.',
+    'consulting.markContacted':'وضع علامة تم التواصل','consulting.markClosed':'وضع علامة مغلق',
+    'tab.corporate':'باقات الشركات','tab.blog':'المدونة',
+    'corp.title':'باقات الشركات','corp.new':'+ باقة جديدة','corp.inquiries':'الاستفسارات',
+    'corp.f.seats':'عدد المقاعد','corp.f.priceFrom':'السعر يبدأ من (ر.س)','corp.empty':'لا توجد باقات شركات بعد.',
+    'corp.noInquiries':'لا توجد استفسارات بعد.',
+    'blog.title':'المدونة','blog.new':'+ مقال جديد','blog.create':'إنشاء المقال',
+    'blog.f.title':'العنوان (إنجليزي)','blog.f.titleAr':'العنوان (عربي)','blog.f.category':'التصنيف',
+    'blog.f.excerpt':'مقتطف','blog.f.body':'المحتوى','blog.f.published':'نشر فورًا',
+    'blog.empty':'لا توجد مقالات بعد.','blog.publish':'نشر','blog.unpublish':'إلغاء النشر','blog.delete':'حذف',
+    'blog.published':'منشور','blog.draft':'مسودة'
+  }
+};
+let lang = localStorage.getItem('mah_admin_lang') || 'en';
+function t(key){ return (I18N[lang] && I18N[lang][key]) || I18N.en[key] || key; }
+function applyI18n(){
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang==='ar' ? 'rtl' : 'ltr';
+  document.getElementById('langBtn').textContent = lang==='en' ? 'العربية' : 'English';
+  document.querySelectorAll('[data-i18n]').forEach(el=>{ el.textContent = t(el.getAttribute('data-i18n')); });
+  if(currentUser) renderTabs();
+}
+function toggleLang(){ lang = lang==='en' ? 'ar' : 'en'; localStorage.setItem('mah_admin_lang', lang); applyI18n(); if(currentUser) loadActiveTab(); }
+
+/* ---------------- API helper ---------------- */
+function apiBase(){ return document.getElementById('apiBaseInput').value.replace(/\/$/, ''); }
+document.addEventListener('DOMContentLoaded', ()=>{
+  const saved = localStorage.getItem('mah_admin_api_base');
+  if(saved) document.getElementById('apiBaseInput').value = saved;
+  document.getElementById('apiBaseInput').addEventListener('change', e=>localStorage.setItem('mah_admin_api_base', e.target.value));
+});
+
+let authToken = localStorage.getItem('mah_admin_token') || null;
+let currentUser = JSON.parse(localStorage.getItem('mah_admin_user') || 'null');
+
+async function api(path, options={}){
+  const headers = Object.assign({ 'Content-Type': 'application/json' }, options.headers || {});
+  if(authToken) headers['Authorization'] = 'Bearer ' + authToken;
+  if(options.body instanceof FormData) delete headers['Content-Type'];
+  let res;
+  try{
+    res = await fetch(apiBase() + path, Object.assign({}, options, { headers }));
+  } catch(err){
+    showToast(t('toast.networkErr'));
+    throw err;
+  }
+  let data = {};
+  try{ data = await res.json(); }catch(e){}
+  if(!res.ok){ throw Object.assign(new Error(data.error || res.statusText), { data, status: res.status }); }
+  return data;
+}
+
+/* ---------------- Auth ---------------- */
+async function doLogin(){
+  const nationalId = document.getElementById('loginNid').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  const errEl = document.getElementById('loginError');
+  errEl.style.display = 'none';
+  try{
+    const data = await api('/api/auth/login', { method:'POST', body: JSON.stringify({ nationalId, password }) });
+    authToken = data.token;
+    currentUser = data.user;
+    localStorage.setItem('mah_admin_token', authToken);
+    localStorage.setItem('mah_admin_user', JSON.stringify(currentUser));
+    enterApp();
+  } catch(err){
+    errEl.textContent = (err.data && typeof err.data.error === 'string') ? err.data.error : t('toast.loginFail');
+    errEl.style.display = 'block';
+  }
+}
+function doLogout(){
+  authToken = null; currentUser = null;
+  localStorage.removeItem('mah_admin_token'); localStorage.removeItem('mah_admin_user');
+  document.getElementById('appScreen').style.display = 'none';
+  document.getElementById('loginScreen').style.display = '';
+}
+function enterApp(){
+  if(!['ADMIN','TRAINER','CONSULTANT'].includes(currentUser.role)){
+    showToast(t('no.access'));
+    return;
+  }
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('appScreen').style.display = '';
+  document.getElementById('greeting').textContent = currentUser.name;
+  document.getElementById('rolePill').textContent = currentUser.role;
+  activeTab = currentUser.role === 'CONSULTANT' ? 'consulting' : 'courses';
+  renderTabs();
+}
+
+/* ---------------- Tabs ---------------- */
+let activeTab = 'courses';
+const ALL_PANELS = ['overview','courses','settings','applications','plans','consulting','corporate','blog'];
+function renderTabs(){
+  const role = currentUser.role;
+  let tabs;
+  if(role === 'ADMIN'){
+    tabs = [['overview', t('tab.overview')], ['courses', t('tab.courses')], ['consulting', t('tab.consulting')],
+      ['plans', t('tab.plans')], ['corporate', t('tab.corporate')], ['blog', t('tab.blog')],
+      ['applications', t('tab.applications')], ['settings', t('tab.settings')]];
+  } else if(role === 'CONSULTANT'){
+    tabs = [['consulting', t('tab.consulting')], ['blog', t('tab.blog')]];
+  } else {
+    tabs = [['courses', t('tab.courses')], ['blog', t('tab.blog')]];
+  }
+  document.getElementById('tabs').innerHTML = tabs.map(([id,label])=>
+    `<button class="tab-btn ${activeTab===id?'active':''}" onclick="switchTab('${id}')">${label}</button>`
+  ).join('');
+  ALL_PANELS.forEach(id=>{
+    document.getElementById('panel-'+id).classList.toggle('active', id===activeTab && tabs.some(t=>t[0]===id));
+  });
+  if(!tabs.some(tb=>tb[0]===activeTab)) switchTab(tabs[0][0]);
+  else loadActiveTab();
+}
+function switchTab(id){
+  activeTab = id;
+  renderTabs();
+}
+function loadActiveTab(){
+  if(activeTab==='overview') loadOverview();
+  if(activeTab==='courses') loadCourses();
+  if(activeTab==='settings') loadSettings();
+  if(activeTab==='applications') loadApplications();
+  if(activeTab==='plans') loadPlans();
+  if(activeTab==='consulting') loadConsulting();
+  if(activeTab==='corporate') loadCorporate();
+  if(activeTab==='blog') loadBlog();
+}
+
+/* ---------------- Overview (admin) ---------------- */
+async function loadOverview(){
+  try{
+    const { courseCount, traineeCount, trainerCount, revenue } = await api('/api/admin/stats');
+    document.getElementById('overviewStats').innerHTML = `
+      <div class="stat-card"><b>${courseCount}</b><span>${t('stat.courses')}</span></div>
+      <div class="stat-card"><b>${traineeCount}</b><span>${t('stat.students')}</span></div>
+      <div class="stat-card"><b>${trainerCount}</b><span>${t('stat.trainers')}</span></div>
+      <div class="stat-card"><b>${Number(revenue).toLocaleString()} SAR</b><span>${t('stat.revenue')}</span></div>`;
+  }catch(err){ /* toast already shown on network errors */ }
+}
+
+/* ---------------- Courses ---------------- */
+let coursesCache = [];
+let openCourseId = null;
+
+async function loadCourses(){
+  try{
+    const isAdmin = currentUser.role === 'ADMIN';
+    const data = isAdmin ? await api('/api/admin/courses') : (await api('/api/courses')); // trainer sees full public catalog to find their own
+    coursesCache = data.courses || [];
+    if(!isAdmin) coursesCache = coursesCache.filter(c => c.instructor && c.instructor.id === currentUser.id || c.instructorId === currentUser.id);
+    renderCourseList();
+  }catch(err){}
+}
+function renderCourseList(){
+  const list = document.getElementById('courseList');
+  if(coursesCache.length===0){ list.innerHTML = `<p class="empty-note">${t('empty.courses')}</p>`; return; }
+  list.innerHTML = coursesCache.map(c=>`
+    <div class="course-row">
+      <div class="course-row-head">
+        <div>
+          <div class="ci-title">${escapeHtml(c.title)}</div>
+          <div class="ci-meta">${escapeHtml(c.category)} &middot; ${Number(c.price)} SAR ${c._count ? '&middot; '+c._count.enrollments+' '+t('courses.students') : ''}</div>
+        </div>
+        <div class="course-row-actions">
+          <button class="btn ghost small" onclick="toggleCourseBody('${c.id}')">${t('courses.manage')}</button>
+          <button class="btn danger small" onclick="deleteCourse('${c.id}')">${t('courses.delete')}</button>
+        </div>
+      </div>
+      <div class="course-body" id="body-${c.id}"></div>
+    </div>`).join('');
+  if(openCourseId) toggleCourseBody(openCourseId, true);
+}
+function escapeHtml(s){ return String(s==null?'':s).replace(/[&<>"']/g, ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch])); }
+
+async function toggleCourseBody(courseId, forceOpen){
+  const body = document.getElementById('body-'+courseId);
+  const isOpen = body.classList.contains('open');
+  document.querySelectorAll('.course-body.open').forEach(el=>el.classList.remove('open'));
+  if(isOpen && !forceOpen){ openCourseId = null; return; }
+  openCourseId = courseId;
+  body.classList.add('open');
+  await renderCourseEditor(courseId, body);
+}
+async function renderCourseEditor(courseId, body){
+  body.innerHTML = `<p class="empty-note">…</p>`;
+  const { course } = await api('/api/courses/'+courseId);
+  const liveData = await api('/api/courses/'+courseId+'/live-sessions').catch(()=>({sessions:[]}));
+  body.innerHTML = previewVideoBlockHtml(course)
+    + (course.modules||[]).map(m=>moduleBlockHtml(course, m)).join('')
+    + `<div class="add-row">
+        <div class="inline-form">
+          <input type="text" id="newModTitle-${course.id}" placeholder="${t('module.title')}">
+          <input type="number" id="newModOrder-${course.id}" placeholder="${t('module.order')}" value="${(course.modules||[]).length+1}">
+          <button class="btn small brass" onclick="addModule('${course.id}')">${t('courses.addModule')}</button>
+        </div>
+      </div>`
+    + liveSessionsBlockHtml(course, liveData.sessions||[]);
+}
+function previewVideoBlockHtml(course){
+  const has = !!course.previewVideoUrl;
+  return `
+    <div class="module-block">
+      <div class="module-head">
+        <span>${t('preview.title')}</span>
+        <span class="video-status ${has?'':'missing'}">${has ? t('video.present') : t('video.missing')}</span>
+      </div>
+      <div class="add-row">
+        <div class="inline-form">
+          <label class="video-upload-label">${t('preview.upload')}
+            <input type="file" accept="video/*" onchange="uploadPreviewVideo('${course.id}', this.files[0])">
+          </label>
+          ${has ? `<button class="btn ghost small" onclick="removePreviewVideo('${course.id}')">${t('preview.remove')}</button>` : ''}
+        </div>
+        <p class="form-note" style="margin-top:8px;">${t('preview.note')}</p>
+      </div>
+    </div>`;
+}
+async function uploadPreviewVideo(courseId, file){
+  if(!file) return;
+  const fd = new FormData();
+  fd.append('video', file);
+  try{
+    await api(`/api/courses/${courseId}/preview-video`, { method:'POST', body: fd });
+    showToast(t('toast.uploaded'));
+    renderCourseEditor(courseId, document.getElementById('body-'+courseId));
+  }catch(err){}
+}
+async function removePreviewVideo(courseId){
+  try{
+    await api(`/api/courses/${courseId}/preview-video`, { method:'DELETE' });
+    showToast(t('toast.deleted'));
+    renderCourseEditor(courseId, document.getElementById('body-'+courseId));
+  }catch(err){}
+}
+function liveSessionsBlockHtml(course, sessions){
+  return `
+    <div class="module-block">
+      <div class="module-head"><span>${t('live.title')}</span></div>
+      ${sessions.length===0 ? `<div class="lesson-row"><span>${t('live.none')}</span></div>` : sessions.map(s=>`
+        <div class="lesson-row">
+          <div class="l-left"><span>${escapeHtml(s.title)}</span><span class="video-status">${new Date(s.scheduledAt).toLocaleString()} &middot; ${s.durationMinutes} min</span></div>
+        </div>`).join('')}
+      <div class="add-row">
+        <div class="inline-form">
+          <input type="text" id="liveTitle-${course.id}" placeholder="${t('live.titleField')}">
+          <input type="datetime-local" id="liveWhen-${course.id}" title="${t('live.when')}">
+          <input type="number" id="liveDur-${course.id}" placeholder="${t('live.duration')}" value="60">
+          <button class="btn small brass" onclick="scheduleLive('${course.id}')">${t('live.schedule')}</button>
+        </div>
+      </div>
+    </div>`;
+}
+async function scheduleLive(courseId){
+  const title = document.getElementById('liveTitle-'+courseId).value.trim();
+  const when = document.getElementById('liveWhen-'+courseId).value;
+  const durationMinutes = Number(document.getElementById('liveDur-'+courseId).value) || 60;
+  if(!title || !when) return;
+  try{
+    const { session } = await api(`/api/courses/${courseId}/live-sessions`, {
+      method:'POST',
+      body: JSON.stringify({ title, scheduledAt: new Date(when).toISOString(), durationMinutes })
+    });
+    showToast(t('toast.sessionCreated'));
+    window.prompt(t('live.hostLinkPrompt'), session.joinUrl);
+    renderCourseEditor(courseId, document.getElementById('body-'+courseId));
+  }catch(err){}
+}
+function moduleBlockHtml(course, m){
+  return `
+    <div class="module-block">
+      <div class="module-head">
+        <span>${escapeHtml(m.title)}</span>
+        <span class="m-actions"><button class="btn ghost small" onclick="deleteModule('${course.id}','${m.id}')">${t('courses.delete')}</button></span>
+      </div>
+      ${(m.lessons||[]).map(l=>lessonRowHtml(course, m, l)).join('')}
+      <div class="add-row">
+        <div class="inline-form">
+          <input type="text" id="newLesTitle-${m.id}" placeholder="${t('lesson.title')}">
+          <input type="number" id="newLesOrder-${m.id}" placeholder="${t('lesson.order')}" value="${(m.lessons||[]).length+1}">
+          <input type="number" id="newLesDur-${m.id}" placeholder="${t('lesson.duration')}">
+          <button class="btn small brass" onclick="addLesson('${course.id}','${m.id}')">${t('lesson.add')}</button>
+        </div>
+      </div>
+    </div>`;
+}
+function lessonRowHtml(course, m, l){
+  const hasVideo = !!l.videoUrl;
+  return `
+    <div class="lesson-row">
+      <div class="l-left">
+        <span>${escapeHtml(l.title)}</span>
+        <span class="video-status ${hasVideo?'':'missing'}">${hasVideo ? t('video.present') : t('video.missing')}</span>
+      </div>
+      <div class="l-actions">
+        <label class="video-upload-label">${t('video.upload')}
+          <input type="file" accept="video/*" onchange="uploadVideo('${course.id}','${l.id}', this.files[0])">
+        </label>
+        <button class="btn ghost small" onclick="deleteLesson('${course.id}','${l.id}')">${t('courses.delete')}</button>
+      </div>
+    </div>`;
+}
+
+function openNewCourseForm(){ document.getElementById('newCourseForm').style.display = ''; }
+function closeNewCourseForm(){ document.getElementById('newCourseForm').style.display = 'none'; }
+async function createCourse(){
+  const body = {
+    title: document.getElementById('ncTitle').value.trim(),
+    titleAr: document.getElementById('ncTitleAr').value.trim() || undefined,
+    category: document.getElementById('ncCategory').value.trim(),
+    description: document.getElementById('ncDescription').value.trim(),
+    price: Number(document.getElementById('ncPrice').value)
+  };
+  try{
+    await api('/api/courses', { method:'POST', body: JSON.stringify(body) });
+    showToast(t('toast.created'));
+    closeNewCourseForm();
+    ['ncTitle','ncTitleAr','ncCategory','ncDescription','ncPrice'].forEach(id=>document.getElementById(id).value='');
+    loadCourses();
+  }catch(err){}
+}
+async function deleteCourse(id){
+  if(!confirm(t('confirm.deleteCourse'))) return;
+  try{ await api('/api/courses/'+id, { method:'DELETE' }); showToast(t('toast.deleted')); loadCourses(); }catch(err){}
+}
+async function addModule(courseId){
+  const title = document.getElementById('newModTitle-'+courseId).value.trim();
+  const order = Number(document.getElementById('newModOrder-'+courseId).value) || 1;
+  if(!title) return;
+  try{
+    await api(`/api/courses/${courseId}/modules`, { method:'POST', body: JSON.stringify({ title, order }) });
+    showToast(t('toast.created'));
+    renderCourseEditor(courseId, document.getElementById('body-'+courseId));
+  }catch(err){}
+}
+async function deleteModule(courseId, moduleId){
+  if(!confirm(t('confirm.deleteModule'))) return;
+  try{
+    await api('/api/modules/'+moduleId, { method:'DELETE' });
+    showToast(t('toast.deleted'));
+    renderCourseEditor(courseId, document.getElementById('body-'+courseId));
+  }catch(err){}
+}
+async function addLesson(courseId, moduleId){
+  const title = document.getElementById('newLesTitle-'+moduleId).value.trim();
+  const order = Number(document.getElementById('newLesOrder-'+moduleId).value) || 1;
+  const durationSeconds = Number(document.getElementById('newLesDur-'+moduleId).value) || 60;
+  if(!title) return;
+  try{
+    await api(`/api/modules/${moduleId}/lessons`, { method:'POST', body: JSON.stringify({ title, order, durationSeconds }) });
+    showToast(t('toast.created'));
+    renderCourseEditor(courseId, document.getElementById('body-'+courseId));
+  }catch(err){}
+}
+async function deleteLesson(courseId, lessonId){
+  if(!confirm(t('confirm.deleteLesson'))) return;
+  try{
+    await api('/api/lessons/'+lessonId, { method:'DELETE' });
+    showToast(t('toast.deleted'));
+    renderCourseEditor(courseId, document.getElementById('body-'+courseId));
+  }catch(err){}
+}
+async function uploadVideo(courseId, lessonId, file){
+  if(!file) return;
+  const fd = new FormData();
+  fd.append('video', file);
+  try{
+    await api(`/api/lessons/${lessonId}/video`, { method:'POST', body: fd });
+    showToast(t('toast.uploaded'));
+    renderCourseEditor(courseId, document.getElementById('body-'+courseId));
+  }catch(err){}
+}
+
+/* ---------------- Settings (admin) ---------------- */
+async function loadSettings(){
+  try{
+    const { settings } = await api('/api/settings');
+    document.getElementById('stSiteName').value = settings.siteName || '';
+    document.getElementById('stSiteNameAr').value = settings.siteNameAr || '';
+    document.getElementById('stDescription').value = settings.description || '';
+    document.getElementById('stDescriptionAr').value = settings.descriptionAr || '';
+    document.getElementById('stLogoUrl').value = settings.logoUrl || '';
+    document.getElementById('stPrimaryColor').value = settings.primaryColor || '';
+  }catch(err){}
+}
+async function saveSettings(){
+  const body = {
+    siteName: document.getElementById('stSiteName').value.trim() || undefined,
+    siteNameAr: document.getElementById('stSiteNameAr').value.trim() || undefined,
+    description: document.getElementById('stDescription').value.trim() || undefined,
+    descriptionAr: document.getElementById('stDescriptionAr').value.trim() || undefined,
+    logoUrl: document.getElementById('stLogoUrl').value.trim() || undefined,
+    primaryColor: document.getElementById('stPrimaryColor').value.trim() || undefined
+  };
+  try{ await api('/api/settings', { method:'PATCH', body: JSON.stringify(body) }); showToast(t('toast.saved')); }catch(err){}
+}
+
+/* ---------------- Applications (admin) ---------------- */
+async function loadApplications(){
+  try{
+    const { applications } = await api('/api/applications?status=pending');
+    const list = document.getElementById('applicationsList');
+    if(applications.length===0){ list.innerHTML = `<p class="empty-note">${t('apps.empty')}</p>`; return; }
+    list.innerHTML = applications.map(a=>`
+      <div class="course-row">
+        <div class="course-row-head">
+          <div>
+            <div class="ci-title">${escapeHtml(a.name)} — <span style="font-weight:400;font-size:13px;color:var(--slate);">${a.appliedRole}</span></div>
+            <div class="ci-meta">${escapeHtml(a.specialization)} &middot; ${escapeHtml(a.phone)} ${a.email?('&middot; '+escapeHtml(a.email)):''}</div>
+          </div>
+          <div class="course-row-actions">
+            <button class="btn brass small" onclick="approveApplication('${a.id}')">${t('apps.approve')}</button>
+            <button class="btn danger small" onclick="rejectApplication('${a.id}')">${t('apps.reject')}</button>
+          </div>
+        </div>
+        <div class="course-body open" style="display:block;padding:12px 18px;font-size:13px;color:var(--ink-soft);">${escapeHtml(a.bio)}</div>
+      </div>`).join('');
+  }catch(err){}
+}
+async function approveApplication(id){
+  try{
+    const data = await api(`/api/applications/${id}/approve`, { method:'POST' });
+    showToast(t('apps.approved').replace('{pw}', data.temporaryPassword));
+    loadApplications();
+  }catch(err){}
+}
+async function rejectApplication(id){
+  try{
+    await api(`/api/applications/${id}/reject`, { method:'POST', body: JSON.stringify({}) });
+    showToast(t('apps.rejected'));
+    loadApplications();
+  }catch(err){}
+}
+
+/* ---------------- Subscription plans (admin) ---------------- */
+function openNewPlanForm(){ document.getElementById('newPlanForm').style.display = ''; }
+function closeNewPlanForm(){ document.getElementById('newPlanForm').style.display = 'none'; }
+async function loadPlans(){
+  try{
+    const { plans } = await api('/api/subscription-plans');
+    const list = document.getElementById('plansList');
+    if(plans.length===0){ list.innerHTML = `<p class="empty-note">${t('plans.empty')}</p>`; return; }
+    list.innerHTML = plans.map(p=>`
+      <div class="course-row"><div class="course-row-head">
+        <div>
+          <div class="ci-title">${escapeHtml(p.name)} <span style="font-weight:400;font-size:12px;color:var(--slate);">(${escapeHtml(p.tier)})</span></div>
+          <div class="ci-meta">${p.durationDays} days &middot; ${Number(p.price)} SAR</div>
+        </div>
+      </div></div>`).join('');
+  }catch(err){}
+}
+async function createPlan(){
+  const body = {
+    tier: document.getElementById('npTier').value.trim(),
+    name: document.getElementById('npName').value.trim(),
+    nameAr: document.getElementById('npNameAr').value.trim() || undefined,
+    description: document.getElementById('npDescription').value.trim(),
+    durationDays: Number(document.getElementById('npDuration').value),
+    price: Number(document.getElementById('npPrice').value)
+  };
+  try{
+    await api('/api/subscription-plans', { method:'POST', body: JSON.stringify(body) });
+    showToast(t('toast.created'));
+    closeNewPlanForm();
+    ['npTier','npName','npNameAr','npDescription','npDuration','npPrice'].forEach(id=>document.getElementById(id).value='');
+    loadPlans();
+  }catch(err){}
+}
+
+/* ---------------- Consulting (consultant / admin) ---------------- */
+function openNewServiceForm(){ document.getElementById('newServiceForm').style.display = ''; }
+function closeNewServiceForm(){ document.getElementById('newServiceForm').style.display = 'none'; }
+async function loadConsulting(){
+  try{
+    const { services } = await api('/api/consulting/services');
+    const mine = currentUser.role==='ADMIN' ? services : services.filter(s=>s.consultant && s.consultant.id===currentUser.id);
+    const sList = document.getElementById('servicesList');
+    sList.innerHTML = mine.length===0 ? `<p class="empty-note">${t('consulting.empty')}</p>` : mine.map(s=>`
+      <div class="course-row"><div class="course-row-head">
+        <div>
+          <div class="ci-title">${escapeHtml(s.title)}</div>
+          <div class="ci-meta">${escapeHtml(s.category)} &middot; ${escapeHtml(s.consultant.name)}</div>
+        </div>
+      </div></div>`).join('');
+  }catch(err){}
+  try{
+    const { requests } = await api('/api/consulting/requests');
+    const lList = document.getElementById('leadsList');
+    lList.innerHTML = requests.length===0 ? `<p class="empty-note">${t('consulting.noLeads')}</p>` : requests.map(r=>`
+      <div class="course-row"><div class="course-row-head">
+        <div>
+          <div class="ci-title">${escapeHtml(r.name)} — <span style="font-weight:400;font-size:12px;color:var(--slate);">${r.status}</span></div>
+          <div class="ci-meta">${escapeHtml(r.service.title)} &middot; ${escapeHtml(r.email)} ${r.company?('&middot; '+escapeHtml(r.company)):''}</div>
+        </div>
+        <div class="course-row-actions">
+          <button class="btn ghost small" onclick="updateLeadStatus('${r.id}','contacted')">${t('consulting.markContacted')}</button>
+          <button class="btn ghost small" onclick="updateLeadStatus('${r.id}','closed')">${t('consulting.markClosed')}</button>
+        </div>
+      </div></div>`).join('');
+  }catch(err){}
+}
+async function createService(){
+  const body = {
+    title: document.getElementById('nsTitle').value.trim(),
+    titleAr: document.getElementById('nsTitleAr').value.trim() || undefined,
+    category: document.getElementById('nsCategory').value.trim(),
+    description: document.getElementById('nsDescription').value.trim()
+  };
+  try{
+    await api('/api/consulting/services', { method:'POST', body: JSON.stringify(body) });
+    showToast(t('toast.created'));
+    closeNewServiceForm();
+    ['nsTitle','nsTitleAr','nsCategory','nsDescription'].forEach(id=>document.getElementById(id).value='');
+    loadConsulting();
+  }catch(err){}
+}
+async function updateLeadStatus(id, status){
+  try{ await api(`/api/consulting/requests/${id}`, { method:'PATCH', body: JSON.stringify({ status }) }); loadConsulting(); }catch(err){}
+}
+
+/* ---------------- Corporate packages (admin) ---------------- */
+function openNewCorpForm(){ document.getElementById('newCorpForm').style.display = ''; }
+function closeNewCorpForm(){ document.getElementById('newCorpForm').style.display = 'none'; }
+async function loadCorporate(){
+  try{
+    const { packages } = await api('/api/corporate-packages');
+    const list = document.getElementById('corpList');
+    list.innerHTML = packages.length ? packages.map(p=>`
+      <div class="course-row"><div class="course-row-head">
+        <div>
+          <div class="ci-title">${escapeHtml(p.name)} <span style="font-weight:400;font-size:12px;color:var(--slate);">(${escapeHtml(p.tier)})</span></div>
+          <div class="ci-meta">${p.seatsIncluded ? p.seatsIncluded+' seats' : ''} ${p.priceFrom ? '&middot; from '+Number(p.priceFrom)+' SAR' : ''}</div>
+        </div>
+      </div></div>`).join('') : `<p class="empty-note">${t('corp.empty')}</p>`;
+  }catch(err){}
+  try{
+    const { inquiries } = await api('/api/corporate-packages/inquiries');
+    const list2 = document.getElementById('corpInquiriesList');
+    list2.innerHTML = inquiries.length ? inquiries.map(i=>`
+      <div class="course-row"><div class="course-row-head">
+        <div>
+          <div class="ci-title">${escapeHtml(i.companyName)} — <span style="font-weight:400;font-size:12px;color:var(--slate);">${i.status}</span></div>
+          <div class="ci-meta">${escapeHtml(i.package.name)} &middot; ${escapeHtml(i.contactName)} &middot; ${escapeHtml(i.email)}</div>
+        </div>
+        <div class="course-row-actions">
+          <button class="btn ghost small" onclick="updateCorpInquiryStatus('${i.id}','contacted')">${t('consulting.markContacted')}</button>
+          <button class="btn ghost small" onclick="updateCorpInquiryStatus('${i.id}','closed')">${t('consulting.markClosed')}</button>
+        </div>
+      </div></div>`).join('') : `<p class="empty-note">${t('corp.noInquiries')}</p>`;
+  }catch(err){}
+}
+async function createCorpPackage(){
+  const body = {
+    tier: document.getElementById('ncpTier').value.trim(),
+    name: document.getElementById('ncpName').value.trim(),
+    nameAr: document.getElementById('ncpNameAr').value.trim() || undefined,
+    description: document.getElementById('ncpDescription').value.trim(),
+    seatsIncluded: Number(document.getElementById('ncpSeats').value) || undefined,
+    priceFrom: Number(document.getElementById('ncpPrice').value) || undefined
+  };
+  try{
+    await api('/api/corporate-packages', { method:'POST', body: JSON.stringify(body) });
+    showToast(t('toast.created'));
+    closeNewCorpForm();
+    ['ncpTier','ncpName','ncpNameAr','ncpDescription','ncpSeats','ncpPrice'].forEach(id=>document.getElementById(id).value='');
+    loadCorporate();
+  }catch(err){}
+}
+async function updateCorpInquiryStatus(id, status){
+  try{ await api(`/api/corporate-packages/inquiries/${id}`, { method:'PATCH', body: JSON.stringify({ status }) }); loadCorporate(); }catch(err){}
+}
+
+/* ---------------- Blog (admin / trainer / consultant) ---------------- */
+function openNewPostForm(){ document.getElementById('newPostForm').style.display = ''; }
+function closeNewPostForm(){ document.getElementById('newPostForm').style.display = 'none'; }
+async function loadBlog(){
+  try{
+    const { posts } = await api('/api/blog/mine');
+    const list = document.getElementById('postsList');
+    list.innerHTML = posts.length ? posts.map(p=>`
+      <div class="course-row"><div class="course-row-head">
+        <div>
+          <div class="ci-title">${escapeHtml(p.title)} <span style="font-weight:400;font-size:12px;color:${p.published?'var(--green)':'var(--slate)'};">${p.published?t('blog.published'):t('blog.draft')}</span></div>
+          <div class="ci-meta">${escapeHtml(p.category)}</div>
+        </div>
+        <div class="course-row-actions">
+          <button class="btn ghost small" onclick="togglePublish('${p.id}', ${!p.published})">${p.published?t('blog.unpublish'):t('blog.publish')}</button>
+          <button class="btn danger small" onclick="deletePost('${p.id}')">${t('blog.delete')}</button>
+        </div>
+      </div></div>`).join('') : `<p class="empty-note">${t('blog.empty')}</p>`;
+  }catch(err){}
+}
+async function createPost(){
+  const body = {
+    title: document.getElementById('npTitle').value.trim(),
+    titleAr: document.getElementById('npTitleAr').value.trim() || undefined,
+    category: document.getElementById('npCategory').value.trim(),
+    excerpt: document.getElementById('npExcerpt').value.trim(),
+    body: document.getElementById('npBody').value.trim(),
+    published: document.getElementById('npPublished').checked
+  };
+  try{
+    await api('/api/blog/posts', { method:'POST', body: JSON.stringify(body) });
+    showToast(t('toast.created'));
+    closeNewPostForm();
+    ['npTitle','npTitleAr','npCategory','npExcerpt','npBody'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('npPublished').checked = false;
+    loadBlog();
+  }catch(err){}
+}
+async function togglePublish(id, published){
+  try{ await api(`/api/blog/posts/${id}`, { method:'PATCH', body: JSON.stringify({ published }) }); loadBlog(); }catch(err){}
+}
+async function deletePost(id){
+  if(!confirm(t('blog.delete')+'?')) return;
+  try{ await api(`/api/blog/posts/${id}`, { method:'DELETE' }); showToast(t('toast.deleted')); loadBlog(); }catch(err){}
+}
+
+/* ---------------- Toast ---------------- */
+function showToast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  clearTimeout(window._t); window._t = setTimeout(()=>el.classList.remove('show'), 3200);
+}
+
+/* ---------------- Init ---------------- */
+applyI18n();
+if(currentUser && authToken) enterApp();
+</script>
+</body>
+</html>

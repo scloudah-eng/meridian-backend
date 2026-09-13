@@ -1,0 +1,2022 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mada Alhyat Training Center</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Markazi+Text:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16233D;
+    --ink-soft:#2B3A5A;
+    --paper:#F3F1EA;
+    --paper-raised:#FFFFFF;
+    --brass:#A9803F;
+    --brass-deep:#8A6A34;
+    --teal:#2E8B90;
+    --teal-deep:#256F73;
+    --line:#D8D3C4;
+    --slate:#5B6373;
+    --green:#2F6D52;
+    --red:#A13F3F;
+    --radius:2px;
+    --serif:'Fraunces', Georgia, serif;
+    --sans:'IBM Plex Sans', -apple-system, sans-serif;
+    --serif-ar:'Markazi Text', serif;
+    --sans-ar:'IBM Plex Sans Arabic', sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:var(--sans);
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  html[dir="rtl"] body{font-family:var(--sans-ar);}
+  html[dir="rtl"] h1.display, html[dir="rtl"] h2.h-serif, html[dir="rtl"] .d-title,
+  html[dir="rtl"] .cc-title, html[dir="rtl"] .lc-title, html[dir="rtl"] .p-title,
+  html[dir="rtl"] .step h3, html[dir="rtl"] .brand, html[dir="rtl"] .buy-price,
+  html[dir="rtl"] .cc-price, html[dir="rtl"] .stat b, html[dir="rtl"] .cta-band h2,
+  html[dir="rtl"] .modal h3, html[dir="rtl"] .order-card h4, html[dir="rtl"] .sl-head b,
+  html[dir="rtl"] .er-title, html[dir="rtl"] .p-title, html[dir="rtl"] .pLessonTitle,
+  html[dir="rtl"] .foot-grid h4, html[dir="rtl"] .testi-who b, html[dir="rtl"] .snum,
+  html[dir="rtl"] .instructor-row b, html[dir="rtl"] .d-block h3, html[dir="rtl"] .order-total{
+    font-family:var(--serif-ar); letter-spacing:0;
+  }
+  img,svg{display:block;max-width:100%;}
+  a{color:inherit;}
+  button{font-family:inherit;}
+  ::selection{background:var(--brass);color:#fff;}
+  :focus-visible{outline:2px solid var(--brass);outline-offset:2px;}
+
+  .wrap{max-width:1120px;margin:0 auto;padding:0 28px;}
+  @media (max-width:640px){.wrap{padding:0 18px;}}
+
+  /* ---------- Nav ---------- */
+  header.site{
+    position:sticky;top:0;z-index:40;
+    background:var(--paper);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-row{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 0;
+  }
+  .brand{
+    display:flex;align-items:center;gap:10px;
+    font-family:var(--serif);font-weight:600;font-size:22px;
+    letter-spacing:-0.01em;
+    cursor:pointer; background:none;border:none;color:var(--ink);
+  }
+  .brand-mark{
+    width:34px;height:34px;border-radius:50%;flex:none;object-fit:cover;
+    box-shadow:0 0 0 1.5px var(--line);
+  }
+  nav.links{display:flex;gap:30px;align-items:center;}
+  nav.links button.navlink{
+    background:none;border:none;font-size:14.5px;color:var(--ink-soft);
+    cursor:pointer;padding:6px 0;border-bottom:2px solid transparent;font-family:inherit;
+  }
+  nav.links button.navlink.active{color:var(--ink);border-bottom-color:var(--brass);}
+  .mega-wrap{position:relative;}
+  .mega-panel{
+    display:none;position:absolute;top:100%;inset-inline-start:0;margin-top:14px;
+    background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:0 20px 50px rgba(22,35,61,.16);padding:18px;min-width:420px;z-index:60;
+    grid-template-columns:repeat(2,1fr);gap:6px 20px;
+  }
+  .mega-panel.open{display:grid;}
+  .mega-item{
+    display:flex;justify-content:space-between;align-items:center;padding:9px 10px;border-radius:4px;
+    font-size:13.5px;color:var(--ink-soft);cursor:pointer;background:none;border:none;font-family:inherit;text-align:start;
+  }
+  .mega-item:hover{background:#EEEBE1;color:var(--ink);}
+  .mega-item .mi-count{font-size:11.5px;color:var(--slate);}
+  .nav-actions{display:flex;align-items:center;gap:10px;}
+  .btn{
+    font-family:inherit;font-size:14.5px;font-weight:600;
+    padding:11px 20px;border-radius:var(--radius);border:1px solid var(--ink);
+    cursor:pointer;transition:background .15s ease, color .15s ease, border-color .15s ease;
+    background:var(--ink);color:#fff;
+  }
+  .btn:hover{background:var(--ink-soft);}
+  .btn.ghost{background:transparent;color:var(--ink);border-color:var(--ink);}
+  .btn.ghost:hover{background:var(--ink);color:#fff;}
+  .btn.brass{background:var(--brass-deep);border-color:var(--brass-deep);}
+  .btn.brass:hover{background:#79591f;}
+  .btn.block{width:100%;justify-content:center;display:flex;align-items:center;gap:8px;}
+  .btn.small{padding:8px 14px;font-size:13.5px;}
+  .btn:disabled{opacity:.45;cursor:not-allowed;}
+  .lang-btn{
+    background:none;border:1px solid var(--line);color:var(--ink-soft);font-size:13px;
+    padding:8px 13px;border-radius:20px;cursor:pointer;font-family:inherit;font-weight:600;
+  }
+  .lang-btn:hover{border-color:var(--brass-deep);color:var(--ink);}
+  @media (max-width:800px){
+    nav.links{display:none;}
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    background:var(--ink);color:#EFEBDD;
+    padding:76px 0 84px;
+    position:relative;overflow:hidden;
+  }
+  .hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:64px;align-items:center;}
+  @media (max-width:860px){.hero .wrap{grid-template-columns:1fr;gap:44px;}}
+  .hero-eyebrow{
+    font-size:13.5px;color:#5FC4C0;font-weight:600;margin-bottom:18px;
+  }
+  h1.display{
+    font-family:var(--serif);font-weight:600;font-size:50px;line-height:1.06;
+    letter-spacing:-0.015em;margin:0 0 22px;max-width:14ch;
+  }
+  html[dir="rtl"] h1.display{letter-spacing:0;}
+  @media (max-width:640px){h1.display{font-size:36px;}}
+  .hero p.lede{font-size:17px;color:#C7CBDA;max-width:44ch;margin:0 0 32px;}
+  .hero-ctas{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:44px;}
+  .hero .btn.ghost{border-color:#5A6784;color:#EFEBDD;}
+  .hero .btn.ghost:hover{background:#EFEBDD;color:var(--ink);border-color:#EFEBDD;}
+  .stat-row{display:flex;gap:38px;flex-wrap:wrap;}
+  .stat b{display:block;font-family:var(--serif);font-size:26px;font-weight:600;color:#fff;}
+  .stat span{font-size:13px;color:#9AA2B8;}
+
+  .ledger-card{
+    background:#EFEBDD;color:var(--ink);border-radius:var(--radius);
+    padding:26px 26px 22px;box-shadow:0 24px 60px rgba(0,0,0,.35);
+  }
+  .ledger-card .lc-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px;gap:12px;}
+  .lc-tag{font-size:12px;color:var(--brass-deep);font-weight:600;}
+  .lc-title{font-family:var(--serif);font-size:19px;font-weight:600;margin:4px 0 2px;}
+  .lc-sub{font-size:13px;color:var(--slate);}
+  .lc-ring{width:52px;height:52px;flex:none;}
+  .lc-rows{border-top:1px solid var(--line);margin-top:14px;padding-top:14px;}
+  .lc-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;font-size:13.5px;border-bottom:1px dashed var(--line);}
+  .lc-row:last-child{border-bottom:none;}
+  .lc-row .num{color:var(--slate);width:24px;font-variant-numeric:tabular-nums;}
+  .lc-row .name{flex:1;padding:0 10px;}
+  .lc-check{width:16px;height:16px;border-radius:50%;flex:none;}
+  .lc-check.done{background:var(--green);}
+  .lc-check.todo{border:1.5px solid var(--line);}
+
+  /* ---------- Section basics ---------- */
+  section{padding:76px 0;}
+  section.tight{padding:52px 0;}
+  h2.h-serif{font-family:var(--serif);font-size:32px;font-weight:600;letter-spacing:-0.01em;margin:0 0 8px;}
+  html[dir="rtl"] h2.h-serif{letter-spacing:0;}
+  .section-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:36px;gap:20px;flex-wrap:wrap;}
+  .section-head p{color:var(--slate);font-size:15px;margin:0;max-width:46ch;}
+
+  /* category chips */
+  .chips{display:flex;gap:10px;flex-wrap:wrap;}
+  .chip{
+    border:1px solid var(--line);background:var(--paper-raised);
+    padding:9px 16px;border-radius:20px;font-size:13.5px;cursor:pointer;color:var(--ink-soft);font-family:inherit;
+  }
+  .chip.active{background:var(--ink);border-color:var(--ink);color:#fff;}
+  .chip .chip-count{opacity:.65;font-size:12px;margin-inline-start:4px;}
+
+  /* subscription plan cards */
+  .plan-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:30px;}
+  @media (max-width:900px){.plan-grid{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:560px){.plan-grid{grid-template-columns:1fr;}}
+  .plan-card{border:1px solid var(--line);background:var(--paper-raised);border-radius:var(--radius);padding:24px;display:flex;flex-direction:column;}
+  .plan-card.tier-gold, .plan-card.tier-platinum{border-color:var(--brass-deep);box-shadow:0 8px 24px rgba(138,106,52,.12);}
+  .plan-card .p-tier{font-size:11.5px;font-weight:700;color:var(--brass-deep);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;}
+  html[dir="rtl"] .plan-card .p-tier{text-transform:none;}
+  .plan-card .p-name{font-family:var(--serif);font-size:20px;font-weight:600;margin-bottom:10px;}
+  html[dir="rtl"] .plan-card .p-name{font-family:var(--serif-ar);}
+  .plan-card .p-price{font-family:var(--serif);font-size:28px;font-weight:600;margin-bottom:4px;}
+  html[dir="rtl"] .plan-card .p-price{font-family:var(--serif-ar);}
+  .plan-card .p-duration{font-size:12.5px;color:var(--slate);margin-bottom:16px;}
+  .plan-card .p-desc{font-size:13.5px;color:var(--ink-soft);line-height:1.6;margin-bottom:20px;flex:1;}
+  .plan-card .p-features{list-style:none;padding:0;margin:0 0 20px;display:flex;flex-direction:column;gap:8px;}
+  .plan-card .p-features li{font-size:13px;color:var(--ink-soft);padding-inline-start:18px;position:relative;}
+  .plan-card .p-features li::before{content:"";position:absolute;inset-inline-start:0;top:6px;width:7px;height:7px;background:var(--green);border-radius:50%;}
+
+  /* trainer / consultant cards */
+  .trainer-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:30px;}
+  @media (max-width:900px){.trainer-grid{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:560px){.trainer-grid{grid-template-columns:1fr;}}
+  .trainer-card{border:1px solid var(--line);background:var(--paper-raised);border-radius:var(--radius);padding:22px 18px;text-align:center;}
+  .trainer-card .t-avatar{width:56px;height:56px;border-radius:50%;background:var(--ink);color:#EFEBDD;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:22px;margin:0 auto 12px;}
+  html[dir="rtl"] .trainer-card .t-avatar{font-family:var(--serif-ar);}
+  .trainer-card .t-name{font-family:var(--serif);font-weight:600;font-size:15px;margin-bottom:4px;}
+  html[dir="rtl"] .trainer-card .t-name{font-family:var(--serif-ar);}
+  .trainer-card .t-role{font-size:11.5px;color:var(--brass-deep);font-weight:600;margin-bottom:6px;}
+  .trainer-card .t-meta{font-size:12px;color:var(--slate);}
+
+  /* course grid + card */
+  .course-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:30px;}
+  @media (max-width:900px){.course-grid{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:620px){.course-grid{grid-template-columns:1fr;}}
+  .course-card{
+    background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);
+    display:flex;flex-direction:column;cursor:pointer;overflow:hidden;
+    transition:border-color .15s ease;text-align:start;
+  }
+  .course-card:hover{border-color:var(--brass-deep);}
+  .cc-media{
+    aspect-ratio:16/9;background:linear-gradient(135deg,#1E2C4A,#33456E);
+    position:relative;display:flex;align-items:center;justify-content:center;
+  }
+  .cc-media .cat-pill{
+    position:absolute;top:12px;inset-inline-start:12px;background:rgba(243,241,234,.92);color:var(--ink);
+    font-size:11.5px;font-weight:600;padding:5px 10px;border-radius:20px;
+  }
+  .cc-media .dur-pill{
+    position:absolute;bottom:12px;inset-inline-end:12px;background:rgba(22,35,61,.75);color:#EFEBDD;
+    font-size:11.5px;padding:4px 9px;border-radius:20px;
+  }
+  .play-ring{width:44px;height:44px;border-radius:50%;border:1.5px solid rgba(239,235,221,.6);display:flex;align-items:center;justify-content:center;}
+  .cc-body{padding:18px 18px 20px;display:flex;flex-direction:column;gap:10px;flex:1;}
+  .cc-title{font-family:var(--serif);font-size:18px;font-weight:600;line-height:1.25;}
+  .cc-meta{font-size:12.5px;color:var(--slate);display:flex;gap:8px;flex-wrap:wrap;}
+  .cc-foot{margin-top:auto;display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:1px solid var(--line);}
+  .cc-price{font-family:var(--serif);font-weight:600;font-size:17px;}
+  .stars{font-size:12.5px;color:var(--brass-deep);}
+
+  /* how it works */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:36px;}
+  @media (max-width:760px){.steps{grid-template-columns:1fr;}}
+  .step{border-top:2px solid var(--ink);padding-top:16px;}
+  .step .snum{font-family:var(--serif);font-size:30px;color:var(--brass-deep);font-weight:600;}
+  .step h3{font-family:var(--serif);font-size:19px;margin:8px 0 8px;font-weight:600;}
+  .step p{color:var(--slate);font-size:14.5px;margin:0;}
+
+  /* testimonials */
+  .testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:34px;}
+  @media (max-width:860px){.testi-grid{grid-template-columns:1fr;}}
+  .testi{background:var(--paper-raised);border:1px solid var(--line);padding:24px;border-radius:var(--radius);}
+  .testi p{font-size:14.5px;color:var(--ink-soft);margin:0 0 16px;}
+  .testi-who{display:flex;align-items:center;gap:10px;}
+  .avatar{width:34px;height:34px;border-radius:50%;background:var(--ink);color:#EFEBDD;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:14px;flex:none;}
+  .testi-who b{display:block;font-size:13.5px;}
+  .testi-who span{font-size:12px;color:var(--slate);}
+
+  .cta-band{background:var(--brass-deep);color:#fff;padding:56px 0;text-align:start;}
+  .cta-band .wrap{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;}
+  .cta-band h2{font-family:var(--serif);font-size:28px;margin:0 0 6px;font-weight:600;}
+  .cta-band p{margin:0;color:#F4E7CC;font-size:14.5px;}
+  .cta-band .btn{background:var(--ink);border-color:var(--ink);}
+  .cta-band .btn:hover{background:#0d1730;}
+
+  footer.site{background:var(--ink);color:#9AA2B8;padding:52px 0 28px;}
+  .foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:34px;margin-bottom:38px;}
+  @media (max-width:760px){.foot-grid{grid-template-columns:1fr 1fr;}}
+  .foot-grid h4{color:#EFEBDD;font-size:13px;margin:0 0 14px;font-weight:600;}
+  .foot-grid ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px;font-size:13.5px;}
+  .foot-grid a{text-decoration:none;color:#9AA2B8;}
+  .foot-grid a:hover{color:#EFEBDD;}
+  .pay-badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;}
+  .pay-badge{border:1px solid #3A4666;padding:6px 10px;border-radius:4px;font-size:11.5px;color:#C7CBDA;}
+  .foot-bottom{border-top:1px solid #2B3A5A;padding-top:22px;font-size:12.5px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+
+  /* ---------- Breadcrumb ---------- */
+  .crumb{font-size:13px;color:var(--slate);padding:22px 0 0;}
+  .crumb button{background:none;border:none;color:var(--slate);cursor:pointer;font-size:13px;padding:0;font-family:inherit;}
+  .crumb button:hover{color:var(--ink);text-decoration:underline;}
+
+  /* ---------- Course detail ---------- */
+  .detail-grid{display:grid;grid-template-columns:1fr 340px;gap:48px;padding:26px 0 70px;align-items:start;}
+  @media (max-width:900px){.detail-grid{grid-template-columns:1fr;}}
+  .d-cat{font-size:12.5px;color:var(--brass-deep);font-weight:600;margin-bottom:10px;}
+  .d-title{font-family:var(--serif);font-size:34px;font-weight:600;line-height:1.15;margin:0 0 14px;}
+  .d-sub{color:var(--slate);font-size:14.5px;margin-bottom:22px;display:flex;gap:16px;flex-wrap:wrap;}
+  .d-video{aspect-ratio:16/9;background:linear-gradient(135deg,#1E2C4A,#33456E);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;margin-bottom:34px;position:relative;}
+  .d-video .play-ring{width:64px;height:64px;border-width:2px;}
+  .d-video .preview-lbl{position:absolute;bottom:16px;inset-inline-start:16px;color:#EFEBDD;font-size:12.5px;background:rgba(0,0,0,.4);padding:5px 10px;border-radius:20px;}
+  .d-block{margin-bottom:38px;}
+  .d-block h3{font-family:var(--serif);font-size:20px;font-weight:600;margin:0 0 14px;}
+  .d-block p{color:var(--ink-soft);font-size:14.5px;line-height:1.7;}
+  .outcomes{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;}
+  @media (max-width:520px){.outcomes{grid-template-columns:1fr;}}
+  .outcomes li{font-size:14px;color:var(--ink-soft);padding-inline-start:22px;position:relative;}
+  .outcomes li::before{content:"";position:absolute;inset-inline-start:0;top:7px;width:9px;height:9px;border:1.5px solid var(--brass-deep);border-radius:50%;}
+
+  .curriculum{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--paper-raised);}
+  .cur-module{border-bottom:1px solid var(--line);}
+  .cur-module:last-child{border-bottom:none;}
+  .cur-mhead{display:flex;justify-content:space-between;padding:15px 18px;background:#EEEBE1;font-size:14px;font-weight:600;gap:10px;}
+  .cur-mhead span.mlabel{display:flex;gap:10px;align-items:baseline;}
+  .cur-mhead .mnum{font-family:var(--serif);color:var(--brass-deep);}
+  .cur-mhead .mmeta{font-weight:400;color:var(--slate);font-size:12.5px;white-space:nowrap;}
+  .cur-lesson{display:flex;justify-content:space-between;align-items:center;padding:12px 18px 12px 34px;font-size:13.5px;border-top:1px dashed var(--line);color:var(--ink-soft);}
+  html[dir="rtl"] .cur-lesson{padding:12px 34px 12px 18px;}
+  .cur-lesson .l-left{display:flex;gap:10px;align-items:center;}
+  .lock{width:13px;height:13px;flex:none;color:var(--slate);}
+
+  .instructor-row{display:flex;gap:16px;align-items:flex-start;}
+  .instructor-row .avatar{width:54px;height:54px;font-size:20px;}
+  .instructor-row b{font-size:15.5px;}
+  .instructor-row p{margin:4px 0 0;font-size:13.5px;color:var(--slate);}
+
+  .review{border-top:1px solid var(--line);padding:18px 0;}
+  .review:first-child{border-top:none;}
+  .review-top{display:flex;justify-content:space-between;font-size:13px;color:var(--slate);margin-bottom:6px;}
+  .review p{font-size:14px;margin:0;color:var(--ink-soft);}
+
+  .buy-card{
+    border:1px solid var(--line);background:var(--paper-raised);border-radius:var(--radius);
+    padding:24px;position:sticky;top:92px;
+  }
+  .buy-price{font-family:var(--serif);font-size:32px;font-weight:600;margin-bottom:4px;}
+  .buy-sub{font-size:12.5px;color:var(--slate);margin-bottom:20px;}
+  .buy-list{list-style:none;margin:20px 0;padding:16px 0 0;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:10px;}
+  .buy-list li{font-size:13.5px;color:var(--ink-soft);padding-inline-start:20px;position:relative;}
+  .buy-list li::before{content:"";position:absolute;inset-inline-start:0;top:6px;width:8px;height:8px;background:var(--brass-deep);border-radius:50%;}
+  .buy-pay-lbl{font-size:11.5px;color:var(--slate);margin:18px 0 8px;}
+
+  /* ---------- Checkout ---------- */
+  .checkout-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:44px;padding:36px 0 80px;align-items:start;}
+  @media (max-width:860px){.checkout-grid{grid-template-columns:1fr;}}
+  .pay-methods{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0 26px;}
+  @media (max-width:520px){.pay-methods{grid-template-columns:repeat(2,1fr);}}
+  .pay-opt{
+    border:1.5px solid var(--line);border-radius:var(--radius);padding:14px 10px;text-align:center;
+    cursor:pointer;background:var(--paper-raised);font-size:12.5px;font-weight:600;color:var(--ink-soft);
+  }
+  .pay-opt.active{border-color:var(--brass-deep);color:var(--ink);background:#FBF3E2;}
+  .pay-opt .p-icon{font-size:20px;margin-bottom:6px;}
+  .field{margin-bottom:16px;}
+  .field label{display:block;font-size:12.5px;color:var(--slate);margin-bottom:6px;font-weight:600;}
+  .field input{
+    width:100%;padding:12px 13px;border:1px solid var(--line);border-radius:var(--radius);
+    font-family:inherit;font-size:14px;background:var(--paper-raised);color:var(--ink);
+  }
+  .field input:focus{border-color:var(--brass-deep);}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .order-card{border:1px solid var(--line);background:var(--paper-raised);border-radius:var(--radius);padding:22px;}
+  .order-card h4{font-family:var(--serif);font-size:16px;margin:0 0 16px;}
+  .order-line{display:flex;justify-content:space-between;font-size:13.5px;padding:8px 0;color:var(--ink-soft);}
+  .order-total{display:flex;justify-content:space-between;font-size:16px;font-weight:600;padding-top:12px;margin-top:6px;border-top:1px solid var(--line);}
+  .lock-note{font-size:12px;color:var(--slate);text-align:center;margin-top:12px;}
+
+  /* ---------- Dashboard ---------- */
+  .dash-head{padding:44px 0 10px;}
+  .enrolled-list{display:flex;flex-direction:column;gap:16px;margin:30px 0 70px;}
+  .enrolled-row{
+    display:flex;gap:20px;align-items:center;border:1px solid var(--line);background:var(--paper-raised);
+    border-radius:var(--radius);padding:16px;cursor:pointer;
+  }
+  .enrolled-row:hover{border-color:var(--brass-deep);}
+  .er-thumb{width:96px;aspect-ratio:16/9;background:linear-gradient(135deg,#1E2C4A,#33456E);border-radius:var(--radius);flex:none;}
+  .er-body{flex:1;min-width:0;}
+  .er-title{font-family:var(--serif);font-weight:600;font-size:16.5px;margin-bottom:6px;}
+  .progress-bar{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin-bottom:6px;}
+  .progress-bar span{display:block;height:100%;background:var(--green);}
+  .er-meta{font-size:12.5px;color:var(--slate);}
+  .empty-state{text-align:center;padding:70px 20px;border:1px dashed var(--line);border-radius:var(--radius);margin:30px 0 70px;}
+  .empty-state h3{font-family:var(--serif);font-size:20px;margin-bottom:8px;}
+  .empty-state p{color:var(--slate);font-size:14.5px;margin-bottom:22px;}
+
+  /* ---------- Player ---------- */
+  .player-grid{display:grid;grid-template-columns:1fr 320px;gap:0;padding-top:0;}
+  @media (max-width:860px){.player-grid{grid-template-columns:1fr;}}
+  .player-main{padding:32px 40px 60px;}
+  @media (max-width:640px){.player-main{padding:24px 18px 50px;}}
+  .p-video{aspect-ratio:16/9;background:linear-gradient(135deg,#101A30,#26355A);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;position:relative;}
+  .p-video .play-ring{width:70px;height:70px;border-width:2px;cursor:pointer;}
+  .p-progress-top{height:4px;background:rgba(239,235,221,.25);position:absolute;left:0;right:0;bottom:0;}
+  .p-progress-top span{display:block;height:100%;background:var(--brass);}
+  .p-title-row{display:flex;justify-content:space-between;align-items:flex-start;margin:24px 0 8px;gap:20px;}
+  .p-title{font-family:var(--serif);font-size:22px;font-weight:600;}
+  .p-desc{color:var(--slate);font-size:14px;max-width:60ch;margin-bottom:26px;}
+  .p-nav-btns{display:flex;gap:10px;}
+  .sidebar-lessons{background:var(--paper-raised);border-inline-start:1px solid var(--line);padding:24px 0;max-height:calc(100vh - 68px);overflow:auto;position:sticky;top:68px;}
+  .sl-head{padding:0 22px 16px;border-bottom:1px solid var(--line);margin-bottom:8px;}
+  .sl-head b{font-family:var(--serif);font-size:15px;}
+  .sl-head .progress-bar{margin-top:10px;}
+  .sl-module-title{font-size:11.5px;font-weight:700;color:var(--slate);text-transform:uppercase;letter-spacing:.04em;padding:16px 22px 6px;}
+  html[dir="rtl"] .sl-module-title{text-transform:none;letter-spacing:0;}
+  .sl-lesson{
+    display:flex;gap:10px;align-items:flex-start;padding:10px 22px;cursor:pointer;font-size:13.5px;color:var(--ink-soft);
+  }
+  .sl-lesson:hover{background:#EEEBE1;}
+  .sl-lesson.current{background:#FBF3E2;color:var(--ink);font-weight:600;}
+  .sl-check{width:15px;height:15px;border-radius:50%;border:1.5px solid var(--line);flex:none;margin-top:2px;}
+  .sl-check.done{background:var(--green);border-color:var(--green);}
+  .sl-lesson .l-dur{margin-inline-start:auto;font-size:11.5px;color:var(--slate);}
+
+  /* ---------- Catalog page ---------- */
+  .catalog-head{padding:44px 0 6px;}
+  .catalog-controls{display:flex;justify-content:space-between;gap:18px;align-items:center;flex-wrap:wrap;margin-top:20px;}
+  .search-box{
+    display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--paper-raised);
+    padding:10px 14px;border-radius:24px;flex:1;max-width:340px;min-width:220px;
+  }
+  .search-box input{border:none;outline:none;background:none;font-family:inherit;font-size:14px;width:100%;color:var(--ink);}
+  select.sort{border:1px solid var(--line);background:var(--paper-raised);padding:10px 14px;border-radius:var(--radius);font-family:inherit;font-size:13.5px;color:var(--ink-soft);}
+  .result-count{font-size:13px;color:var(--slate);margin:22px 0 -6px;}
+
+  /* ---------- Modal (auth) ---------- */
+  .modal-backdrop{position:fixed;inset:0;background:rgba(22,35,61,.55);display:none;align-items:center;justify-content:center;z-index:100;padding:20px;}
+  .modal-backdrop.open{display:flex;}
+  .modal{background:var(--paper-raised);border-radius:var(--radius);padding:32px;width:380px;max-width:100%;max-height:90vh;overflow:auto;}
+  .modal h3{font-family:var(--serif);font-size:21px;margin:0 0 6px;}
+  .modal p.sub{font-size:13.5px;color:var(--slate);margin:0 0 22px;}
+  .modal-close{float:inline-end;background:none;border:none;font-size:20px;cursor:pointer;color:var(--slate);}
+
+  /* ---------- Nafath ---------- */
+  .nafath-brand{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-weight:600;font-size:19px;margin-bottom:6px;}
+  html[dir="rtl"] .nafath-brand{font-family:var(--serif-ar);}
+  .nafath-mark{width:30px;height:30px;border-radius:8px;background:#0E7C5A;color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--serif-ar);font-size:16px;flex:none;}
+  .nafath-disclaimer{font-size:11.5px;color:var(--slate);text-align:center;margin:12px 0 0;}
+  .nafath-spinner{
+    width:46px;height:46px;border-radius:50%;border:3px solid var(--line);border-top-color:#0E7C5A;
+    margin:6px auto 18px;animation:spin 1s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .nafath-code{
+    font-family:var(--serif);font-size:30px;font-weight:600;letter-spacing:.1em;
+    background:#EEEBE1;border-radius:var(--radius);padding:14px;margin-top:16px;
+  }
+  .field-label-sub{font-size:12.5px;color:var(--slate);margin-bottom:8px;font-weight:600;}
+  .role-chips{display:flex;gap:8px;margin-bottom:18px;}
+  .role-chip{
+    flex:1;border:1.5px solid var(--line);background:var(--paper-raised);padding:10px 8px;border-radius:var(--radius);
+    font-size:12.5px;font-weight:600;color:var(--ink-soft);cursor:pointer;font-family:inherit;text-align:center;
+  }
+  .role-chip.active{border-color:var(--brass-deep);background:#FBF3E2;color:var(--ink);}
+  .role-badge{font-size:10.5px;color:var(--slate);border:1px solid var(--line);border-radius:12px;padding:3px 9px;margin-inline-start:6px;}
+
+  /* ---------- Quiz ---------- */
+  .quiz-q{margin-bottom:18px;}
+  .quiz-q p{font-size:14.5px;font-weight:600;margin:0 0 12px;}
+  .quiz-opt{
+    display:block;width:100%;text-align:start;border:1.5px solid var(--line);border-radius:var(--radius);
+    padding:12px 14px;margin-bottom:9px;background:var(--paper-raised);font-size:13.5px;cursor:pointer;color:var(--ink-soft);font-family:inherit;
+  }
+  .quiz-opt:hover{border-color:var(--brass-deep);}
+  .quiz-opt.correct{border-color:var(--green);background:#EAF3EE;color:var(--ink);}
+  .quiz-opt.wrong{border-color:var(--red);background:#F6EAEA;color:var(--ink);}
+  .quiz-feedback{font-size:13.5px;margin-top:8px;}
+  .quiz-feedback.ok{color:var(--green);}
+  .quiz-feedback.bad{color:var(--red);}
+
+  /* ---------- Certificate ---------- */
+  .certificate{border:2px solid var(--brass-deep);padding:30px;text-align:center;background:#FFFDF8;}
+  .certificate .cert-eyebrow{font-size:11.5px;letter-spacing:.06em;color:var(--brass-deep);font-weight:600;margin-bottom:14px;}
+  .certificate .cert-logo{max-width:220px;height:auto;margin:0 auto 18px;display:block;}
+  .certificate h2{font-family:var(--serif);font-size:15px;color:var(--slate);font-weight:600;margin:0 0 4px;}
+  html[dir="rtl"] .certificate h2{font-family:var(--serif-ar);}
+  .certificate .cert-name{font-family:var(--serif);font-size:26px;font-weight:600;margin:6px 0 18px;}
+  html[dir="rtl"] .certificate .cert-name{font-family:var(--serif-ar);}
+  .certificate .cert-course{font-size:14.5px;color:var(--ink-soft);margin-bottom:20px;}
+  .certificate .cert-meta{display:flex;justify-content:center;gap:28px;font-size:12px;color:var(--slate);margin-bottom:18px;flex-wrap:wrap;}
+  .certificate .cert-qr{width:96px;height:96px;margin:0 auto 10px;}
+  .certificate .cert-ref{font-size:11px;color:var(--slate);letter-spacing:.04em;}
+
+  /* ---------- Compliance ---------- */
+  .compliance-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
+  .compliance-badge{border:1px solid #3A4666;padding:6px 11px;border-radius:20px;font-size:11px;color:#C7CBDA;}
+  .compliance-note{font-size:12px;color:#7C859E;max-width:76ch;margin:0 0 22px;line-height:1.6;}
+  .link-btn{background:none;border:none;color:#C7CBDA;font-size:12.5px;text-decoration:underline;cursor:pointer;padding:0;font-family:inherit;}
+  .link-btn:hover{color:#fff;}
+
+  /* ---------- Watch progress (player) ---------- */
+  .watch-wrap{margin:14px 0 18px;}
+  .watch-label{display:flex;justify-content:space-between;font-size:11.5px;color:var(--slate);margin-bottom:5px;}
+  .watch-bar{height:5px;background:var(--line);border-radius:6px;overflow:hidden;}
+  .watch-bar span{display:block;height:100%;background:var(--brass);transition:width .3s linear;}
+  .gate-note{font-size:12px;color:var(--slate);margin-top:8px;}
+
+  /* ---------- Attendance / certificate CTA (dashboard) ---------- */
+  .attendance-box{border:1px solid var(--line);background:var(--paper-raised);border-radius:var(--radius);padding:14px 16px;margin-top:10px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;}
+  .attendance-box .a-meta{font-size:12.5px;color:var(--slate);}
+
+  /* ---------- Trainer / Admin dashboards ---------- */
+  .stat-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:26px 0 40px;}
+  @media (max-width:860px){.stat-cards{grid-template-columns:repeat(2,1fr);}}
+  .stat-card{border:1px solid var(--line);background:var(--paper-raised);border-radius:var(--radius);padding:18px;}
+  .stat-card b{display:block;font-family:var(--serif);font-size:26px;font-weight:600;margin-bottom:4px;}
+  html[dir="rtl"] .stat-card b{font-family:var(--serif-ar);}
+  .stat-card span{font-size:12.5px;color:var(--slate);}
+  .data-table{width:100%;border-collapse:collapse;background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;}
+  .data-table th{text-align:start;font-size:11.5px;color:var(--slate);font-weight:600;padding:12px 16px;background:#EEEBE1;border-bottom:1px solid var(--line);}
+  .data-table td{padding:13px 16px;font-size:13.5px;color:var(--ink-soft);border-bottom:1px solid var(--line);}
+  .data-table tr:last-child td{border-bottom:none;}
+  .data-table td.strong{color:var(--ink);font-weight:600;}
+  .role-tabs{display:flex;gap:10px;margin-bottom:8px;}
+  .compliance-list{display:flex;flex-direction:column;gap:10px;margin-top:14px;}
+  .compliance-item{display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--ink-soft);}
+  .compliance-dot{width:9px;height:9px;border-radius:50%;background:var(--green);flex:none;}
+  .demo-note{font-size:12.5px;color:var(--slate);background:#EEEBE1;border-radius:var(--radius);padding:12px 16px;margin:18px 0 30px;}
+  .skip-link{
+    position:absolute;left:12px;top:-60px;background:var(--ink);color:#fff;padding:10px 16px;border-radius:4px;
+    z-index:200;transition:top .15s ease;font-size:13.5px;
+  }
+  .skip-link:focus{top:12px;}
+
+  @media print{
+    body *{visibility:hidden;}
+    .certificate, .certificate *{visibility:visible;}
+    .certificate{position:absolute;top:0;left:0;right:0;margin:0 auto;border:2px solid #8A6A34;}
+    .no-print{display:none !important;}
+  }
+
+  .toast{
+    position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(120%);
+    background:var(--ink);color:#EFEBDD;padding:14px 22px;border-radius:var(--radius);font-size:14px;
+    transition:transform .25s ease;z-index:200;display:flex;align-items:center;gap:10px;
+  }
+  .toast.show{transform:translateX(-50%) translateY(0);}
+
+  .view{display:none;}
+  .view.active{display:block;}
+
+  /* ---- Additions for real-API wiring ---- */
+  .api-bar{background:#0F192C;color:#9AA2B8;font-size:12px;padding:7px 0;}
+  .api-bar .wrap{display:flex;align-items:center;gap:8px;}
+  .api-bar input{flex:1;max-width:320px;padding:5px 9px;border-radius:4px;border:1px solid #3A4666;background:#16233D;color:#EFEBDD;font-size:11.5px;}
+  .video-real{width:100%;border-radius:var(--radius);background:#000;display:block;max-height:520px;}
+  .no-video-box{aspect-ratio:16/9;background:linear-gradient(135deg,#1E2C4A,#33456E);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;color:#C7CBDA;font-size:13.5px;text-align:center;padding:20px;}
+  .live-card{border:1px solid var(--line);background:var(--paper-raised);border-radius:var(--radius);padding:14px 16px;margin-top:10px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;}
+  .live-card .lc-info b{display:block;font-family:var(--serif);font-size:14.5px;font-weight:600;}
+  html[dir="rtl"] .live-card .lc-info b{font-family:var(--serif-ar);}
+  .live-card .lc-info span{font-size:12px;color:var(--slate);}
+  .auth-tabs{display:flex;gap:8px;margin-bottom:18px;}
+  .auth-tab{flex:1;border:1.5px solid var(--line);background:var(--paper-raised);padding:9px;border-radius:var(--radius);font-size:13px;font-weight:600;color:var(--ink-soft);cursor:pointer;font-family:inherit;text-align:center;}
+  .auth-tab.active{border-color:var(--brass-deep);background:#FBF3E2;color:var(--ink);}
+  .cur-lesson.has-video{cursor:pointer;}
+  .cur-lesson.has-video:hover{background:#F6F4EC;}
+</style>
+</head>
+<body>
+
+<div class="api-bar">
+  <div class="wrap">
+    <span data-i18n="apiBaseLabel">API base URL</span>
+    <input type="text" id="apiBaseInput" value="http://localhost:4000">
+  </div>
+</div>
+
+<header class="site">
+  <div class="wrap nav-row">
+    <button class="brand" onclick="go('home')">
+      <img class="brand-mark" src="logo-icon.jpeg" alt="Mada Alhyat"> <span id="brandText" data-i18n="brand">Mada Alhyat</span>
+    </button>
+    <nav class="links">
+      <div class="mega-wrap" id="megaWrap">
+        <button class="navlink" data-view="catalog" onclick="toggleMegaMenu(event)" data-i18n="nav.courses">Courses</button>
+        <div class="mega-panel" id="megaPanel"></div>
+      </div>
+      <button class="navlink" data-view="consulting" onclick="go('consulting')" data-i18n="nav.consulting">Consulting</button>
+      <button class="navlink" data-view="corporate" onclick="go('corporate')" data-i18n="nav.corporate">Corporate</button>
+      <button class="navlink" data-view="plans" onclick="go('plans')" data-i18n="nav.plans">Subscriptions</button>
+      <button class="navlink" data-view="blog" onclick="go('blog')" data-i18n="nav.blog">Blog</button>
+      <button class="navlink" data-view="dashboard" onclick="go('dashboard')" data-i18n="nav.learning">My Learning</button>
+    </nav>
+    <div class="nav-actions">
+      <button class="lang-btn" onclick="toggleLang()" id="langBtn">العربية</button>
+      <button class="btn ghost small" id="loginBtn" onclick="handleLoginBtnClick()" data-i18n="nav.login">Log in</button>
+      <button class="btn ghost small" id="logoutBtn" onclick="doLogout()" style="display:none;" data-i18n="logout">Log out</button>
+      <button class="btn small" onclick="go('catalog')" data-i18n="nav.browse">Browse courses</button>
+    </div>
+  </div>
+</header>
+
+<!-- ================= HOME ================= -->
+<div class="view active" id="view-home">
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <div class="hero-eyebrow" data-i18n="hero.eyebrow">Professional training, delivered online</div>
+        <h1 class="display" id="heroTitle" data-i18n="hero.title">Build career-grade skills, at your own pace.</h1>
+        <p class="lede" id="heroLede" data-i18n="hero.lede">Structured, instructor-led training in business, safety and digital skills — recorded lessons you can revisit, live classes, and a certificate when you finish.</p>
+        <div class="hero-ctas">
+          <button class="btn brass" onclick="go('catalog')" data-i18n="hero.cta1">Browse courses</button>
+          <button class="btn ghost" onclick="go('consulting')" data-i18n="hero.cta2">Explore consulting</button>
+        </div>
+        <div class="stat-row" id="heroStatRow"></div>
+      </div>
+      <div class="ledger-card">
+        <div class="lc-top">
+          <div>
+            <div class="lc-tag" data-i18n="hero.card.tag">Real accounts, real progress</div>
+            <div class="lc-title" data-i18n="hero.card.title">Connected to a live backend</div>
+            <div class="lc-sub" data-i18n="hero.card.sub">Courses, enrollment, video lessons and certificates are all real.</div>
+          </div>
+        </div>
+        <div class="lc-rows">
+          <div class="lc-row"><span class="lc-check done"></span><span class="name" data-i18n="hero.card.r1">Real accounts (national ID + password)</span></div>
+          <div class="lc-row"><span class="lc-check done"></span><span class="name" data-i18n="hero.card.r2">Real video lessons with progress tracking</span></div>
+          <div class="lc-row"><span class="lc-check done"></span><span class="name" data-i18n="hero.card.r3">Live classes via video conferencing</span></div>
+          <div class="lc-row"><span class="lc-check done"></span><span class="name" data-i18n="hero.card.r4">Verifiable certificates</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="tight">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <h2 class="h-serif" data-i18n="browse.title">Browse by category</h2>
+          <p data-i18n="browse.sub">Real course counts, pulled live from the catalog.</p>
+        </div>
+      </div>
+      <div class="chips" id="homeCategoryChips"></div>
+    </div>
+  </section>
+
+  <section class="tight">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <h2 class="h-serif" data-i18n="featured.title">Available courses</h2>
+          <p data-i18n="featured.sub">Live from the platform's course catalog.</p>
+        </div>
+        <button class="btn ghost small" onclick="go('catalog')" data-i18n="featured.viewall">View all courses</button>
+      </div>
+      <div class="course-grid" id="featuredGrid"></div>
+    </div>
+  </section>
+
+  <section class="tight">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <h2 class="h-serif" data-i18n="plans.title">Subscription plans</h2>
+          <p data-i18n="plans.sub">Catalog-wide access instead of paying per course.</p>
+        </div>
+        <button class="btn ghost small" onclick="go('plans')" data-i18n="plans.viewall">View all plans</button>
+      </div>
+      <div class="plan-grid" id="homePlansGrid"></div>
+    </div>
+  </section>
+
+  <section class="tight">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <h2 class="h-serif" data-i18n="trainers.title">Trainers &amp; consultants</h2>
+          <p data-i18n="trainers.sub">The people behind the catalog.</p>
+        </div>
+      </div>
+      <div class="trainer-grid" id="trainersGrid"></div>
+    </div>
+  </section>
+</div>
+
+<!-- ================= CONSULTING ================= -->
+<div class="view" id="view-consulting">
+  <div class="wrap catalog-head">
+    <h2 class="h-serif" data-i18n="consulting.pageTitle">Consulting services</h2>
+    <p style="color:var(--slate);font-size:14.5px;" data-i18n="consulting.pageSub">A separate service line from courses — submit an inquiry and a consultant will follow up.</p>
+    <div class="chips" id="consultingChips"></div>
+  </div>
+  <div class="wrap">
+    <div class="course-grid" id="consultingGrid" style="margin-bottom:80px;"></div>
+  </div>
+</div>
+
+<!-- ================= CONSULTING INQUIRY ================= -->
+<div class="view" id="view-consulting-inquiry">
+  <div class="wrap crumb"><button onclick="go('consulting')" data-i18n="consulting.pageTitle">Consulting services</button></div>
+  <div class="wrap" style="max-width:520px;padding-bottom:80px;">
+    <h2 class="h-serif" id="inquiryServiceTitle" style="margin-bottom:6px;"></h2>
+    <p style="color:var(--slate);font-size:14px;margin-bottom:24px;" data-i18n="consulting.inquirySub">Tell us about your need — no account required.</p>
+    <div class="field"><label data-i18n="apply.name">Full name</label><input type="text" id="inqName"></div>
+    <div class="field"><label data-i18n="consulting.email">Email</label><input type="email" id="inqEmail"></div>
+    <div class="field"><label data-i18n="consulting.phone">Phone (optional)</label><input type="text" id="inqPhone"></div>
+    <div class="field"><label data-i18n="consulting.company">Company (optional)</label><input type="text" id="inqCompany"></div>
+    <div class="field"><label data-i18n="consulting.message">Your message</label><textarea id="inqMessage" rows="4" style="width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:var(--radius);font-family:inherit;font-size:14px;"></textarea></div>
+    <div class="form-error" id="inqError" style="display:none;color:var(--red);font-size:13px;margin:-6px 0 14px;"></div>
+    <button class="btn brass block" onclick="submitInquiry()" data-i18n="consulting.submit">Send inquiry</button>
+  </div>
+</div>
+
+<!-- ================= SUBSCRIPTION PLANS ================= -->
+<div class="view" id="view-plans">
+  <div class="wrap catalog-head">
+    <h2 class="h-serif" data-i18n="plans.title">Subscription plans</h2>
+    <p style="color:var(--slate);font-size:14.5px;" data-i18n="plans.sub">Catalog-wide access instead of paying per course.</p>
+  </div>
+  <div class="wrap">
+    <div class="plan-grid" id="plansGrid" style="margin-bottom:80px;"></div>
+  </div>
+</div>
+
+<!-- ================= CORPORATE PACKAGES ================= -->
+<div class="view" id="view-corporate">
+  <div class="wrap catalog-head">
+    <h2 class="h-serif" data-i18n="corp.title">Corporate packages</h2>
+    <p style="color:var(--slate);font-size:14.5px;" data-i18n="corp.sub">Seat-based training packages for teams and organizations.</p>
+  </div>
+  <div class="wrap">
+    <div class="plan-grid" id="corpGrid" style="margin-bottom:80px;"></div>
+  </div>
+</div>
+
+<!-- ================= CORPORATE INQUIRY ================= -->
+<div class="view" id="view-corporate-inquiry">
+  <div class="wrap crumb"><button onclick="go('corporate')" data-i18n="corp.title">Corporate packages</button></div>
+  <div class="wrap" style="max-width:520px;padding-bottom:80px;">
+    <h2 class="h-serif" id="corpInquiryTitle" style="margin-bottom:6px;"></h2>
+    <p style="color:var(--slate);font-size:14px;margin-bottom:24px;" data-i18n="corp.inquirySub">Tell us about your team — no account required.</p>
+    <div class="field"><label data-i18n="corp.companyName">Company name</label><input type="text" id="corpCompanyName"></div>
+    <div class="field"><label data-i18n="apply.name">Contact name</label><input type="text" id="corpContactName"></div>
+    <div class="field"><label data-i18n="consulting.email">Email</label><input type="email" id="corpEmail"></div>
+    <div class="field"><label data-i18n="consulting.phone">Phone (optional)</label><input type="text" id="corpPhone"></div>
+    <div class="field"><label data-i18n="corp.seats">Number of seats (optional)</label><input type="number" id="corpSeats" min="1"></div>
+    <div class="field"><label data-i18n="consulting.message">Your message</label><textarea id="corpMessage" rows="4" style="width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:var(--radius);font-family:inherit;font-size:14px;"></textarea></div>
+    <div class="form-error" id="corpError" style="display:none;color:var(--red);font-size:13px;margin:-6px 0 14px;"></div>
+    <button class="btn brass block" onclick="submitCorpInquiry()" data-i18n="consulting.submit">Send inquiry</button>
+  </div>
+</div>
+
+<!-- ================= BLOG ================= -->
+<div class="view" id="view-blog">
+  <div class="wrap catalog-head">
+    <h2 class="h-serif" data-i18n="blog.title">Blog</h2>
+    <p style="color:var(--slate);font-size:14.5px;" data-i18n="blog.sub">Articles and updates from the team.</p>
+  </div>
+  <div class="wrap">
+    <div class="course-grid" id="blogGrid" style="margin-bottom:80px;"></div>
+  </div>
+</div>
+
+<!-- ================= BLOG POST ================= -->
+<div class="view" id="view-blog-post">
+  <div class="wrap crumb"><button onclick="go('blog')" data-i18n="blog.title">Blog</button></div>
+  <div class="wrap" style="max-width:680px;padding-bottom:80px;">
+    <div class="d-cat" id="postCategory"></div>
+    <h1 class="d-title" id="postTitle" style="font-size:30px;"></h1>
+    <div class="d-sub" id="postMeta"></div>
+    <div id="postBody" style="font-size:15px;line-height:1.9;color:var(--ink-soft);white-space:pre-wrap;"></div>
+  </div>
+</div>
+
+<!-- ================= CATALOG ================= -->
+<div class="view" id="view-catalog">
+  <div class="wrap catalog-head">
+    <h2 class="h-serif" data-i18n="catalog.title">All courses</h2>
+    <p style="color:var(--slate);font-size:14.5px;" data-i18n="catalog.sub">Filter by category or search for a specific topic.</p>
+    <div class="catalog-controls">
+      <div class="chips" id="catalogChips"></div>
+      <div class="search-box">
+        <span>&#128269;</span>
+        <input type="text" id="searchInput" data-i18n-ph="catalog.search" placeholder="Search courses" oninput="renderCatalog()">
+      </div>
+    </div>
+    <div class="result-count" id="resultCount"></div>
+  </div>
+  <div class="wrap">
+    <div class="course-grid" id="catalogGrid" style="margin-bottom:80px;"></div>
+  </div>
+</div>
+
+<!-- ================= COURSE DETAIL ================= -->
+<div class="view" id="view-detail">
+  <div class="wrap crumb">
+    <button onclick="go('home')" data-i18n="crumb.home">Home</button> / <button onclick="go('catalog')" data-i18n="crumb.courses">Courses</button> / <span id="crumbCat"></span>
+  </div>
+  <div class="wrap detail-grid">
+    <div>
+      <div class="d-cat" id="dCat"></div>
+      <h1 class="d-title" id="dTitle"></h1>
+      <div class="d-sub" id="dSub"></div>
+
+      <div class="d-block" id="dPreviewBlock" style="display:none;">
+        <h3 data-i18n="detail.preview">Free preview</h3>
+        <video id="dPreviewVideo" controls style="width:100%;border-radius:var(--radius);background:#000;max-height:420px;"></video>
+      </div>
+
+      <div class="d-block">
+        <h3 data-i18n="detail.overview">Overview</h3>
+        <p id="dOverview"></p>
+      </div>
+
+      <div class="d-block">
+        <h3 data-i18n="detail.curriculum">Curriculum</h3>
+        <div class="curriculum" id="dCurriculum"></div>
+      </div>
+
+      <div class="d-block">
+        <h3 data-i18n="detail.instructor">Instructor</h3>
+        <div class="instructor-row">
+          <div class="avatar" id="dInstAvatar"></div>
+          <div><b id="dInstName"></b></div>
+        </div>
+      </div>
+
+      <div class="d-block">
+        <h3 data-i18n="detail.live">Upcoming live sessions</h3>
+        <div id="dLiveList"></div>
+      </div>
+    </div>
+
+    <aside class="buy-card">
+      <div class="buy-price" id="dPrice"></div>
+      <div class="buy-sub" data-i18n="detail.onetime">One-time payment &middot; lifetime access</div>
+      <button class="btn brass block" id="enrollBtn" onclick="startCheckout()" data-i18n="detail.enroll">Enroll now</button>
+      <div class="buy-pay-lbl" data-i18n="detail.accepted">Accepted payment methods</div>
+      <div class="pay-badges">
+        <span class="pay-badge" data-i18n="pay.card">Credit / Debit</span>
+        <span class="pay-badge" data-i18n="pay.mada">mada</span>
+        <span class="pay-badge" data-i18n="pay.applepay">Apple Pay</span>
+        <span class="pay-badge" data-i18n="pay.stcpay">STC Pay</span>
+        <span class="pay-badge" data-i18n="pay.paypal">PayPal</span>
+        <span class="pay-badge" data-i18n="pay.bank">Bank transfer</span>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- ================= CHECKOUT ================= -->
+<div class="view" id="view-checkout">
+  <div class="wrap crumb"><button onclick="go('detail', currentCourseId)" data-i18n="checkout.back">Back to course</button></div>
+  <div class="wrap checkout-grid">
+    <div>
+      <h2 class="h-serif" style="margin-bottom:26px;" data-i18n="checkout.choose">Choose a payment method</h2>
+      <div class="pay-methods" id="payMethods"></div>
+      <div id="payFormArea"></div>
+      <button class="btn brass block" style="margin-top:6px;" id="checkoutSubmitBtn" onclick="completeCheckout()" data-i18n="checkout.complete">Complete enrollment</button>
+      <p class="lock-note" data-i18n="checkout.lock">Real enrollment via the API. Payment confirmation uses the demo stand-in described in the backend README — no real charge is made until a real gateway is connected.</p>
+    </div>
+    <div class="order-card">
+      <h4 data-i18n="checkout.summary">Order summary</h4>
+      <div class="order-line"><span id="ordTitle"></span><span id="ordPrice"></span></div>
+      <div class="order-total"><span data-i18n="checkout.total">Total due</span><span id="ordTotal"></span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= DASHBOARD ================= -->
+<div class="view" id="view-dashboard">
+  <div class="wrap dash-head">
+    <h2 class="h-serif" id="dashGreeting" data-i18n="dash.title">My learning</h2>
+    <p style="color:var(--slate);font-size:14.5px;" data-i18n="dash.sub">Pick up where you left off.</p>
+  </div>
+  <div class="wrap">
+    <div id="enrolledWrap"></div>
+    <h3 class="h-serif" style="font-size:20px;margin:10px 0 16px;" data-i18n="dash.liveTitle">Your upcoming live sessions</h3>
+    <div id="myLiveWrap" style="margin-bottom:70px;"></div>
+  </div>
+</div>
+
+<!-- ================= PLAYER ================= -->
+<div class="view" id="view-player">
+  <div class="player-grid">
+    <div class="player-main">
+      <div class="wrap crumb" style="padding:0 0 20px;"><button onclick="go('dashboard')" data-i18n="dash.title">My learning</button> / <span id="pCourseTitle"></span></div>
+      <video class="video-real" id="videoEl" controls style="display:none;"></video>
+      <div class="no-video-box" id="noVideoBox" data-i18n="player.noVideo">This lesson doesn't have a video uploaded yet.</div>
+      <div class="p-title-row">
+        <div><div class="p-title" id="pLessonTitle"></div></div>
+        <div class="p-nav-btns">
+          <button class="btn ghost small" onclick="prevLesson()" data-i18n="player.prev">Previous</button>
+          <button class="btn small" onclick="nextLesson()" data-i18n="player.next">Next lesson</button>
+        </div>
+      </div>
+      <p class="p-desc" id="pLessonDesc"></p>
+      <div class="watch-wrap">
+        <div class="watch-label"><span data-i18n="player.watched">Watched</span><span id="watchPct">0%</span></div>
+        <div class="watch-bar"><span id="watchBar" style="width:0%"></span></div>
+      </div>
+      <div id="lessonStatusNote" class="gate-note"></div>
+      <button class="btn brass small" id="certBtn" style="margin-top:16px;display:none;" onclick="getCertificate()" data-i18n="dash.getCert">Get certificate</button>
+    </div>
+    <aside class="sidebar-lessons">
+      <div class="sl-head">
+        <b id="pSideTitle"></b>
+        <div class="progress-bar"><span id="pSideProgressBar" style="width:0%"></span></div>
+        <div style="font-size:12px;color:var(--slate);margin-top:4px;" id="pSideProgressText"></div>
+      </div>
+      <div id="lessonList"></div>
+    </aside>
+  </div>
+</div>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <h4 id="footBrand" data-i18n="brand">Mada Alhyat Training Center</h4>
+        <p style="font-size:13.5px;line-height:1.7;max-width:32ch;" id="footDesc" data-i18n="footer.desc">Structured professional training in business, safety and digital skills.</p>
+      </div>
+      <div>
+        <h4 data-i18n="footer.learn">Learn</h4>
+        <ul>
+          <li><a href="#" onclick="go('catalog');return false;" data-i18n="featured.viewall">All courses</a></li>
+          <li><a href="#" onclick="go('dashboard');return false;" data-i18n="dash.title">My learning</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 data-i18n="footer.pay">Payment methods</h4>
+        <div class="pay-badges">
+          <span class="pay-badge" data-i18n="pay.card">Card</span>
+          <span class="pay-badge" data-i18n="pay.mada">mada</span>
+          <span class="pay-badge" data-i18n="pay.applepay">Apple Pay</span>
+          <span class="pay-badge" data-i18n="pay.stcpay">STC Pay</span>
+          <span class="pay-badge" data-i18n="pay.paypal">PayPal</span>
+          <span class="pay-badge" data-i18n="pay.bank">Bank transfer</span>
+        </div>
+      </div>
+    </div>
+    <div class="compliance-row">
+      <span class="compliance-badge" data-i18n="compliance.wcag">WCAG 2.1 AA accessibility</span>
+      <span class="compliance-badge" data-i18n="compliance.attendance">Attendance &amp; hours tracking</span>
+      <span class="compliance-badge" data-i18n="compliance.live">Live video sessions</span>
+    </div>
+    <p class="compliance-note" data-i18n="compliance.note">Real Nafath single sign-on and a real payment gateway are documented next steps — see the backend README.</p>
+    <div class="foot-bottom">
+      <span data-i18n="footer.copy">&copy; 2026 Mada Alhyat Training Center.</span>
+      <span style="display:flex;gap:16px;align-items:center;">
+        <button class="link-btn" onclick="openApply()" data-i18n="footer.joinUs">Join as a trainer or consultant</button>
+        <button class="link-btn" onclick="openPrivacy()" data-i18n="footer.privacy">Privacy policy</button>
+      </span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ AUTH MODAL ============ -->
+<div class="modal-backdrop" id="authModal" role="dialog" aria-modal="true">
+  <div class="modal">
+    <button class="modal-close" onclick="closeAuth()" aria-label="Close">&times;</button>
+    <h3 data-i18n="auth.title">Your account</h3>
+    <div class="auth-tabs">
+      <button type="button" class="auth-tab active" id="authTabLogin" onclick="setAuthTab('login')" data-i18n="auth.tabLogin">Log in</button>
+      <button type="button" class="auth-tab" id="authTabRegister" onclick="setAuthTab('register')" data-i18n="auth.tabRegister">Create account</button>
+    </div>
+    <div class="field"><label data-i18n="auth.nid">National ID / Iqama number</label><input type="text" id="authNid" inputmode="numeric" maxlength="10" placeholder="1000000003"></div>
+    <div class="field" id="authNameField"><label data-i18n="auth.name">Full name</label><input type="text" id="authName" placeholder="e.g. Sara Al-Otaibi"></div>
+    <div class="field" id="authPhoneField"><label data-i18n="auth.phone">Mobile number</label><input type="text" id="authPhone" placeholder="05xxxxxxxx"></div>
+    <div class="field"><label data-i18n="auth.password">Password</label><input type="password" id="authPassword" placeholder="••••••••"></div>
+    <div class="form-error" id="authError" style="display:none;color:var(--red);font-size:13px;margin:-6px 0 14px;"></div>
+    <button class="btn brass block" onclick="submitAuth()" id="authSubmitBtn" data-i18n="auth.loginSubmit">Log in</button>
+    <p class="nafath-disclaimer" data-i18n="auth.note">Real Nafath single sign-on is a documented next step (see backend README) — this uses a national ID and password against the real API.</p>
+  </div>
+</div>
+
+<!-- ============ CERTIFICATE MODAL ============ -->
+<div class="modal-backdrop" id="certModal" role="dialog" aria-modal="true">
+  <div class="modal" style="width:520px;">
+    <button class="modal-close no-print" onclick="closeCert()" aria-label="Close">&times;</button>
+    <div class="certificate" id="certificateBody"></div>
+    <button class="btn brass block no-print" style="margin-top:16px;" onclick="window.print()" data-i18n="cert.print">Print certificate</button>
+  </div>
+</div>
+
+<!-- ============ PRIVACY MODAL ============ -->
+<div class="modal-backdrop" id="privacyModal" role="dialog" aria-modal="true">
+  <div class="modal">
+    <button class="modal-close" onclick="closePrivacy()" aria-label="Close">&times;</button>
+    <h3 data-i18n="privacy.title">Privacy policy</h3>
+    <p class="sub" style="line-height:1.7;" data-i18n="privacy.body">We collect your national ID / iqama number to identify your account and issue certificates in your name. Attendance and lesson-progress data is stored to calculate training hours. We do not sell your data to third parties.</p>
+  </div>
+</div>
+
+<!-- ============ APPLY (TRAINER/CONSULTANT) MODAL ============ -->
+<div class="modal-backdrop" id="applyModal" role="dialog" aria-modal="true">
+  <div class="modal">
+    <button class="modal-close" onclick="closeApply()" aria-label="Close">&times;</button>
+    <h3 data-i18n="apply.title">Join as a trainer or consultant</h3>
+    <p class="sub" data-i18n="apply.sub">Submit your application — an admin will review it and, if approved, create your account.</p>
+    <div class="field">
+      <label data-i18n="apply.role">I'm applying as</label>
+      <select id="applyRole">
+        <option value="TRAINER" data-i18n="role.trainer">Trainer</option>
+        <option value="CONSULTANT" data-i18n="role.consultant">Consultant</option>
+      </select>
+    </div>
+    <div class="field"><label data-i18n="apply.name">Full name</label><input type="text" id="applyName"></div>
+    <div class="field"><label data-i18n="apply.nid">National ID / Iqama number</label><input type="text" id="applyNid" maxlength="10" inputmode="numeric"></div>
+    <div class="field"><label data-i18n="apply.phone">Mobile number</label><input type="text" id="applyPhone" placeholder="05xxxxxxxx"></div>
+    <div class="field"><label data-i18n="apply.email">Email (optional)</label><input type="email" id="applyEmail"></div>
+    <div class="field"><label data-i18n="apply.specialization">Specialization</label><input type="text" id="applySpecialization"></div>
+    <div class="field"><label data-i18n="apply.bio">Brief bio / experience</label><textarea id="applyBio" rows="3" style="width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:var(--radius);font-family:inherit;font-size:14px;"></textarea></div>
+    <div class="form-error" id="applyError" style="display:none;color:var(--red);font-size:13px;margin:-6px 0 14px;"></div>
+    <button class="btn brass block" onclick="submitApply()" data-i18n="apply.submit">Submit application</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script>
+/* ---------------- i18n ---------------- */
+const I18N = {
+  en:{
+    'brand':'Mada Alhyat',
+    'apiBaseLabel':'API base URL',
+    'nav.courses':'Courses','nav.learning':'My Learning','nav.login':'Log in','nav.browse':'Browse courses','logout':'Log out',
+    'hero.eyebrow':'Professional training, delivered online',
+    'hero.title':'Build career-grade skills, at your own pace.',
+    'hero.lede':'Structured, instructor-led training in business, safety and digital skills — recorded lessons you can revisit, live classes, and a certificate when you finish.',
+    'hero.cta1':'Browse courses',
+    'hero.card.tag':'Real accounts, real progress','hero.card.title':'Connected to a live backend',
+    'hero.card.sub':'Courses, enrollment, video lessons and certificates are all real.',
+    'hero.card.r1':'Real accounts (national ID + password)','hero.card.r2':'Real video lessons with progress tracking',
+    'hero.card.r3':'Live classes via video conferencing','hero.card.r4':'Verifiable certificates',
+    'featured.title':'Available courses','featured.sub':"Live from the platform's course catalog.",'featured.viewall':'View all courses',
+    'catalog.title':'All courses','catalog.sub':'Filter by category or search for a specific topic.','catalog.search':'Search courses',
+    'crumb.home':'Home','crumb.courses':'Courses',
+    'detail.overview':'Overview','detail.curriculum':'Curriculum','detail.instructor':'Instructor','detail.live':'Upcoming live sessions','detail.preview':'Free preview',
+    'detail.onetime':'One-time payment · lifetime access','detail.enroll':'Enroll now','detail.continue':'Continue learning',
+    'detail.accepted':'Accepted payment methods',
+    'pay.card':'Credit / Debit','pay.mada':'mada','pay.applepay':'Apple Pay','pay.stcpay':'STC Pay','pay.paypal':'PayPal','pay.bank':'Bank transfer',
+    'checkout.back':'Back to course','checkout.choose':'Choose a payment method','checkout.complete':'Complete enrollment',
+    'checkout.lock':'Real enrollment via the API. Payment confirmation uses the demo stand-in described in the backend README — no real charge is made until a real gateway is connected.',
+    'checkout.summary':'Order summary','checkout.total':'Total due',
+    'checkout.cardnum':'Card number','checkout.expiry':'Expiry','checkout.cvc':'CVC','checkout.nameoncard':'Name on card',
+    'checkout.applepay':"You'll confirm this payment with Face ID or Touch ID when connected to a real gateway.",
+    'checkout.stcnum':'STC Pay mobile number','checkout.paypal':"You'll be redirected to PayPal once connected to a real gateway.",
+    'checkout.bank':'Bank transfer instructions will be emailed once connected to a real gateway.',
+    'dash.title':'My learning','dash.sub':'Pick up where you left off.','dash.liveTitle':'Your upcoming live sessions',
+    'dash.welcome':'Welcome back, {name}','dash.empty.title':'No courses yet','dash.empty.desc':'Enroll in a course to start tracking your progress here.',
+    'dash.continue':'Continue','dash.progress':'{done} of {total} lessons complete · {pct}%','dash.getCert':'Get certificate',
+    'dash.allDone':'All lessons complete','dash.needMore':'Complete every lesson to unlock your certificate.',
+    'dash.noLive':'No upcoming live sessions for your enrolled courses.','dash.join':'Join session',
+    'player.prev':'Previous','player.next':'Next lesson','player.watched':'Watched','player.noVideo':"This lesson doesn't have a video uploaded yet.",
+    'player.completed':'This lesson is complete.','player.notCompleted':'Watch at least 80% to complete this lesson.',
+    'auth.title':'Your account','auth.tabLogin':'Log in','auth.tabRegister':'Create account',
+    'auth.nid':'National ID / Iqama number','auth.name':'Full name','auth.phone':'Mobile number','auth.password':'Password',
+    'auth.loginSubmit':'Log in','auth.registerSubmit':'Create account',
+    'auth.note':'Real Nafath single sign-on is a documented next step (see backend README) — this uses a national ID and password against the real API.',
+    'auth.wrongRole':'This is a trainer/admin account. Please use the control panel (admin.html) instead.',
+    'auth.loginFail':'Login failed — check your national ID and password.',
+    'auth.registerFail':'Could not create account.',
+    'cert.print':'Print certificate','cert.eyebrow':'Certificate of Completion','cert.awarded':'This certifies that',
+    'cert.completed':'has successfully completed the course','cert.date':'Completion date','cert.ref':'Reference',
+    'footer.learn':'Learn','footer.pay':'Payment methods','footer.privacy':'Privacy policy',
+    'footer.joinUs':'Join as a trainer or consultant',
+    'apply.title':'Join as a trainer or consultant','apply.sub':'Submit your application — an admin will review it and, if approved, create your account.',
+    'apply.role':"I'm applying as",'role.trainer':'Trainer','role.consultant':'Consultant',
+    'apply.name':'Full name','apply.nid':'National ID / Iqama number','apply.phone':'Mobile number',
+    'apply.email':'Email (optional)','apply.specialization':'Specialization','apply.bio':'Brief bio / experience',
+    'apply.submit':'Submit application','apply.success':'Application submitted — we will review it soon.',
+    'apply.error':'Please check your details and try again.',
+    'footer.desc':'Structured professional training in business, safety and digital skills.',
+    'footer.copy':'© 2026 Mada Alhyat Training Center.',
+    'privacy.title':'Privacy policy',
+    'privacy.body':'We collect your national ID / iqama number to identify your account and issue certificates in your name. Attendance and lesson-progress data is stored to calculate training hours. We do not sell your data to third parties.',
+    'compliance.wcag':'WCAG 2.1 AA accessibility','compliance.attendance':'Attendance & hours tracking','compliance.live':'Live video sessions',
+    'compliance.note':'Real Nafath single sign-on and a real payment gateway are documented next steps — see the backend README.',
+    'toast.networkErr':'Could not reach the API. Check the API base URL and that the server is running.',
+    'toast.enrolled':'Enrollment complete.','toast.lessonUpdated':'Progress saved.',
+    'browse':'Browse courses','results':'{n} courses found','result':'{n} course found',
+    'currency':'SAR {p}',
+    'nav.consulting':'Consulting','nav.plans':'Subscriptions',
+    'hero.cta2':'Explore consulting',
+    'stat.courses':'courses','stat.consulting':'consulting services','stat.trainers':'trainers & consultants',
+    'browse.title':'Browse by category','browse.sub':'Real course counts, pulled live from the catalog.',
+    'plans.title':'Subscription plans','plans.sub':'Catalog-wide access instead of paying per course.','plans.viewall':'View all plans',
+    'plans.day':'day','plans.days':'days','plans.liveSessions':'{n} live sessions / month','plans.liveUnlimited':'Unlimited live sessions',
+    'plans.prioritySupport':'Priority support','plans.subscribe':'Subscribe','plans.empty':'No subscription plans available yet.',
+    'trainers.title':'Trainers & consultants','trainers.sub':'The people behind the catalog.',
+    'trainers.coursesCount':'{n} courses','trainers.servicesCount':'{n} services',
+    'consulting.pageTitle':'Consulting services','consulting.pageSub':'A separate service line from courses — submit an inquiry and a consultant will follow up.',
+    'consulting.inquire':'Request this service','consulting.inquirySub':'Tell us about your need — no account required.',
+    'consulting.email':'Email','consulting.phone':'Phone (optional)','consulting.company':'Company (optional)',
+    'consulting.message':'Your message','consulting.submit':'Send inquiry','consulting.success':'Inquiry sent — we will be in touch soon.',
+    'consulting.error':'Please check your details and try again.','consulting.empty':'No consulting services available yet.',
+    'nav.corporate':'Corporate','nav.blog':'Blog',
+    'corp.title':'Corporate packages','corp.sub':'Seat-based training packages for teams and organizations.',
+    'corp.inquirySub':'Tell us about your team — no account required.','corp.companyName':'Company name','corp.seats':'Number of seats (optional)',
+    'corp.empty':'No corporate packages available yet.',
+    'blog.title':'Blog','blog.sub':'Articles and updates from the team.','blog.empty':'No posts published yet.',
+  },
+  ar:{
+    'brand':'مدى الحياة',
+    'apiBaseLabel':'رابط الخادم (API)',
+    'nav.courses':'الدورات','nav.learning':'تعلّمي','nav.login':'تسجيل الدخول','nav.browse':'تصفح الدورات','logout':'تسجيل الخروج',
+    'hero.eyebrow':'تدريب مهني عبر الإنترنت',
+    'hero.title':'اكتسب مهارات مهنية حقيقية، بالوتيرة التي تناسبك.',
+    'hero.lede':'تدريب منظم بإشراف مدربين في مجالات الأعمال والسلامة والمهارات الرقمية — دروس مسجّلة يمكنك مراجعتها، وجلسات مباشرة، وشهادة عند إتمام الدورة.',
+    'hero.cta1':'تصفح الدورات',
+    'hero.card.tag':'حسابات حقيقية، تقدّم حقيقي','hero.card.title':'مربوط بخادم حقيقي',
+    'hero.card.sub':'الدورات والتسجيل ودروس الفيديو والشهادات كلها حقيقية.',
+    'hero.card.r1':'حسابات حقيقية (هوية وطنية + كلمة مرور)','hero.card.r2':'دروس فيديو حقيقية مع تتبّع التقدّم',
+    'hero.card.r3':'حصص مباشرة عبر مؤتمرات الفيديو','hero.card.r4':'شهادات قابلة للتحقق',
+    'featured.title':'الدورات المتاحة','featured.sub':'مباشرة من كتالوج الدورات على المنصة.','featured.viewall':'عرض كل الدورات',
+    'catalog.title':'جميع الدورات','catalog.sub':'صفِّ النتائج حسب التصنيف أو ابحث عن موضوع محدد.','catalog.search':'ابحث عن دورة',
+    'crumb.home':'الرئيسية','crumb.courses':'الدورات',
+    'detail.overview':'نظرة عامة','detail.curriculum':'المنهج','detail.instructor':'المدرب','detail.live':'الجلسات المباشرة القادمة','detail.preview':'معاينة مجانية',
+    'detail.onetime':'دفعة واحدة · وصول مدى الحياة','detail.enroll':'سجّل الآن','detail.continue':'متابعة التعلم',
+    'detail.accepted':'طرق الدفع المقبولة',
+    'pay.card':'بطاقة ائتمان / خصم','pay.mada':'مدى','pay.applepay':'Apple Pay','pay.stcpay':'STC Pay','pay.paypal':'PayPal','pay.bank':'تحويل بنكي',
+    'checkout.back':'العودة إلى الدورة','checkout.choose':'اختر طريقة الدفع','checkout.complete':'إتمام التسجيل',
+    'checkout.lock':'تسجيل حقيقي عبر الواجهة البرمجية. تأكيد الدفع يستخدم البديل التجريبي الموضح في دليل الخادم — لا يتم خصم أي مبلغ حقيقي حتى ربط بوابة دفع فعلية.',
+    'checkout.summary':'ملخص الطلب','checkout.total':'الإجمالي المستحق',
+    'checkout.cardnum':'رقم البطاقة','checkout.expiry':'تاريخ الانتهاء','checkout.cvc':'رمز التحقق CVC','checkout.nameoncard':'الاسم على البطاقة',
+    'checkout.applepay':'ستؤكد هذه العملية عبر Face ID أو Touch ID بعد ربط بوابة دفع حقيقية.',
+    'checkout.stcnum':'رقم جوال STC Pay','checkout.paypal':'سيتم تحويلك إلى PayPal بعد ربط بوابة دفع حقيقية.',
+    'checkout.bank':'سيتم إرسال تعليمات التحويل البنكي بعد ربط بوابة دفع حقيقية.',
+    'dash.title':'تعلّمي','dash.sub':'تابع من حيث توقفت.','dash.liveTitle':'جلساتك المباشرة القادمة',
+    'dash.welcome':'مرحبًا بعودتك، {name}','dash.empty.title':'لا توجد دورات بعد','dash.empty.desc':'سجّل في دورة لبدء تتبّع تقدّمك هنا.',
+    'dash.continue':'متابعة','dash.progress':'{done} من {total} دروس مكتملة · {pct}%','dash.getCert':'الحصول على الشهادة',
+    'dash.allDone':'اكتملت جميع الدروس','dash.needMore':'أكمل جميع الدروس لفتح شهادتك.',
+    'dash.noLive':'لا توجد جلسات مباشرة قادمة لدوراتك المسجَّلة.','dash.join':'الانضمام للجلسة',
+    'player.prev':'السابق','player.next':'الدرس التالي','player.watched':'نسبة المشاهدة','player.noVideo':'لا يوجد فيديو مرفوع لهذا الدرس بعد.',
+    'player.completed':'هذا الدرس مكتمل.','player.notCompleted':'شاهد 80% على الأقل لإكمال هذا الدرس.',
+    'auth.title':'حسابك','auth.tabLogin':'تسجيل الدخول','auth.tabRegister':'إنشاء حساب',
+    'auth.nid':'رقم الهوية / الإقامة','auth.name':'الاسم الكامل','auth.phone':'رقم الجوال','auth.password':'كلمة المرور',
+    'auth.loginSubmit':'تسجيل الدخول','auth.registerSubmit':'إنشاء الحساب',
+    'auth.note':'تسجيل الدخول الحقيقي عبر نفاذ خطوة موثّقة قادمة (راجع دليل الخادم) — هذا يستخدم رقم الهوية وكلمة المرور مقابل الواجهة البرمجية الحقيقية.',
+    'auth.wrongRole':'هذا حساب مدرب/مسؤول. الرجاء استخدام لوحة التحكم (admin.html) بدلاً من ذلك.',
+    'auth.loginFail':'فشل تسجيل الدخول — تحقق من رقم الهوية وكلمة المرور.',
+    'auth.registerFail':'تعذّر إنشاء الحساب.',
+    'cert.print':'طباعة الشهادة','cert.eyebrow':'شهادة إتمام','cert.awarded':'تشهد هذه الوثيقة بأن',
+    'cert.completed':'قد أتمّ بنجاح دورة','cert.date':'تاريخ الإتمام','cert.ref':'الرقم المرجعي',
+    'footer.learn':'تعلّم','footer.pay':'طرق الدفع','footer.privacy':'سياسة الخصوصية',
+    'footer.joinUs':'انضم كمدرب أو مستشار',
+    'apply.title':'انضم كمدرب أو مستشار','apply.sub':'أرسل طلبك — سيراجعه المسؤول، وعند الموافقة سيُنشأ حسابك.',
+    'apply.role':'أتقدّم بصفتي','role.trainer':'مدرب','role.consultant':'مستشار',
+    'apply.name':'الاسم الكامل','apply.nid':'رقم الهوية / الإقامة','apply.phone':'رقم الجوال',
+    'apply.email':'البريد الإلكتروني (اختياري)','apply.specialization':'التخصص','apply.bio':'نبذة مختصرة / الخبرة',
+    'apply.submit':'إرسال الطلب','apply.success':'تم إرسال طلبك — سنراجعه قريبًا.',
+    'apply.error':'يرجى مراجعة البيانات والمحاولة مرة أخرى.',
+    'footer.desc':'تدريب مهني منظم في الأعمال والسلامة والمهارات الرقمية.',
+    'footer.copy':'© 2026 مركز مدى الحياة للتدريب.',
+    'privacy.title':'سياسة الخصوصية',
+    'privacy.body':'نجمع رقم الهوية الوطنية / الإقامة للتعرّف على حسابك وإصدار الشهادات باسمك. تُحفظ بيانات الحضور وتقدّم الدروس لحساب ساعات التدريب. لا نبيع بياناتك لأي طرف ثالث.',
+    'compliance.wcag':'إمكانية وصول WCAG 2.1 AA','compliance.attendance':'تتبّع الحضور والساعات','compliance.live':'جلسات فيديو مباشرة',
+    'compliance.note':'تسجيل الدخول الحقيقي عبر نفاذ وبوابة دفع حقيقية خطوتان موثّقتان قادمتان — راجع دليل الخادم.',
+    'toast.networkErr':'تعذّر الوصول إلى الخادم. تحقق من رابط الـ API ومن أن الخادم يعمل.',
+    'toast.enrolled':'تم التسجيل بنجاح.','toast.lessonUpdated':'تم حفظ التقدّم.',
+    'browse':'تصفح الدورات','results':'{n} دورة متاحة','result':'{n} دورة متاحة',
+    'currency':'{p} ر.س',
+    'nav.consulting':'الاستشارات','nav.plans':'الاشتراكات',
+    'hero.cta2':'استكشف الاستشارات',
+    'stat.courses':'دورة','stat.consulting':'خدمة استشارية','stat.trainers':'مدرب ومستشار',
+    'browse.title':'تصفّح حسب المحور','browse.sub':'عدد الدورات الحقيقي، مباشرة من الكتالوج.',
+    'plans.title':'باقات الاشتراك','plans.sub':'وصول كامل للكتالوج بدلاً من الدفع لكل دورة.','plans.viewall':'عرض كل الباقات',
+    'plans.day':'يوم','plans.days':'يومًا','plans.liveSessions':'{n} جلسة مباشرة / شهريًا','plans.liveUnlimited':'جلسات مباشرة غير محدودة',
+    'plans.prioritySupport':'دعم ذو أولوية','plans.subscribe':'اشترك','plans.empty':'لا توجد باقات اشتراك متاحة بعد.',
+    'trainers.title':'المدربون والمستشارون','trainers.sub':'الأشخاص وراء الكتالوج.',
+    'trainers.coursesCount':'{n} دورة','trainers.servicesCount':'{n} خدمة',
+    'consulting.pageTitle':'الخدمات الاستشارية','consulting.pageSub':'خط خدمات منفصل عن الدورات — أرسل استفسارك وسيتواصل معك مستشار.',
+    'consulting.inquire':'طلب هذه الخدمة','consulting.inquirySub':'أخبرنا باحتياجك — بدون حساب.',
+    'consulting.email':'البريد الإلكتروني','consulting.phone':'رقم الجوال (اختياري)','consulting.company':'الجهة (اختياري)',
+    'consulting.message':'رسالتك','consulting.submit':'إرسال الاستفسار','consulting.success':'تم إرسال استفسارك — سنتواصل معك قريبًا.',
+    'consulting.error':'يرجى مراجعة البيانات والمحاولة مرة أخرى.','consulting.empty':'لا توجد خدمات استشارية متاحة بعد.',
+    'nav.corporate':'باقات الشركات','nav.blog':'المدونة',
+    'corp.title':'باقات الشركات','corp.sub':'باقات تدريب حسب عدد المقاعد للفرق والمؤسسات.',
+    'corp.inquirySub':'أخبرنا عن فريقكم — بدون حساب.','corp.companyName':'اسم الجهة','corp.seats':'عدد المقاعد (اختياري)',
+    'corp.empty':'لا توجد باقات شركات متاحة بعد.',
+    'blog.title':'المدونة','blog.sub':'مقالات وتحديثات من الفريق.','blog.empty':'لا توجد مقالات منشورة بعد.',
+  }
+};
+let lang = localStorage.getItem('mah_lang') || 'en';
+function t(key, vars){
+  let s = (I18N[lang] && I18N[lang][key]) || I18N.en[key] || key;
+  if(vars) Object.keys(vars).forEach(k=>{ s = s.replace('{'+k+'}', vars[k]); });
+  return s;
+}
+function fmtPrice(p){ return t('currency', {p}); }
+function applyStaticTranslations(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{ el.textContent = t(el.getAttribute('data-i18n')); });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{ el.setAttribute('placeholder', t(el.getAttribute('data-i18n-ph'))); });
+}
+function toggleLang(){
+  lang = lang==='en' ? 'ar' : 'en';
+  localStorage.setItem('mah_lang', lang);
+  applyLangToDoc();
+}
+function applyLangToDoc(){
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang==='ar' ? 'rtl' : 'ltr';
+  document.getElementById('langBtn').textContent = lang==='en' ? 'العربية' : 'English';
+  applyStaticTranslations();
+  updateLoginBtn();
+  renderAll();
+}
+function renderAll(){
+  renderFeatured();
+  loadHeroStats();
+  loadHomePlans();
+  loadTrainers();
+  const activeView = document.querySelector('.view.active');
+  if(!activeView) return;
+  const id = activeView.id.replace('view-','');
+  if(id==='catalog') renderCatalog();
+  if(id==='detail' && currentCourseId) loadDetail(currentCourseId);
+  if(id==='checkout') renderCheckoutSummary();
+  if(id==='dashboard') loadDashboard();
+  if(id==='player' && playerState.courseId) renderPlayer();
+  if(id==='consulting') loadConsultingCatalog();
+  if(id==='plans') loadPlansView();
+  if(id==='corporate') loadCorporateCatalog();
+  if(id==='blog') loadBlogList();
+}
+
+/* ---------------- API helper ---------------- */
+function apiBase(){ return document.getElementById('apiBaseInput').value.replace(/\/$/, ''); }
+async function api(path, options={}){
+  const headers = Object.assign({ 'Content-Type': 'application/json' }, options.headers || {});
+  if(authToken) headers['Authorization'] = 'Bearer ' + authToken;
+  if(options.body instanceof FormData) delete headers['Content-Type'];
+  let res;
+  try{
+    res = await fetch(apiBase() + path, Object.assign({}, options, { headers }));
+  } catch(err){
+    showToast(t('toast.networkErr'));
+    throw err;
+  }
+  let data = {};
+  try{ data = await res.json(); }catch(e){}
+  if(!res.ok){ throw Object.assign(new Error(data.error || res.statusText), { data, status: res.status }); }
+  return data;
+}
+
+/* ---------------- State ---------------- */
+let authToken = localStorage.getItem('mah_token') || null;
+let currentUser = JSON.parse(localStorage.getItem('mah_user') || 'null');
+let currentCourseId = null;
+let currentCategory = 'All';
+let checkoutPayMethod = 'card';
+let coursesCache = [];
+let myEnrollments = [];
+let playerState = { courseId:null, enrollmentId:null, moduleIdx:0, lessonIdx:0, modules:[] };
+let authTab = 'login';
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  const savedBase = localStorage.getItem('mah_api_base');
+  if(savedBase) document.getElementById('apiBaseInput').value = savedBase;
+  document.getElementById('apiBaseInput').addEventListener('change', e=>localStorage.setItem('mah_api_base', e.target.value));
+  applyLangToDoc();
+  updateLoginBtn();
+  loadSettings();
+});
+
+function showToast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  clearTimeout(window._t); window._t = setTimeout(()=>el.classList.remove('show'), 3000);
+}
+
+/* ---------------- Platform settings (branding) ---------------- */
+async function loadSettings(){
+  try{
+    const { settings } = await api('/api/settings');
+    const name = lang==='ar' ? settings.siteNameAr : settings.siteName;
+    const desc = lang==='ar' ? settings.descriptionAr : settings.description;
+    if(name){ document.title = name; ['brandText','footBrand'].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent=name; }); }
+    if(desc){ const el = document.getElementById('footDesc'); if(el) el.textContent = desc; }
+    if(settings.primaryColor){
+      document.documentElement.style.setProperty('--brass-deep', settings.primaryColor);
+      document.documentElement.style.setProperty('--brass', settings.primaryColor);
+    }
+  }catch(err){ /* fall back to static defaults already in the page */ }
+}
+
+/* ---------------- Routing ---------------- */
+function go(view, courseId){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+view).classList.add('active');
+  document.querySelectorAll('.navlink').forEach(b=>b.classList.toggle('active', b.dataset.view===view));
+  window.scrollTo({top:0, behavior:'auto'});
+
+  if(view==='detail' && courseId){ currentCourseId = courseId; loadDetail(courseId); }
+  if(view==='checkout'){ renderCheckoutSummary(); }
+  if(view==='catalog'){ renderCatalog(); }
+  if(view==='dashboard'){ loadDashboard(); }
+  if(view==='player' && courseId){ openPlayer(courseId); }
+  if(view==='consulting'){ loadConsultingCatalog(); }
+  if(view==='consulting-inquiry' && courseId){ openInquiry(courseId); }
+  if(view==='plans'){ loadPlansView(); }
+  if(view==='corporate'){ loadCorporateCatalog(); }
+  if(view==='corporate-inquiry' && courseId){ openCorpInquiry(courseId); }
+  if(view==='blog'){ loadBlogList(); }
+  if(view==='blog-post' && courseId){ loadBlogPost(courseId); }
+}
+
+/* ---------------- Courses: fetch + render ---------------- */
+async function fetchCourses(params={}){
+  const qs = new URLSearchParams(params).toString();
+  const { courses } = await api('/api/courses' + (qs?('?'+qs):''));
+  return courses;
+}
+function courseTitle(c){ return (lang==='ar' && c.titleAr) ? c.titleAr : c.title; }
+function courseLessonsCount(c){ return (c.modules||[]).reduce((n,m)=>n+(m.lessons||[]).length,0); }
+function courseDurationSeconds(c){ return (c.modules||[]).reduce((s,m)=>s+(m.lessons||[]).reduce((s2,l)=>s2+(l.durationSeconds||0),0),0); }
+function fmtDuration(totalSeconds){
+  const h = Math.floor(totalSeconds/3600), m = Math.round((totalSeconds%3600)/60);
+  if(lang==='ar') return (h?`${h} س `:'') + `${m} د`;
+  return (h?`${h}h `:'') + `${m}m`;
+}
+function courseCardHTML(c){
+  const lessons = courseLessonsCount(c);
+  const dur = fmtDuration(courseDurationSeconds(c));
+  return `
+  <div class="course-card" onclick="go('detail','${c.id}')">
+    <div class="cc-media">
+      <span class="cat-pill">${escapeHtml(c.category)}</span>
+      <div class="play-ring">&#9658;</div>
+      <span class="dur-pill">${dur}</span>
+    </div>
+    <div class="cc-body">
+      <div class="cc-title">${escapeHtml(courseTitle(c))}</div>
+      <div class="cc-meta"><span>${escapeHtml(c.instructor ? c.instructor.name : '')}</span><span>&middot;</span><span>${lessons} ${lang==='ar'?'درسًا':'lessons'}</span></div>
+      <div class="cc-foot">
+        <span></span>
+        <span class="cc-price">${fmtPrice(Number(c.price))}</span>
+      </div>
+    </div>
+  </div>`;
+}
+function escapeHtml(s){ return String(s==null?'':s).replace(/[&<>"']/g, ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch])); }
+
+async function renderFeatured(){
+  try{
+    const courses = await fetchCourses();
+    coursesCache = courses;
+    document.getElementById('featuredGrid').innerHTML = courses.slice(0,3).map(courseCardHTML).join('') ||
+      `<p style="color:var(--slate);">${lang==='ar'?'لا توجد دورات منشورة بعد.':'No courses published yet.'}</p>`;
+    renderHomeCategoryChips(courses);
+  }catch(err){}
+}
+
+/* ---------------- Home extras: stats, category chips, plans, trainers ---------------- */
+function categoryLabel(c){ return (lang==='ar') ? c.category : (c.categoryEn || c.category); }
+function buildCategoryCounts(courses){
+  const counts = {};
+  courses.forEach(c=>{
+    const key = c.category;
+    if(!counts[key]) counts[key] = { key, label: categoryLabel(c), n: 0 };
+    counts[key].n++;
+  });
+  return Object.values(counts).sort((a,b)=>b.n-a.n);
+}
+function renderHomeCategoryChips(courses){
+  const entries = buildCategoryCounts(courses);
+  const el = document.getElementById('homeCategoryChips');
+  if(el) el.innerHTML = entries.length ? entries.map(e=>
+    `<button class="chip" onclick="goToCategory('${e.key.replace(/'/g,"\\'")}')">${escapeHtml(e.label)}<span class="chip-count">${e.n}</span></button>`
+  ).join('') : `<p style="color:var(--slate);font-size:13px;">${lang==='ar'?'لا توجد محاور بعد.':'No categories yet.'}</p>`;
+  renderMegaMenu(entries);
+}
+function renderMegaMenu(entries){
+  const panel = document.getElementById('megaPanel');
+  if(!panel) return;
+  panel.innerHTML = entries.length ? entries.map(e=>
+    `<button class="mega-item" onclick="goToCategory('${e.key.replace(/'/g,"\\'")}')">${escapeHtml(e.label)}<span class="mi-count">${e.n}</span></button>`
+  ).join('') : `<span style="grid-column:1/-1;color:var(--slate);font-size:13px;padding:8px;">${lang==='ar'?'لا توجد محاور بعد.':'No categories yet.'}</span>`;
+}
+function toggleMegaMenu(ev){
+  ev.preventDefault(); ev.stopPropagation();
+  document.getElementById('megaPanel').classList.toggle('open');
+}
+document.addEventListener('click', (ev)=>{
+  const wrap = document.getElementById('megaWrap');
+  if(wrap && !wrap.contains(ev.target)) document.getElementById('megaPanel').classList.remove('open');
+});
+function goToCategory(cat){
+  document.getElementById('megaPanel').classList.remove('open');
+  currentCategory = cat;
+  go('catalog');
+}
+
+async function fetchConsultingServices(params={}){
+  const qs = new URLSearchParams(params).toString();
+  const { services } = await api('/api/consulting/services' + (qs?('?'+qs):''));
+  return services;
+}
+async function fetchPlans(){
+  const { plans } = await api('/api/subscription-plans');
+  return plans;
+}
+
+function planCardHTML(p){
+  const name = (lang==='ar' && p.nameAr) ? p.nameAr : p.name;
+  const desc = (lang==='ar' && p.descriptionAr) ? p.descriptionAr : p.description;
+  const days = lang==='ar' ? `${p.durationDays} ${t('plans.days')}` : `${p.durationDays} ${p.durationDays===1?t('plans.day'):t('plans.days')}`;
+  const liveLabel = p.liveSessionsPerMonth===null ? t('plans.liveUnlimited') : t('plans.liveSessions').replace('{n}', p.liveSessionsPerMonth);
+  return `
+  <div class="plan-card tier-${escapeHtml(p.tier)}">
+    <div class="p-tier">${escapeHtml(p.tier)}</div>
+    <div class="p-name">${escapeHtml(name)}</div>
+    <div class="p-price">${fmtPrice(Number(p.price))}</div>
+    <div class="p-duration">${days}</div>
+    <div class="p-desc">${escapeHtml(desc)}</div>
+    <ul class="p-features">
+      <li>${liveLabel}</li>
+      ${p.prioritySupport ? `<li>${t('plans.prioritySupport')}</li>` : ''}
+    </ul>
+    <button class="btn brass block" onclick="handleLoginBtnClick()">${t('plans.subscribe')}</button>
+  </div>`;
+}
+async function loadHomePlans(){
+  try{
+    const plans = await fetchPlans();
+    const grid = document.getElementById('homePlansGrid');
+    if(grid) grid.innerHTML = plans.length ? plans.map(planCardHTML).join('') : `<p style="color:var(--slate);">${t('plans.empty')}</p>`;
+  }catch(err){}
+}
+async function loadPlansView(){
+  try{
+    const plans = await fetchPlans();
+    document.getElementById('plansGrid').innerHTML = plans.length ? plans.map(planCardHTML).join('') : `<p style="color:var(--slate);">${t('plans.empty')}</p>`;
+  }catch(err){}
+}
+
+async function loadTrainers(){
+  try{
+    const [courses, services] = await Promise.all([fetchCourses(), fetchConsultingServices()]);
+    const people = {};
+    courses.forEach(c=>{
+      if(!c.instructor) return;
+      const id = c.instructor.id;
+      if(!people[id]) people[id] = { name: c.instructor.name, role: 'TRAINER', courses: 0, services: 0 };
+      people[id].courses++;
+    });
+    services.forEach(s=>{
+      if(!s.consultant) return;
+      const id = s.consultant.id;
+      if(!people[id]) people[id] = { name: s.consultant.name, role: 'CONSULTANT', courses: 0, services: 0 };
+      people[id].services++;
+    });
+    const list = Object.values(people).slice(0,8);
+    const grid = document.getElementById('trainersGrid');
+    if(!grid) return;
+    grid.innerHTML = list.length ? list.map(p=>`
+      <div class="trainer-card">
+        <div class="t-avatar">${escapeHtml((p.name||'?').charAt(0))}</div>
+        <div class="t-name">${escapeHtml(p.name)}</div>
+        <div class="t-role">${p.role==='CONSULTANT' ? t('role.consultant') : t('role.trainer')}</div>
+        <div class="t-meta">${p.courses ? t('trainers.coursesCount').replace('{n}',p.courses) : ''}${p.courses&&p.services?' · ':''}${p.services ? t('trainers.servicesCount').replace('{n}',p.services) : ''}</div>
+      </div>`).join('') : `<p style="color:var(--slate);">—</p>`;
+  }catch(err){}
+}
+async function loadHeroStats(){
+  try{
+    const [courses, services] = await Promise.all([fetchCourses(), fetchConsultingServices()]);
+    const trainerIds = new Set();
+    courses.forEach(c=>c.instructor && trainerIds.add(c.instructor.id));
+    services.forEach(s=>s.consultant && trainerIds.add(s.consultant.id));
+    const row = document.getElementById('heroStatRow');
+    if(!row) return;
+    row.innerHTML = `
+      <div class="stat"><b>${courses.length}</b><span>${t('stat.courses')}</span></div>
+      <div class="stat"><b>${services.length}</b><span>${t('stat.consulting')}</span></div>
+      <div class="stat"><b>${trainerIds.size}</b><span>${t('stat.trainers')}</span></div>`;
+  }catch(err){}
+}
+
+/* ---------------- Consulting: catalog + inquiry ---------------- */
+let consultingCache = [];
+let currentConsultingCategory = 'All';
+function consultingCardHTML(s){
+  const title = (lang==='ar' && s.titleAr) ? s.titleAr : s.title;
+  const cat = categoryLabel(s);
+  return `
+  <div class="course-card" onclick="go('consulting-inquiry','${s.id}')">
+    <div class="cc-media">
+      <span class="cat-pill">${escapeHtml(cat)}</span>
+    </div>
+    <div class="cc-body">
+      <div class="cc-title">${escapeHtml(title)}</div>
+      <div class="cc-meta">${escapeHtml(s.consultant ? s.consultant.name : '')}</div>
+      <div class="cc-foot"><span></span><span class="cc-price">${t('consulting.inquire')}</span></div>
+    </div>
+  </div>`;
+}
+async function loadConsultingCatalog(){
+  try{
+    const services = await fetchConsultingServices(currentConsultingCategory!=='All' ? { category: currentConsultingCategory } : {});
+    consultingCache = services;
+    const counts = {};
+    services.forEach(s=>{ counts[s.category] = (counts[s.category]||0)+1; });
+    const allCats = ['All', ...new Set(consultingCache.map(s=>s.category))];
+    document.getElementById('consultingChips').innerHTML = allCats.map(cat=>{
+      const label = cat==='All' ? (lang==='ar'?'الكل':'All') : categoryLabel(consultingCache.find(s=>s.category===cat));
+      return `<button class="chip ${cat===currentConsultingCategory?'active':''}" onclick="setConsultingCategory('${cat.replace(/'/g,"\\'")}')">${escapeHtml(label)}</button>`;
+    }).join('');
+    document.getElementById('consultingGrid').innerHTML = services.length ? services.map(consultingCardHTML).join('') :
+      `<p style="color:var(--slate);">${t('consulting.empty')}</p>`;
+  }catch(err){}
+}
+function setConsultingCategory(cat){ currentConsultingCategory = cat; loadConsultingCatalog(); }
+function openInquiry(serviceId){
+  const service = consultingCache.find(s=>s.id===serviceId);
+  document.getElementById('inquiryServiceTitle').textContent = service ? ((lang==='ar'&&service.titleAr)?service.titleAr:service.title) : '';
+  document.getElementById('inquiryServiceTitle').dataset.serviceId = serviceId;
+}
+async function submitInquiry(){
+  const errEl = document.getElementById('inqError');
+  errEl.style.display = 'none';
+  const serviceId = document.getElementById('inquiryServiceTitle').dataset.serviceId;
+  const body = {
+    serviceId,
+    name: document.getElementById('inqName').value.trim(),
+    email: document.getElementById('inqEmail').value.trim(),
+    phone: document.getElementById('inqPhone').value.trim() || undefined,
+    company: document.getElementById('inqCompany').value.trim() || undefined,
+    message: document.getElementById('inqMessage').value.trim()
+  };
+  try{
+    await api('/api/consulting/requests', { method:'POST', body: JSON.stringify(body) });
+    showToast(t('consulting.success'));
+    go('consulting');
+    ['inqName','inqEmail','inqPhone','inqCompany','inqMessage'].forEach(id=>document.getElementById(id).value='');
+  } catch(err){
+    errEl.textContent = (err.data && typeof err.data.error === 'string') ? err.data.error : t('consulting.error');
+    errEl.style.display = 'block';
+  }
+}
+
+/* ---------------- Corporate packages ---------------- */
+let corpCache = [];
+function corpCardHTML(p){
+  const name = (lang==='ar' && p.nameAr) ? p.nameAr : p.name;
+  const desc = (lang==='ar' && p.descriptionAr) ? p.descriptionAr : p.description;
+  return `
+  <div class="plan-card">
+    <div class="p-tier">${escapeHtml(p.tier)}</div>
+    <div class="p-name">${escapeHtml(name)}</div>
+    ${p.priceFrom ? `<div class="p-price">${fmtPrice(Number(p.priceFrom))}+</div>` : ''}
+    <div class="p-duration">${p.seatsIncluded ? p.seatsIncluded + ' ' + (lang==='ar'?'مقعدًا':'seats') : ''}</div>
+    <div class="p-desc">${escapeHtml(desc)}</div>
+    <button class="btn brass block" onclick="go('corporate-inquiry','${p.id}')">${t('consulting.inquire')}</button>
+  </div>`;
+}
+async function loadCorporateCatalog(){
+  try{
+    const { packages } = await api('/api/corporate-packages');
+    corpCache = packages;
+    document.getElementById('corpGrid').innerHTML = packages.length ? packages.map(corpCardHTML).join('') :
+      `<p style="color:var(--slate);">${t('corp.empty')}</p>`;
+  }catch(err){}
+}
+function openCorpInquiry(packageId){
+  const pkg = corpCache.find(p=>p.id===packageId);
+  document.getElementById('corpInquiryTitle').textContent = pkg ? ((lang==='ar'&&pkg.nameAr)?pkg.nameAr:pkg.name) : '';
+  document.getElementById('corpInquiryTitle').dataset.packageId = packageId;
+}
+async function submitCorpInquiry(){
+  const errEl = document.getElementById('corpError');
+  errEl.style.display = 'none';
+  const packageId = document.getElementById('corpInquiryTitle').dataset.packageId;
+  const body = {
+    packageId,
+    companyName: document.getElementById('corpCompanyName').value.trim(),
+    contactName: document.getElementById('corpContactName').value.trim(),
+    email: document.getElementById('corpEmail').value.trim(),
+    phone: document.getElementById('corpPhone').value.trim() || undefined,
+    seats: Number(document.getElementById('corpSeats').value) || undefined,
+    message: document.getElementById('corpMessage').value.trim()
+  };
+  try{
+    await api('/api/corporate-packages/inquiries', { method:'POST', body: JSON.stringify(body) });
+    showToast(t('consulting.success'));
+    go('corporate');
+    ['corpCompanyName','corpContactName','corpEmail','corpPhone','corpSeats','corpMessage'].forEach(id=>document.getElementById(id).value='');
+  } catch(err){
+    errEl.textContent = (err.data && typeof err.data.error === 'string') ? err.data.error : t('consulting.error');
+    errEl.style.display = 'block';
+  }
+}
+
+/* ---------------- Blog ---------------- */
+function blogCardHTML(p){
+  const title = (lang==='ar' && p.titleAr) ? p.titleAr : p.title;
+  const excerpt = (lang==='ar' && p.excerptAr) ? p.excerptAr : p.excerpt;
+  return `
+  <div class="course-card" onclick="go('blog-post','${p.slug}')">
+    <div class="cc-media"><span class="cat-pill">${escapeHtml(p.category)}</span></div>
+    <div class="cc-body">
+      <div class="cc-title">${escapeHtml(title)}</div>
+      <div class="cc-meta" style="-webkit-line-clamp:3;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;">${escapeHtml(excerpt)}</div>
+      <div class="cc-foot"><span>${p.author ? escapeHtml(p.author.name) : ''}</span><span></span></div>
+    </div>
+  </div>`;
+}
+async function loadBlogList(){
+  try{
+    const { posts } = await api('/api/blog/posts');
+    document.getElementById('blogGrid').innerHTML = posts.length ? posts.map(blogCardHTML).join('') :
+      `<p style="color:var(--slate);">${t('blog.empty')}</p>`;
+  }catch(err){}
+}
+async function loadBlogPost(slug){
+  try{
+    const { post } = await api('/api/blog/posts/' + encodeURIComponent(slug));
+    const title = (lang==='ar' && post.titleAr) ? post.titleAr : post.title;
+    const body = (lang==='ar' && post.bodyAr) ? post.bodyAr : post.body;
+    document.getElementById('postCategory').textContent = post.category;
+    document.getElementById('postTitle').textContent = title;
+    document.getElementById('postMeta').innerHTML = `<span>${post.author?escapeHtml(post.author.name):''}</span><span>${new Date(post.publishedAt||post.createdAt).toLocaleDateString()}</span>`;
+    document.getElementById('postBody').textContent = body;
+  }catch(err){
+    document.getElementById('postTitle').textContent = '';
+    document.getElementById('postBody').textContent = '';
+  }
+}
+async function renderCatalog(){
+  try{
+    const q = (document.getElementById('searchInput').value||'').trim();
+    const params = {};
+    if(currentCategory!=='All') params.category = currentCategory;
+    if(q) params.q = q;
+    const courses = await fetchCourses(params);
+    coursesCache = courses;
+
+    const allCourses = await fetchCourses();
+    const cats = ['All', ...new Set(allCourses.map(c=>c.category))];
+    document.getElementById('catalogChips').innerHTML = cats.map(cat=>
+      `<button class="chip ${cat===currentCategory?'active':''}" onclick="setCatalogCategory('${cat.replace(/'/g,"\\'")}')">${cat==='All'?(lang==='ar'?'الكل':'All'):escapeHtml(cat)}</button>`
+    ).join('');
+
+    document.getElementById('resultCount').textContent = t(courses.length===1?'result':'results', {n:courses.length});
+    document.getElementById('catalogGrid').innerHTML = courses.length
+      ? courses.map(courseCardHTML).join('')
+      : `<p style="color:var(--slate);">${lang==='ar'?'لا توجد دورات مطابقة.':'No courses match.'}</p>`;
+  }catch(err){}
+}
+function setCatalogCategory(cat){ currentCategory = cat; renderCatalog(); }
+
+/* ---------------- Course detail ---------------- */
+let detailCourse = null;
+async function loadDetail(id){
+  try{
+    const { course } = await api('/api/courses/'+id);
+    detailCourse = course;
+    document.getElementById('crumbCat').textContent = courseTitle(course);
+    document.getElementById('dCat').textContent = course.category;
+    document.getElementById('dTitle').textContent = courseTitle(course);
+    const lessons = courseLessonsCount(course);
+    document.getElementById('dSub').innerHTML = `
+      <span>${course.instructor ? escapeHtml(course.instructor.name) : ''}</span>
+      <span>${fmtDuration(courseDurationSeconds(course))} ${lang==='ar'?'إجمالي':'total'}</span>
+      <span>${lessons} ${lang==='ar'?'درسًا':'lessons'}</span>`;
+    document.getElementById('dOverview').textContent = course.description;
+
+    const previewBlock = document.getElementById('dPreviewBlock');
+    const previewVideo = document.getElementById('dPreviewVideo');
+    if(course.previewVideoUrl){
+      previewVideo.src = apiBase() + course.previewVideoUrl;
+      previewBlock.style.display = '';
+    } else {
+      previewVideo.removeAttribute('src');
+      previewBlock.style.display = 'none';
+    }
+
+    document.getElementById('dCurriculum').innerHTML = (course.modules||[]).map((m,mi)=>`
+      <div class="cur-module">
+        <div class="cur-mhead">
+          <span class="mlabel"><span class="mnum">${String(mi+1).padStart(2,'0')}</span> ${escapeHtml(m.title)}</span>
+          <span class="mmeta">${(m.lessons||[]).length} ${lang==='ar'?'دروس':'lessons'}</span>
+        </div>
+        ${(m.lessons||[]).map(l=>`
+          <div class="cur-lesson">
+            <span class="l-left"><svg class="lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>${escapeHtml(l.title)}</span>
+            <span>${fmtDuration(l.durationSeconds)}</span>
+          </div>`).join('')}
+      </div>`).join('');
+
+    document.getElementById('dInstAvatar').textContent = course.instructor ? course.instructor.name.charAt(0) : '?';
+    document.getElementById('dInstName').textContent = course.instructor ? course.instructor.name : '';
+
+    const liveData = await api('/api/courses/'+id+'/live-sessions').catch(()=>({sessions:[]}));
+    const sessions = liveData.sessions || [];
+    document.getElementById('dLiveList').innerHTML = sessions.length
+      ? sessions.map(s=>`<div class="live-card"><div class="lc-info"><b>${escapeHtml(s.title)}</b><span>${new Date(s.scheduledAt).toLocaleString()} &middot; ${s.durationMinutes} min</span></div></div>`).join('')
+      : `<p style="color:var(--slate);font-size:13.5px;">${lang==='ar'?'لا توجد جلسات مباشرة مجدولة حاليًا.':'No live sessions scheduled yet.'}</p>`;
+
+    document.getElementById('dPrice').textContent = fmtPrice(Number(course.price));
+
+    const btn = document.getElementById('enrollBtn');
+    const already = currentUser && myEnrollments.find(e=>e.courseId===id);
+    if(currentUser && currentUser.role!=='TRAINEE'){
+      btn.disabled = true; btn.textContent = t('auth.wrongRole');
+    } else if(already){
+      btn.disabled = false; btn.textContent = t('detail.continue');
+      btn.onclick = ()=>go('player', id);
+    } else {
+      btn.disabled = false; btn.textContent = t('detail.enroll');
+      btn.onclick = startCheckout;
+    }
+  }catch(err){}
+}
+function startCheckout(){
+  if(!currentUser){ openAuth(); return; }
+  if(currentUser.role!=='TRAINEE'){ showToast(t('auth.wrongRole')); return; }
+  go('checkout');
+}
+
+/* ---------------- Checkout / payments ---------------- */
+const PAY_METHODS = [
+  {id:'card', key:'pay.card', icon:'&#128179;'},{id:'mada', key:'pay.mada', icon:'&#127974;'},
+  {id:'applepay', key:'pay.applepay', icon:'&#63743;'},{id:'stcpay', key:'pay.stcpay', icon:'&#128241;'},
+  {id:'paypal', key:'pay.paypal', icon:'&#128274;'},{id:'bank', key:'pay.bank', icon:'&#127970;'}
+];
+function renderCheckoutSummary(){
+  if(!detailCourse) return;
+  document.getElementById('ordTitle').textContent = courseTitle(detailCourse);
+  document.getElementById('ordPrice').textContent = fmtPrice(Number(detailCourse.price));
+  document.getElementById('ordTotal').textContent = fmtPrice(Number(detailCourse.price));
+  renderPayMethods(); renderPayForm();
+}
+function renderPayMethods(){
+  document.getElementById('payMethods').innerHTML = PAY_METHODS.map(p=>`
+    <div class="pay-opt ${p.id===checkoutPayMethod?'active':''}" onclick="selectPayMethod('${p.id}')">
+      <div class="p-icon">${p.icon}</div>${t(p.key)}
+    </div>`).join('');
+}
+function selectPayMethod(id){ checkoutPayMethod = id; renderPayMethods(); renderPayForm(); }
+function renderPayForm(){
+  const area = document.getElementById('payFormArea');
+  if(checkoutPayMethod==='card' || checkoutPayMethod==='mada'){
+    area.innerHTML = `
+      <div class="field"><label>${t('checkout.cardnum')}</label><input type="text" placeholder="4242 4242 4242 4242"></div>
+      <div class="field-row">
+        <div class="field"><label>${t('checkout.expiry')}</label><input type="text" placeholder="MM/YY"></div>
+        <div class="field"><label>${t('checkout.cvc')}</label><input type="text" placeholder="123"></div>
+      </div>
+      <div class="field"><label>${t('checkout.nameoncard')}</label><input type="text" placeholder="${lang==='ar'?'الاسم الكامل':'Full name'}"></div>`;
+  } else if(checkoutPayMethod==='applepay'){
+    area.innerHTML = `<p style="font-size:13.5px;color:var(--slate);margin:0 0 16px;">${t('checkout.applepay')}</p>`;
+  } else if(checkoutPayMethod==='stcpay'){
+    area.innerHTML = `<div class="field"><label>${t('checkout.stcnum')}</label><input type="text" placeholder="05xxxxxxxx"></div>`;
+  } else if(checkoutPayMethod==='paypal'){
+    area.innerHTML = `<p style="font-size:13.5px;color:var(--slate);margin:0 0 16px;">${t('checkout.paypal')}</p>`;
+  } else if(checkoutPayMethod==='bank'){
+    area.innerHTML = `<p style="font-size:13.5px;color:var(--slate);margin:0 0 16px;">${t('checkout.bank')}</p>`;
+  }
+}
+async function completeCheckout(){
+  const btn = document.getElementById('checkoutSubmitBtn');
+  btn.disabled = true;
+  try{
+    const { payment } = await api('/api/payments', { method:'POST', body: JSON.stringify({ courseId: currentCourseId, method: checkoutPayMethod }) });
+    // Demo stand-in for a real gateway webhook — see backend README "Payments integration".
+    await api(`/api/payments/${payment.id}/confirm`, { method:'POST' });
+    await api('/api/enrollments', { method:'POST', body: JSON.stringify({ courseId: currentCourseId, paymentId: payment.id }) });
+    showToast(t('toast.enrolled'));
+    await refreshEnrollments();
+    setTimeout(()=>go('player', currentCourseId), 400);
+  }catch(err){
+  } finally { btn.disabled = false; }
+}
+
+/* ---------------- Dashboard ---------------- */
+async function refreshEnrollments(){
+  if(!currentUser || currentUser.role!=='TRAINEE'){ myEnrollments = []; return; }
+  try{ const { enrollments } = await api('/api/enrollments/mine'); myEnrollments = enrollments; }
+  catch(err){ myEnrollments = []; }
+}
+async function loadDashboard(){
+  if(!currentUser){ openAuth(); go('home'); return; }
+  if(currentUser.role!=='TRAINEE'){
+    document.getElementById('enrolledWrap').innerHTML = `<p class="empty-note">${t('auth.wrongRole')}</p>`;
+    document.getElementById('myLiveWrap').innerHTML = '';
+    return;
+  }
+  document.getElementById('dashGreeting').textContent = t('dash.welcome', {name: currentUser.name.split(' ')[0]});
+  await refreshEnrollments();
+  const wrap = document.getElementById('enrolledWrap');
+  if(myEnrollments.length===0){
+    wrap.innerHTML = `<div class="empty-state"><h3>${t('dash.empty.title')}</h3><p>${t('dash.empty.desc')}</p><button class="btn brass" onclick="go('catalog')">${t('browse')}</button></div>`;
+  } else {
+    wrap.innerHTML = `<div class="enrolled-list">` + myEnrollments.map(e=>{
+      const pct = e.totalLessons ? Math.round((e.completedLessons/e.totalLessons)*100) : 0;
+      return `
+      <div class="enrolled-row" onclick="go('player','${e.courseId}')">
+        <div class="er-thumb" style="background:linear-gradient(135deg,#1E2C4A,#33456E);"></div>
+        <div class="er-body">
+          <div class="er-title">${escapeHtml(courseTitle(e.course))}</div>
+          <div class="progress-bar"><span style="width:${pct}%"></span></div>
+          <div class="er-meta">${t('dash.progress',{done:e.completedLessons,total:e.totalLessons,pct})}</div>
+        </div>
+        <button class="btn small ghost">${t('dash.continue')}</button>
+      </div>`;
+    }).join('') + `</div>`;
+  }
+  try{
+    const { sessions } = await api('/api/live-sessions/mine');
+    const liveWrap = document.getElementById('myLiveWrap');
+    liveWrap.innerHTML = sessions.length
+      ? sessions.map(s=>`
+        <div class="live-card">
+          <div class="lc-info"><b>${escapeHtml(s.course ? courseTitle(s.course) : '')} — ${escapeHtml(s.title)}</b><span>${new Date(s.scheduledAt).toLocaleString()} &middot; ${s.durationMinutes} min</span></div>
+          <a class="btn brass small" href="${s.joinUrl}" target="_blank" rel="noopener">${t('dash.join')}</a>
+        </div>`).join('')
+      : `<p class="empty-note">${t('dash.noLive')}</p>`;
+  }catch(err){ document.getElementById('myLiveWrap').innerHTML = ''; }
+}
+
+/* ---------------- Player ---------------- */
+async function openPlayer(courseId){
+  try{
+    const { course } = await api('/api/courses/'+courseId);
+    await refreshEnrollments();
+    const enrollment = myEnrollments.find(e=>e.courseId===courseId);
+    if(!enrollment){ showToast(t('auth.wrongRole')); go('detail', courseId); return; }
+    playerState = { courseId, enrollmentId: enrollment.id, moduleIdx:0, lessonIdx:0, modules: course.modules||[] };
+    detailCourse = course;
+    renderPlayer();
+  }catch(err){}
+}
+function flatLessons(modules){
+  const flat = [];
+  modules.forEach((m,mi)=>(m.lessons||[]).forEach((l,li)=>flat.push({...l, mi, li, moduleTitle:m.title})));
+  return flat;
+}
+async function renderPlayer(){
+  const modules = playerState.modules;
+  const flat = flatLessons(modules);
+  if(flat.length===0){ return; }
+  const current = flat.find(l=>l.mi===playerState.moduleIdx && l.li===playerState.lessonIdx) || flat[0];
+
+  document.getElementById('pCourseTitle').textContent = courseTitle(detailCourse);
+  document.getElementById('pSideTitle').textContent = courseTitle(detailCourse);
+  document.getElementById('pLessonTitle').textContent = current.title;
+  document.getElementById('pLessonDesc').textContent = `${current.moduleTitle} — ${fmtDuration(current.durationSeconds)}`;
+
+  const video = document.getElementById('videoEl');
+  const noVideo = document.getElementById('noVideoBox');
+  if(current.videoUrl){
+    video.src = apiBase() + current.videoUrl;
+    video.style.display = ''; noVideo.style.display = 'none';
+    video.onloadedmetadata = null;
+    video.ontimeupdate = throttledProgressReport(current.id, video);
+    video.onended = ()=>reportProgress(current.id, Math.ceil(video.duration||current.durationSeconds));
+  } else {
+    video.pause(); video.removeAttribute('src'); video.style.display = 'none'; noVideo.style.display = '';
+  }
+
+  await refreshEnrollments();
+  const enrollment = myEnrollments.find(e=>e.id===playerState.enrollmentId) || {};
+  const progressList = enrollment.progress || [];
+  const completedSet = new Set(progressList.filter(p=>p.completed).map(p=>p.lessonId));
+
+  const total = flat.length;
+  const doneCount = completedSet.size;
+  const pct = total ? Math.round((doneCount/total)*100) : 0;
+  document.getElementById('pSideProgressBar').style.width = pct+'%';
+  document.getElementById('pSideProgressText').textContent = `${doneCount}/${total}`;
+
+  const currentProgress = progressList.find(p=>p.lessonId===current.id);
+  const watchedPct = current.durationSeconds ? Math.min(100, Math.round(((currentProgress?currentProgress.watchedSeconds:0)/current.durationSeconds)*100)) : 0;
+  document.getElementById('watchBar').style.width = watchedPct+'%';
+  document.getElementById('watchPct').textContent = watchedPct+'%';
+  document.getElementById('lessonStatusNote').textContent = (currentProgress && currentProgress.completed) ? t('player.completed') : t('player.notCompleted');
+
+  document.getElementById('certBtn').style.display = (total>0 && doneCount===total) ? '' : 'none';
+
+  document.getElementById('lessonList').innerHTML = modules.map((m,mi)=>`
+    <div class="sl-module-title">${escapeHtml(m.title)}</div>
+    ${(m.lessons||[]).map((l,li)=>{
+      const done = completedSet.has(l.id);
+      const isCurrent = mi===playerState.moduleIdx && li===playerState.lessonIdx;
+      return `<div class="sl-lesson ${isCurrent?'current':''} ${l.videoUrl?'has-video':''}" onclick="jumpToLesson(${mi},${li})">
+        <span class="sl-check ${done?'done':''}"></span>
+        <span>${escapeHtml(l.title)}</span>
+        <span class="l-dur">${fmtDuration(l.durationSeconds)}</span>
+      </div>`;
+    }).join('')}
+  `).join('');
+}
+function jumpToLesson(mi,li){ playerState.moduleIdx=mi; playerState.lessonIdx=li; renderPlayer(); }
+function nextLesson(){
+  const flat = flatLessons(playerState.modules);
+  const idx = flat.findIndex(l=>l.mi===playerState.moduleIdx && l.li===playerState.lessonIdx);
+  if(idx < flat.length-1){ const n=flat[idx+1]; playerState.moduleIdx=n.mi; playerState.lessonIdx=n.li; renderPlayer(); }
+}
+function prevLesson(){
+  const flat = flatLessons(playerState.modules);
+  const idx = flat.findIndex(l=>l.mi===playerState.moduleIdx && l.li===playerState.lessonIdx);
+  if(idx > 0){ const p=flat[idx-1]; playerState.moduleIdx=p.mi; playerState.lessonIdx=p.li; renderPlayer(); }
+}
+function throttledProgressReport(lessonId, video){
+  let last = 0;
+  return ()=>{
+    const now = Date.now();
+    if(now - last < 4000) return;
+    last = now;
+    reportProgress(lessonId, Math.floor(video.currentTime));
+  };
+}
+async function reportProgress(lessonId, watchedSeconds){
+  if(!playerState.enrollmentId) return;
+  try{
+    await api(`/api/enrollments/${playerState.enrollmentId}/progress`, {
+      method:'POST', body: JSON.stringify({ lessonId, watchedSeconds })
+    });
+  }catch(err){}
+}
+
+/* ---------------- Certificate ---------------- */
+async function getCertificate(){
+  try{
+    const { certificate } = await api(`/api/certificates/${playerState.enrollmentId}/issue`, { method:'POST' });
+    openCertificateModal(certificate);
+  }catch(err){}
+}
+function openCertificateModal(cert){
+  const verifyUrl = `${apiBase()}/api/certificates/verify/${cert.refCode}`;
+  const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(verifyUrl)}`;
+  document.getElementById('certificateBody').innerHTML = `
+    <img class="cert-logo" src="logo.jpeg" alt="Mada Alhyat Training Center">
+    <div class="cert-eyebrow">${t('cert.eyebrow')}</div>
+    <h2>${t('cert.awarded')}</h2>
+    <div class="cert-name">${escapeHtml(currentUser.name)}</div>
+    <div class="cert-course">${t('cert.completed')} <strong>${escapeHtml(courseTitle(detailCourse))}</strong></div>
+    <img class="cert-qr" src="${qrSrc}" alt="QR" onerror="this.style.display='none'">
+    <div class="cert-meta"><span>${t('cert.date')}: ${new Date(cert.issuedAt).toLocaleDateString()}</span></div>
+    <div class="cert-ref">${t('cert.ref')}: ${cert.refCode}</div>`;
+  document.getElementById('certModal').classList.add('open');
+}
+function closeCert(){ document.getElementById('certModal').classList.remove('open'); }
+
+/* ---------------- Privacy modal ---------------- */
+function openPrivacy(){ document.getElementById('privacyModal').classList.add('open'); }
+function closePrivacy(){ document.getElementById('privacyModal').classList.remove('open'); }
+function openApply(){ document.getElementById('applyModal').classList.add('open'); }
+function closeApply(){ document.getElementById('applyModal').classList.remove('open'); }
+async function submitApply(){
+  const errEl = document.getElementById('applyError');
+  errEl.style.display = 'none';
+  const body = {
+    appliedRole: document.getElementById('applyRole').value,
+    name: document.getElementById('applyName').value.trim(),
+    nationalId: document.getElementById('applyNid').value.trim(),
+    phone: document.getElementById('applyPhone').value.trim(),
+    email: document.getElementById('applyEmail').value.trim() || undefined,
+    specialization: document.getElementById('applySpecialization').value.trim(),
+    bio: document.getElementById('applyBio').value.trim()
+  };
+  try{
+    await api('/api/applications', { method:'POST', body: JSON.stringify(body) });
+    closeApply();
+    showToast(t('apply.success'));
+    ['applyName','applyNid','applyPhone','applyEmail','applySpecialization','applyBio'].forEach(id=>document.getElementById(id).value='');
+  } catch(err){
+    errEl.textContent = (err.data && typeof err.data.error === 'string') ? err.data.error : t('apply.error');
+    errEl.style.display = 'block';
+  }
+}
+
+/* ---------------- Auth ---------------- */
+function updateLoginBtn(){
+  const btn = document.getElementById('loginBtn');
+  const outBtn = document.getElementById('logoutBtn');
+  if(!currentUser){ btn.style.display=''; btn.textContent = t('nav.login'); outBtn.style.display='none'; return; }
+  btn.style.display=''; btn.textContent = currentUser.name.split(' ')[0];
+  outBtn.style.display = '';
+}
+function handleLoginBtnClick(){ if(currentUser) go('dashboard'); else openAuth(); }
+function openAuth(){
+  document.getElementById('authError').style.display = 'none';
+  document.getElementById('authModal').classList.add('open');
+  setAuthTab('login');
+}
+function closeAuth(){ document.getElementById('authModal').classList.remove('open'); }
+function setAuthTab(tab){
+  authTab = tab;
+  document.getElementById('authTabLogin').classList.toggle('active', tab==='login');
+  document.getElementById('authTabRegister').classList.toggle('active', tab==='register');
+  document.getElementById('authNameField').style.display = tab==='register' ? '' : 'none';
+  document.getElementById('authPhoneField').style.display = tab==='register' ? '' : 'none';
+  document.getElementById('authSubmitBtn').textContent = tab==='register' ? t('auth.registerSubmit') : t('auth.loginSubmit');
+  document.getElementById('authError').style.display = 'none';
+}
+async function submitAuth(){
+  const nationalId = document.getElementById('authNid').value.trim();
+  const password = document.getElementById('authPassword').value;
+  const errEl = document.getElementById('authError');
+  errEl.style.display = 'none';
+  try{
+    let data;
+    if(authTab==='login'){
+      data = await api('/api/auth/login', { method:'POST', body: JSON.stringify({ nationalId, password }) });
+    } else {
+      const name = document.getElementById('authName').value.trim();
+      const phone = document.getElementById('authPhone').value.trim();
+      data = await api('/api/auth/register', { method:'POST', body: JSON.stringify({ nationalId, name, phone, password }) });
+    }
+    if(data.user.role !== 'TRAINEE'){
+      errEl.textContent = t('auth.wrongRole');
+      errEl.style.display = 'block';
+      return;
+    }
+    authToken = data.token; currentUser = data.user;
+    localStorage.setItem('mah_token', authToken);
+    localStorage.setItem('mah_user', JSON.stringify(currentUser));
+    updateLoginBtn();
+    closeAuth();
+    await refreshEnrollments();
+    renderAll();
+  } catch(err){
+    errEl.textContent = (err.data && typeof err.data.error === 'string') ? err.data.error : t(authTab==='login' ? 'auth.loginFail' : 'auth.registerFail');
+    errEl.style.display = 'block';
+  }
+}
+function doLogout(){
+  authToken = null; currentUser = null; myEnrollments = [];
+  localStorage.removeItem('mah_token'); localStorage.removeItem('mah_user');
+  updateLoginBtn();
+  go('home');
+}
+
+/* ---------------- Init ---------------- */
+(async function init(){
+  if(currentUser && authToken) await refreshEnrollments();
+})();
+</script>
+</body>
+</html>

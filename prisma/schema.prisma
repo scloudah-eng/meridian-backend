@@ -1,0 +1,308 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  TRAINEE
+  TRAINER
+  CONSULTANT
+  ADMIN
+}
+
+model User {
+  id            String       @id @default(uuid())
+  nationalId    String       @unique
+  name          String
+  phone         String?
+  passwordHash  String
+  role          Role         @default(TRAINEE)
+  createdAt     DateTime     @default(now())
+
+  enrollments        Enrollment[]
+  coursesTaught      Course[]            @relation("InstructorCourses")
+  certificates       Certificate[]
+  payments           Payment[]
+  subscriptions      Subscription[]
+  consultingServices ConsultingService[] @relation("ConsultantServices")
+  blogPosts          BlogPost[]          @relation("AuthorPosts")
+}
+
+// category is required and is the canonical value used for filtering
+// (existing data — including the SCL catalog seed — stores this in
+// Arabic). categoryEn is an optional English label for the same axis,
+// shown instead of category when the frontend is in English; when it's
+// missing, the frontend falls back to showing category as-is.
+model Course {
+  id               String        @id @default(uuid())
+  title            String
+  titleAr          String?
+  category         String
+  categoryEn       String?
+  description      String
+  descriptionAr    String?
+  previewVideoUrl  String?       // free marketing/preview video — public, no enrollment required
+  price            Decimal       @db.Decimal(10, 2)
+  instructor       User          @relation("InstructorCourses", fields: [instructorId], references: [id])
+  instructorId     String
+  modules          Module[]
+  enrollments      Enrollment[]
+  payments         Payment[]
+  liveSessions     LiveSession[]
+  createdAt        DateTime      @default(now())
+}
+
+model Module {
+  id       String   @id @default(uuid())
+  title    String
+  titleAr  String?
+  order    Int
+  course   Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId String
+  lessons  Lesson[]
+}
+
+model Lesson {
+  id              String            @id @default(uuid())
+  title           String
+  titleAr         String?
+  durationSeconds Int
+  order           Int
+  videoUrl        String?
+  module          Module            @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  moduleId        String
+  progress        LessonProgress[]
+}
+
+model Enrollment {
+  id          String            @id @default(uuid())
+  user        User              @relation(fields: [userId], references: [id])
+  userId      String
+  course      Course            @relation(fields: [courseId], references: [id])
+  courseId    String
+  paymentId   String?
+  enrolledAt  DateTime          @default(now())
+  progress    LessonProgress[]
+  certificate Certificate?
+
+  @@unique([userId, courseId])
+}
+
+model LessonProgress {
+  id             String     @id @default(uuid())
+  enrollment     Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  enrollmentId   String
+  lesson         Lesson     @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  lessonId       String
+  watchedSeconds Int        @default(0)
+  completed      Boolean    @default(false)
+  updatedAt      DateTime   @updatedAt
+
+  @@unique([enrollmentId, lessonId])
+}
+
+model Certificate {
+  id           String     @id @default(uuid())
+  enrollment   Enrollment @relation(fields: [enrollmentId], references: [id])
+  enrollmentId String     @unique
+  refCode      String     @unique
+  issuedAt     DateTime   @default(now())
+  user         User       @relation(fields: [userId], references: [id])
+  userId       String
+}
+
+model Payment {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  course    Course   @relation(fields: [courseId], references: [id])
+  courseId  String
+  amount    Decimal  @db.Decimal(10, 2)
+  method    String
+  status    String   @default("pending")
+  createdAt DateTime @default(now())
+}
+
+// Single-row table holding site-wide branding/settings the admin can edit
+// (name, description, logo, accent color). id is always the literal
+// string "platform" so there is only ever one row.
+model PlatformSettings {
+  id            String  @id @default("platform")
+  siteName      String  @default("Mada Alhyat Training Center")
+  siteNameAr    String  @default("مركز مدى الحياة للتدريب")
+  description   String  @default("Structured professional training in business, safety and digital skills.")
+  descriptionAr String  @default("تدريب مهني منظم في الأعمال والسلامة والمهارات الرقمية.")
+  logoUrl       String?
+  primaryColor  String  @default("#8A6A34")
+}
+
+// A scheduled live video class for a course, backed by a video-conferencing
+// provider room (Daily.co by default — see src/lib/dailyco.js). joinUrl is
+// only ever returned to the course's own trainer/admin and to trainees
+// enrolled in the course, never on the public course listing.
+model LiveSession {
+  id              String   @id @default(uuid())
+  course          Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId        String
+  title           String
+  scheduledAt     DateTime
+  durationMinutes Int      @default(60)
+  provider        String   @default("daily")
+  roomName        String
+  joinUrl         String
+  createdAt       DateTime @default(now())
+}
+
+// ---------------------------------------------------------------------
+// Subscription plans (catalog-wide access for a period, instead of
+// paying per course) — e.g. Basic / Silver / Gold / Platinum.
+// ---------------------------------------------------------------------
+model SubscriptionPlan {
+  id             String         @id @default(uuid())
+  tier           String         @unique // e.g. "basic", "silver", "gold", "platinum" — used as a stable key
+  name           String
+  nameAr         String?
+  description    String
+  descriptionAr  String?
+  durationDays   Int
+  price          Decimal        @db.Decimal(10, 2)
+  liveSessionsPerMonth Int?     // null = unlimited
+  prioritySupport      Boolean  @default(false)
+  active               Boolean  @default(true)
+  subscriptions  Subscription[]
+  createdAt      DateTime       @default(now())
+}
+
+model Subscription {
+  id        String           @id @default(uuid())
+  user      User             @relation(fields: [userId], references: [id])
+  userId    String
+  plan      SubscriptionPlan @relation(fields: [planId], references: [id])
+  planId    String
+  status    String           @default("pending") // pending | active | expired | cancelled
+  startDate DateTime?
+  endDate   DateTime?
+  paymentId String?
+  createdAt DateTime         @default(now())
+}
+
+// ---------------------------------------------------------------------
+// Public applications to become a trainer or consultant. Submitted with
+// no login required; an admin reviews and approves/rejects. Approval is
+// what actually creates (or upgrades) the User account — this is the
+// only path to a TRAINER or CONSULTANT account, closing the privilege-
+// escalation hole that used to exist in /api/auth/register (see that
+// route's comments).
+// ---------------------------------------------------------------------
+model ProviderApplication {
+  id           String    @id @default(uuid())
+  name         String
+  nationalId   String
+  phone        String
+  email        String?
+  appliedRole  Role      // TRAINER or CONSULTANT
+  bio          String
+  bioAr        String?
+  specialization String
+  portfolioUrl String?
+  status       String    @default("pending") // pending | approved | rejected
+  reviewedAt   DateTime?
+  reviewNote   String?
+  createdAt    DateTime  @default(now())
+}
+
+// ---------------------------------------------------------------------
+// Consulting services — a separate line of business from courses.
+// Companies/trainees submit a ConsultingRequest against one of these;
+// no login required to submit a request (matches how consulting leads
+// work in practice — the inquirer is often a company, not a registered
+// trainee).
+// ---------------------------------------------------------------------
+model ConsultingService {
+  id             String              @id @default(uuid())
+  title          String
+  titleAr        String?
+  category       String
+  categoryEn     String?
+  description    String
+  descriptionAr  String?
+  consultant     User                @relation("ConsultantServices", fields: [consultantId], references: [id])
+  consultantId   String
+  active         Boolean             @default(true)
+  requests       ConsultingRequest[]
+  createdAt      DateTime            @default(now())
+}
+
+model ConsultingRequest {
+  id           String            @id @default(uuid())
+  service      ConsultingService @relation(fields: [serviceId], references: [id])
+  serviceId    String
+  name         String
+  email        String
+  phone        String?
+  company      String?
+  message      String
+  status       String            @default("new") // new | contacted | closed
+  createdAt    DateTime          @default(now())
+}
+
+// ---------------------------------------------------------------------
+// Corporate (B2B) packages — bulk/organizational training deals, sold by
+// inquiry rather than instant self-serve checkout (matches how B2B
+// training packages are actually sold: a company reaches out, gets a
+// quote, and is invoiced directly — there's no card-checkout flow here
+// on purpose).
+// ---------------------------------------------------------------------
+model CorporatePackage {
+  id            String                     @id @default(uuid())
+  tier          String                     @unique
+  name          String
+  nameAr        String?
+  description   String
+  descriptionAr String?
+  seatsIncluded Int?                       // null = custom/negotiated
+  priceFrom     Decimal?                   @db.Decimal(10, 2) // null = "contact us for a quote"
+  active        Boolean                    @default(true)
+  inquiries     CorporatePackageInquiry[]
+  createdAt     DateTime                   @default(now())
+}
+
+model CorporatePackageInquiry {
+  id          String           @id @default(uuid())
+  package     CorporatePackage @relation(fields: [packageId], references: [id])
+  packageId   String
+  companyName String
+  contactName String
+  email       String
+  phone       String?
+  seats       Int?
+  message     String
+  status      String           @default("new") // new | contacted | closed
+  createdAt   DateTime         @default(now())
+}
+
+// ---------------------------------------------------------------------
+// Blog — no posts are seeded with fabricated content; this is just the
+// schema/API/admin UI for the team to publish their own real posts.
+// ---------------------------------------------------------------------
+model BlogPost {
+  id            String    @id @default(uuid())
+  slug          String    @unique
+  title         String
+  titleAr       String?
+  excerpt       String
+  excerptAr     String?
+  body          String
+  bodyAr        String?
+  category      String
+  coverImageUrl String?
+  published     Boolean   @default(false)
+  publishedAt   DateTime?
+  author        User      @relation("AuthorPosts", fields: [authorId], references: [id])
+  authorId      String
+  createdAt     DateTime  @default(now())
+}
