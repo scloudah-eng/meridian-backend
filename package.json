@@ -15,7 +15,8 @@
     "seed:plans": "node prisma/seed-subscription-plans.js",
     "seed:corporate": "node prisma/seed-corporate-packages.js",
     "seed:solutions": "node prisma/seed-business-solutions.js",
-    "seed:blog": "node prisma/seed-blog.js"
+    "seed:blog": "node prisma/seed-blog.js",
+    "seed:blog2": "node prisma/seed-blog2.js"
   },
   "dependencies": {
     "@prisma/client": "^5.19.0",
