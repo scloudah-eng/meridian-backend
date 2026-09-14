@@ -13,7 +13,9 @@
     "seed:scl": "node prisma/seed-scl-catalog.js",
     "seed:consulting": "node prisma/seed-scl-consulting.js",
     "seed:plans": "node prisma/seed-subscription-plans.js",
-    "seed:corporate": "node prisma/seed-corporate-packages.js"
+    "seed:corporate": "node prisma/seed-corporate-packages.js",
+    "seed:solutions": "node prisma/seed-business-solutions.js",
+    "seed:blog": "node prisma/seed-blog.js"
   },
   "dependencies": {
     "@prisma/client": "^5.19.0",
