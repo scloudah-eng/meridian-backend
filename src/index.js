@@ -20,6 +20,8 @@ const applicationRoutes = require('./routes/applications.routes');
 const consultingRoutes = require('./routes/consulting.routes');
 const corporateRoutes = require('./routes/corporate.routes');
 const blogRoutes = require('./routes/blog.routes');
+const businessSolutionsRoutes = require('./routes/businessSolutions.routes');
+const contactRoutes = require('./routes/contact.routes');
 
 const app = express();
 
@@ -49,6 +51,8 @@ app.use('/api/applications', applicationRoutes);
 app.use('/api/consulting', consultingRoutes); // exposes /api/consulting/services and /api/consulting/requests
 app.use('/api/corporate-packages', corporateRoutes); // exposes /api/corporate-packages and /api/corporate-packages/inquiries
 app.use('/api/blog', blogRoutes); // exposes /api/blog/posts and /api/blog/mine
+app.use('/api/business-solutions', businessSolutionsRoutes); // exposes /api/business-solutions and /api/business-solutions/requests
+app.use('/api/contact', contactRoutes);
 
 app.use((req, res) => res.status(404).json({ error: 'Not found' }));
 
