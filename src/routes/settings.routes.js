@@ -1,4 +1,7 @@
 const express = require('express');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 const { z } = require('zod');
 const prisma = require('../lib/prisma');
 const { authenticate, requireRole } = require('../middleware/auth');
@@ -18,7 +21,13 @@ const settingsSchema = z.object({
   description: z.string().optional(),
   descriptionAr: z.string().optional(),
   logoUrl: z.string().url().optional(),
-  primaryColor: z.string().regex(/^#[0-9A-Fa-f]{6}$/, 'Must be a hex color like #8A6A34').optional()
+  primaryColor: z.string().regex(/^#[0-9A-Fa-f]{6}$/, 'Must be a hex color like #8A6A34').optional(),
+  phone: z.string().optional(),
+  email: z.string().email().optional(),
+  addressRiyadh: z.string().optional(),
+  addressRiyadhAr: z.string().optional(),
+  addressCairo: z.string().optional(),
+  addressCairoAr: z.string().optional()
 });
 
 // PATCH /api/settings   (admin only)
@@ -30,6 +39,42 @@ router.patch('/', authenticate, requireRole('ADMIN'), async (req, res) => {
     where: { id: SETTINGS_ID },
     update: parsed.data,
     create: { id: SETTINGS_ID, ...parsed.data }
+  });
+  res.json({ settings });
+});
+
+// ---------------------------------------------------------------------
+// Logo upload — lets a non-technical admin replace the logo by picking
+// a file, instead of needing to paste a hosted image URL.
+// ---------------------------------------------------------------------
+const logoUploadDir = path.join(__dirname, '..', '..', 'uploads', 'branding');
+fs.mkdirSync(logoUploadDir, { recursive: true });
+
+const logoStorage = multer.diskStorage({
+  destination: logoUploadDir,
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname) || '.png';
+    cb(null, `logo-${Date.now()}${ext}`);
+  }
+});
+const logoUpload = multer({
+  storage: logoStorage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB — a logo should never need more
+  fileFilter: (req, file, cb) => {
+    if (!file.mimetype.startsWith('image/')) return cb(new Error('Only image files are accepted'));
+    cb(null, true);
+  }
+});
+
+// POST /api/settings/logo   (multipart/form-data, field "logo")   (admin only)
+router.post('/logo', authenticate, requireRole('ADMIN'), logoUpload.single('logo'), async (req, res) => {
+  if (!req.file) return res.status(400).json({ error: 'No image file received (field name must be "logo")' });
+
+  const logoUrl = `/uploads/branding/${req.file.filename}`;
+  const settings = await prisma.platformSettings.upsert({
+    where: { id: SETTINGS_ID },
+    update: { logoUrl },
+    create: { id: SETTINGS_ID, logoUrl }
   });
   res.json({ settings });
 });

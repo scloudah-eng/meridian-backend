@@ -138,6 +138,12 @@ model PlatformSettings {
   descriptionAr String  @default("تدريب مهني منظم في الأعمال والسلامة والمهارات الرقمية.")
   logoUrl       String?
   primaryColor  String  @default("#8A6A34")
+  phone         String? @default("+966 561 919 110")
+  email         String? @default("info@lltc.sa")
+  addressRiyadh   String? @default("Riyadh Office — King Fahd Road, Olaya, in front of Kingdom Tower, above Eklil Lebanon Restaurant, Riyadh, Saudi Arabia")
+  addressRiyadhAr String? @default("مكتب الرياض - طريق الملك فهد، العليا، مقابل برج المملكة، فوق مطعم إكليل لبنان، الرياض، المملكة العربية السعودية")
+  addressCairo    String? @default("Cairo Office — Makram Ebeid St., Nasr City, Cairo, Egypt")
+  addressCairoAr  String? @default("مكتب القاهرة - شارع مكرم عبيد، مدينة نصر، القاهرة، مصر")
 }
 
 // A scheduled live video class for a course, backed by a video-conferencing
@@ -305,4 +311,53 @@ model BlogPost {
   author        User      @relation("AuthorPosts", fields: [authorId], references: [id])
   authorId      String
   createdAt     DateTime  @default(now())
+}
+
+// ---------------------------------------------------------------------
+// Business (technology) solutions — the company's third real business
+// line from the profile PDF ("الحلول التقنية / نظم المعلومات"),
+// distinct from courses and consulting. Company-wide (not tied to a
+// specific consultant), managed by admins. Public inquiry, same
+// no-login pattern as consulting requests.
+// ---------------------------------------------------------------------
+model BusinessSolution {
+  id            String                    @id @default(uuid())
+  title         String
+  titleAr       String?
+  category      String
+  categoryEn    String?
+  description   String
+  descriptionAr String?
+  partnerBrand  String?
+  active        Boolean                   @default(true)
+  requests      BusinessSolutionRequest[]
+  createdAt     DateTime                  @default(now())
+}
+
+model BusinessSolutionRequest {
+  id        String           @id @default(uuid())
+  solution  BusinessSolution @relation(fields: [solutionId], references: [id])
+  solutionId String
+  name      String
+  email     String
+  phone     String?
+  company   String?
+  message   String
+  status    String           @default("new") // new | contacted | closed
+  createdAt DateTime         @default(now())
+}
+
+// ---------------------------------------------------------------------
+// General "Contact Us" messages — separate from consulting/corporate
+// inquiries, for anyone who just wants to reach the company directly.
+// ---------------------------------------------------------------------
+model ContactMessage {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  phone     String?
+  subject   String?
+  message   String
+  status    String   @default("new") // new | read | closed
+  createdAt DateTime @default(now())
 }
