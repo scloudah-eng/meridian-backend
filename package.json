@@ -19,7 +19,8 @@
     "seed:blog2": "node prisma/seed-blog2.js",
     "seed:blog3": "node prisma/seed-blog3.js",
     "seed:curricula": "node prisma/seed-course-curricula.js",
-    "seed:curricula2": "node prisma/seed-course-curricula2.js"
+    "seed:curricula2": "node prisma/seed-course-curricula2.js",
+    "seed:curricula3": "node prisma/seed-course-curricula3.js"
   },
   "dependencies": {
     "@prisma/client": "^5.19.0",
