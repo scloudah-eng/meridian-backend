@@ -23,7 +23,8 @@
     "seed:curricula3": "node prisma/seed-course-curricula3.js",
     "seed:curricula4": "node prisma/seed-course-curricula4.js",
     "seed:curricula5": "node prisma/seed-course-curricula5.js",
-    "seed:curricula6": "node prisma/seed-course-curricula6.js"
+    "seed:curricula6": "node prisma/seed-course-curricula6.js",
+    "seed:curricula7": "node prisma/seed-course-curricula7.js"
   },
   "dependencies": {
     "@prisma/client": "^5.19.0",
