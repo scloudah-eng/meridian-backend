@@ -24,6 +24,7 @@ const businessSolutionsRoutes = require('./routes/businessSolutions.routes');
 const contactRoutes = require('./routes/contact.routes');
 
 const app = express();
+app.set('trust proxy', 1); // Railway sits behind one reverse proxy — needed for express-rate-limit to read X-Forwarded-For correctly
 
 app.use(helmet({ crossOriginResourcePolicy: false })); // allow serving /uploads to the frontend's origin
 app.use(cors({ origin: process.env.CORS_ORIGIN || '*' }));
