@@ -2,6 +2,7 @@ const express = require('express');
 const { z } = require('zod');
 const prisma = require('../lib/prisma');
 const { authenticate, requireRole } = require('../middleware/auth');
+const mailer = require('../lib/mailer');
 
 const router = express.Router();
 
@@ -18,6 +19,12 @@ router.post('/', async (req, res) => {
   const parsed = messageSchema.safeParse(req.body);
   if (!parsed.success) return res.status(400).json({ error: parsed.error.flatten() });
   const contactMessage = await prisma.contactMessage.create({ data: parsed.data });
+
+  mailer.notify(
+    `New contact message from ${contactMessage.name}`,
+    `Name: ${contactMessage.name}\nEmail: ${contactMessage.email}\nPhone: ${contactMessage.phone || '-'}\nSubject: ${contactMessage.subject || '-'}\n\nMessage:\n${contactMessage.message}`
+  );
+
   res.status(201).json({ message: { id: contactMessage.id, status: contactMessage.status } });
 });
 

@@ -18,13 +18,17 @@
     "seed:blog": "node prisma/seed-blog.js",
     "seed:blog2": "node prisma/seed-blog2.js",
     "seed:blog3": "node prisma/seed-blog3.js",
+    "seed:blog4": "node prisma/seed-blog4.js",
     "seed:curricula": "node prisma/seed-course-curricula.js",
     "seed:curricula2": "node prisma/seed-course-curricula2.js",
     "seed:curricula3": "node prisma/seed-course-curricula3.js",
     "seed:curricula4": "node prisma/seed-course-curricula4.js",
     "seed:curricula5": "node prisma/seed-course-curricula5.js",
     "seed:curricula6": "node prisma/seed-course-curricula6.js",
-    "seed:curricula7": "node prisma/seed-course-curricula7.js"
+    "seed:curricula7": "node prisma/seed-course-curricula7.js",
+    "seed:curricula8": "node prisma/seed-course-curricula8.js",
+    "seed:listing": "node prisma/seed-listing-readiness.js",
+    "seed:fixdemo": "node prisma/seed-fix-demo-category.js"
   },
   "dependencies": {
     "@prisma/client": "^5.19.0",
@@ -36,7 +40,8 @@
     "helmet": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
     "multer": "^1.4.5-lts.1",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "nodemailer": "^6.9.14"
   },
   "devDependencies": {
     "nodemon": "^3.1.4",
