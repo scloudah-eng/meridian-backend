@@ -27,7 +27,16 @@ const settingsSchema = z.object({
   addressRiyadh: z.string().optional(),
   addressRiyadhAr: z.string().optional(),
   addressCairo: z.string().optional(),
-  addressCairoAr: z.string().optional()
+  addressCairoAr: z.string().optional(),
+  taxNumber: z.string().optional(),
+  bankName: z.string().optional(),
+  bankAccountName: z.string().optional(),
+  bankIban: z.string().optional(),
+  bankSwift: z.string().optional(),
+  visionEn: z.string().optional(),
+  visionAr: z.string().optional(),
+  missionEn: z.string().optional(),
+  missionAr: z.string().optional()
 });
 
 // PATCH /api/settings   (admin only)

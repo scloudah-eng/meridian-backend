@@ -144,6 +144,15 @@ model PlatformSettings {
   addressRiyadhAr String? @default("مكتب الرياض - طريق الملك فهد، العليا، مقابل برج المملكة، فوق مطعم إكليل لبنان، الرياض، المملكة العربية السعودية")
   addressCairo    String? @default("Cairo Office — Makram Ebeid St., Nasr City, Cairo, Egypt")
   addressCairoAr  String? @default("مكتب القاهرة - شارع مكرم عبيد، مدينة نصر، القاهرة، مصر")
+  taxNumber       String? // VAT / CR registration number
+  bankName        String?
+  bankAccountName String?
+  bankIban        String?
+  bankSwift       String?
+  visionEn        String?
+  visionAr        String?
+  missionEn       String?
+  missionAr       String?
 }
 
 // A scheduled live video class for a course, backed by a video-conferencing

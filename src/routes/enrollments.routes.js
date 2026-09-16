@@ -3,7 +3,6 @@ const { z } = require('zod');
 const prisma = require('../lib/prisma');
 const { authenticate, requireRole } = require('../middleware/auth');
 const { hasActiveSubscription } = require('./subscriptions.routes');
-const mailer = require('../lib/mailer');
 
 const router = express.Router();
 
@@ -33,13 +32,6 @@ router.post('/', authenticate, requireRole('TRAINEE'), async (req, res) => {
     update: {},
     create: { userId: req.user.sub, courseId, paymentId: paymentId || null }
   });
-
-  const trainee = await prisma.user.findUnique({ where: { id: req.user.sub }, select: { name: true, nationalId: true, phone: true } });
-  mailer.notify(
-    `New course enrollment: ${course.title}`,
-    `Course: ${course.title} (${course.titleAr || ''})\n\nTrainee: ${trainee ? trainee.name : req.user.sub}\nNational ID: ${trainee ? trainee.nationalId : '-'}\nPhone: ${(trainee && trainee.phone) || '-'}\nPayment: ${subscribed ? 'Covered by active subscription' : 'Paid (paymentId ' + paymentId + ')'}`
-  );
-
   res.status(201).json({ enrollment });
 });
 

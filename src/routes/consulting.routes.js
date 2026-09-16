@@ -2,7 +2,6 @@ const express = require('express');
 const { z } = require('zod');
 const prisma = require('../lib/prisma');
 const { authenticate, requireRole } = require('../middleware/auth');
-const mailer = require('../lib/mailer');
 
 const router = express.Router();
 
@@ -83,12 +82,6 @@ router.post('/requests', async (req, res) => {
   if (!service) return res.status(404).json({ error: 'Service not found' });
 
   const request = await prisma.consultingRequest.create({ data: parsed.data });
-
-  mailer.notify(
-    `New consulting inquiry: ${service.title}`,
-    `Service: ${service.title} (${service.titleAr || ''})\n\nName: ${parsed.data.name}\nEmail: ${parsed.data.email}\nPhone: ${parsed.data.phone || '-'}\nCompany: ${parsed.data.company || '-'}\n\nMessage:\n${parsed.data.message}`
-  );
-
   res.status(201).json({ request: { id: request.id, status: request.status } });
 });
 
