@@ -2,6 +2,7 @@ const express = require('express');
 const { z } = require('zod');
 const prisma = require('../lib/prisma');
 const { authenticate, requireRole } = require('../middleware/auth');
+const { recordReferral } = require('../lib/referrals');
 
 const router = express.Router();
 
@@ -44,12 +45,13 @@ router.patch('/subscription-plans/:id', authenticate, requireRole('ADMIN'), asyn
 // 'succeeded' payment (see payments.routes.js) before the subscription
 // is activated. Activating sets startDate=now and endDate=now+durationDays.
 router.post('/subscriptions', authenticate, requireRole('TRAINEE'), async (req, res) => {
-  const { planId, paymentId } = req.body;
+  const { planId, paymentId, refCode } = req.body;
   const plan = await prisma.subscriptionPlan.findUnique({ where: { id: planId } });
   if (!plan) return res.status(404).json({ error: 'Plan not found' });
 
   let status = 'pending';
   let startDate = null, endDate = null;
+  let confirmedPayment = null;
   if (paymentId) {
     const payment = await prisma.payment.findUnique({ where: { id: paymentId } });
     // Subscription payments reuse the Payment table with courseId left
@@ -57,6 +59,7 @@ router.post('/subscriptions', authenticate, requireRole('TRAINEE'), async (req, 
     // nullable courseId and a polymorphic reference instead.
     const valid = payment && payment.status === 'succeeded' && payment.userId === req.user.sub;
     if (!valid) return res.status(402).json({ error: 'Payment not confirmed for this subscription' });
+    confirmedPayment = payment;
     status = 'active';
     startDate = new Date();
     endDate = new Date(startDate.getTime() + plan.durationDays * 86400000);
@@ -65,6 +68,11 @@ router.post('/subscriptions', authenticate, requireRole('TRAINEE'), async (req, 
   const subscription = await prisma.subscription.create({
     data: { userId: req.user.sub, planId, paymentId: paymentId || null, status, startDate, endDate }
   });
+
+  if (confirmedPayment) {
+    recordReferral({ refCode, buyerId: req.user.sub, saleType: 'subscription', saleAmount: confirmedPayment.amount, paymentId: confirmedPayment.id });
+  }
+
   res.status(201).json({ subscription });
 });
 

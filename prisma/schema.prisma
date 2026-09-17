@@ -12,6 +12,8 @@ enum Role {
   TRAINER
   CONSULTANT
   ADMIN
+  MARKETER
+  INSTITUTION
 }
 
 model User {
@@ -23,13 +25,64 @@ model User {
   role          Role         @default(TRAINEE)
   createdAt     DateTime     @default(now())
 
-  enrollments        Enrollment[]
+  // Trainer/consultant public profile fields — shown on the trainer's
+  // public profile page. Optional and irrelevant for TRAINEE/ADMIN roles.
+  bio           String?
+  bioAr         String?
+  title         String?      // professional title/headline, e.g. "Senior GRC Consultant"
+  titleAr       String?
+  photoUrl      String?
+  credentials   String?      // free-text list of certifications/credentials
+  credentialsAr String?
+
+  // Marketer/affiliate fields — only meaningful for role MARKETER
+  referralCode    String?  @unique
+  commissionRate  Float?   @default(10) // percent of sale amount
+
+  enrollments        Enrollment[]        @relation("TraineeEnrollments")
+  sponsoredEnrollments Enrollment[]      @relation("InstitutionSponsoredEnrollments")
   coursesTaught      Course[]            @relation("InstructorCourses")
   certificates       Certificate[]
   payments           Payment[]
   subscriptions      Subscription[]
   consultingServices ConsultingService[] @relation("ConsultantServices")
   blogPosts          BlogPost[]          @relation("AuthorPosts")
+  workItems          TrainerWork[]       @relation("TrainerWorkItems")
+  referralsMade      Referral[]          @relation("MarketerReferrals")
+  referralsReceived  Referral[]          @relation("BuyerReferrals")
+}
+
+// A portfolio item shown on a trainer/consultant's public profile page —
+// a past project, publication, workshop delivered, etc.
+model TrainerWork {
+  id          String   @id @default(uuid())
+  trainer     User     @relation("TrainerWorkItems", fields: [trainerId], references: [id], onDelete: Cascade)
+  trainerId   String
+  title       String
+  titleAr     String?
+  description String?
+  descriptionAr String?
+  linkUrl     String?  // optional external link (article, case study, etc.)
+  fileUrl     String?  // optional uploaded file (PDF sample, portfolio piece)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+}
+
+// A downloadable file attached to a course — student reference material
+// or a full "training kit" bundle (slides, workbook, templates). kind
+// distinguishes the two so the frontend can group them under separate
+// headings.
+model CourseMaterial {
+  id       String   @id @default(uuid())
+  course   Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId String
+  title    String
+  titleAr  String?
+  kind     String   @default("reference") // "reference" | "kit"
+  fileUrl  String
+  fileName String?
+  order    Int      @default(0)
+  createdAt DateTime @default(now())
 }
 
 // category is required and is the canonical value used for filtering
@@ -50,6 +103,7 @@ model Course {
   instructor       User          @relation("InstructorCourses", fields: [instructorId], references: [id])
   instructorId     String
   modules          Module[]
+  materials        CourseMaterial[]
   enrollments      Enrollment[]
   payments         Payment[]
   liveSessions     LiveSession[]
@@ -80,11 +134,13 @@ model Lesson {
 
 model Enrollment {
   id          String            @id @default(uuid())
-  user        User              @relation(fields: [userId], references: [id])
+  user        User              @relation("TraineeEnrollments", fields: [userId], references: [id])
   userId      String
   course      Course            @relation(fields: [courseId], references: [id])
   courseId    String
   paymentId   String?
+  sponsor     User?             @relation("InstitutionSponsoredEnrollments", fields: [sponsorId], references: [id])
+  sponsorId   String?
   enrolledAt  DateTime          @default(now())
   progress    LessonProgress[]
   certificate Certificate?
@@ -125,6 +181,26 @@ model Payment {
   method    String
   status    String   @default("pending")
   createdAt DateTime @default(now())
+}
+
+// One recorded sale attributed to a marketer's referral code — created
+// automatically when a buyer who arrived via ?ref=CODE completes a paid
+// enrollment or subscription purchase. commissionAmount is calculated
+// at the marketer's commissionRate at the time of the sale (a rate
+// change later does not retroactively change past referrals).
+model Referral {
+  id               String   @id @default(uuid())
+  marketer         User     @relation("MarketerReferrals", fields: [marketerId], references: [id])
+  marketerId       String
+  buyer            User     @relation("BuyerReferrals", fields: [buyerId], references: [id])
+  buyerId          String
+  saleType         String   // "enrollment" | "subscription"
+  saleAmount       Decimal  @db.Decimal(10, 2)
+  commissionRate   Float
+  commissionAmount Decimal  @db.Decimal(10, 2)
+  status           String   @default("pending") // pending | paid
+  paymentId        String?  @unique
+  createdAt        DateTime @default(now())
 }
 
 // Single-row table holding site-wide branding/settings the admin can edit
@@ -219,10 +295,14 @@ model ProviderApplication {
   nationalId   String
   phone        String
   email        String?
+  nationality  String?
   appliedRole  Role      // TRAINER or CONSULTANT
   bio          String
   bioAr        String?
-  specialization String
+  specialization   String
+  specializationAr String?
+  photoUrl     String?
+  cvUrl        String?
   portfolioUrl String?
   status       String    @default("pending") // pending | approved | rejected
   reviewedAt   DateTime?

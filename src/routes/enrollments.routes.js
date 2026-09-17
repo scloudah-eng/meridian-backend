@@ -3,6 +3,8 @@ const { z } = require('zod');
 const prisma = require('../lib/prisma');
 const { authenticate, requireRole } = require('../middleware/auth');
 const { hasActiveSubscription } = require('./subscriptions.routes');
+const mailer = require('../lib/mailer');
+const { recordReferral } = require('../lib/referrals');
 
 const router = express.Router();
 
@@ -12,16 +14,18 @@ const router = express.Router();
 // must belong to this user, this course, and already be marked
 // 'succeeded' (see payments.routes.js).
 router.post('/', authenticate, requireRole('TRAINEE'), async (req, res) => {
-  const { courseId, paymentId } = req.body;
+  const { courseId, paymentId, refCode } = req.body;
   const course = await prisma.course.findUnique({ where: { id: courseId } });
   if (!course) return res.status(404).json({ error: 'Course not found' });
 
   const subscribed = await hasActiveSubscription(req.user.sub);
+  let confirmedPayment = null;
   if (!subscribed) {
     if (paymentId) {
       const payment = await prisma.payment.findUnique({ where: { id: paymentId } });
       const valid = payment && payment.status === 'succeeded' && payment.courseId === courseId && payment.userId === req.user.sub;
       if (!valid) return res.status(402).json({ error: 'Payment not confirmed for this course' });
+      confirmedPayment = payment;
     } else {
       return res.status(402).json({ error: 'Payment or an active subscription is required to enroll' });
     }
@@ -32,6 +36,17 @@ router.post('/', authenticate, requireRole('TRAINEE'), async (req, res) => {
     update: {},
     create: { userId: req.user.sub, courseId, paymentId: paymentId || null }
   });
+
+  if (confirmedPayment) {
+    recordReferral({ refCode, buyerId: req.user.sub, saleType: 'enrollment', saleAmount: confirmedPayment.amount, paymentId: confirmedPayment.id });
+  }
+
+  const trainee = await prisma.user.findUnique({ where: { id: req.user.sub }, select: { name: true, nationalId: true, phone: true } });
+  mailer.notify(
+    `New course enrollment: ${course.title}`,
+    `Course: ${course.title} (${course.titleAr || ''})\n\nTrainee: ${trainee ? trainee.name : req.user.sub}\nNational ID: ${trainee ? trainee.nationalId : '-'}\nPhone: ${(trainee && trainee.phone) || '-'}\nPayment: ${subscribed ? 'Covered by active subscription' : 'Paid (paymentId ' + paymentId + ')'}`
+  );
+
   res.status(201).json({ enrollment });
 });
 

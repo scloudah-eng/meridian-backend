@@ -22,12 +22,18 @@ const corporateRoutes = require('./routes/corporate.routes');
 const blogRoutes = require('./routes/blog.routes');
 const businessSolutionsRoutes = require('./routes/businessSolutions.routes');
 const contactRoutes = require('./routes/contact.routes');
+const materialsRoutes = require('./routes/materials.routes');
+const trainersRoutes = require('./routes/trainers.routes');
+const marketersRoutes = require('./routes/marketers.routes');
+const institutionRoutes = require('./routes/institution.routes');
+const adminAccountsRoutes = require('./routes/admin-accounts.routes');
 
 const app = express();
 app.set('trust proxy', 1); // Railway sits behind one reverse proxy — needed for express-rate-limit to read X-Forwarded-For correctly
 
 app.use(helmet({ crossOriginResourcePolicy: false })); // allow serving /uploads to the frontend's origin
-app.use(cors({ origin: process.env.CORS_ORIGIN || '*' }));
+const corsOrigins = (process.env.CORS_ORIGIN || '*').split(',').map(o => o.trim());
+app.use(cors({ origin: corsOrigins.includes('*') ? '*' : corsOrigins }));
 app.use(express.json());
 app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 300 }));
 
@@ -54,6 +60,11 @@ app.use('/api/corporate-packages', corporateRoutes); // exposes /api/corporate-p
 app.use('/api/blog', blogRoutes); // exposes /api/blog/posts and /api/blog/mine
 app.use('/api/business-solutions', businessSolutionsRoutes); // exposes /api/business-solutions and /api/business-solutions/requests
 app.use('/api/contact', contactRoutes);
+app.use('/api/course-materials', materialsRoutes);
+app.use('/api/trainers', trainersRoutes);
+app.use('/api/marketers', marketersRoutes);
+app.use('/api/institution', institutionRoutes);
+app.use('/api/admin-accounts', adminAccountsRoutes);
 
 app.use((req, res) => res.status(404).json({ error: 'Not found' }));
 
