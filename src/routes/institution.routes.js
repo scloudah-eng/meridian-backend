@@ -10,7 +10,7 @@ const router = express.Router();
 
 const traineeSchema = z.object({
   name: z.string().min(2),
-  nationalId: z.string().regex(/^\d{10}$/, 'Must be a 10-digit national ID / iqama number'),
+  email: z.string().email(),
   phone: z.string().optional()
 });
 const bulkSchema = z.object({
@@ -19,8 +19,8 @@ const bulkSchema = z.object({
 });
 
 // POST /api/institution/bulk-enroll   (INSTITUTION only)
-// For each trainee: find their account by national ID, or create one
-// (as a normal TRAINEE, with a temporary password returned once so the
+// For each trainee: find their account by email, or create one (as a
+// normal TRAINEE, with a temporary password returned once so the
 // institution can distribute it), then enroll them in the given course
 // sponsored by this institution — no individual payment required, since
 // the institution is the paying party (handled outside the platform,
@@ -34,17 +34,17 @@ router.post('/bulk-enroll', authenticate, requireRole('INSTITUTION'), async (req
 
   const results = [];
   for (const t of parsed.data.trainees) {
-    let user = await prisma.user.findUnique({ where: { nationalId: t.nationalId } });
+    let user = await prisma.user.findUnique({ where: { email: t.email } });
     let temporaryPassword = null;
 
     if (!user) {
       temporaryPassword = crypto.randomBytes(6).toString('base64url');
       const passwordHash = await bcrypt.hash(temporaryPassword, 12);
       user = await prisma.user.create({
-        data: { name: t.name, nationalId: t.nationalId, phone: t.phone || undefined, passwordHash, role: 'TRAINEE' }
+        data: { name: t.name, email: t.email, phone: t.phone || undefined, passwordHash, role: 'TRAINEE' }
       });
     } else if (user.role !== 'TRAINEE') {
-      results.push({ nationalId: t.nationalId, name: t.name, status: 'skipped', reason: 'Existing account is not a trainee account' });
+      results.push({ email: t.email, name: t.name, status: 'skipped', reason: 'Existing account is not a trainee account' });
       continue;
     }
 
@@ -55,7 +55,7 @@ router.post('/bulk-enroll', authenticate, requireRole('INSTITUTION'), async (req
     });
 
     results.push({
-      nationalId: t.nationalId, name: user.name, status: 'enrolled',
+      email: t.email, name: user.name, status: 'enrolled',
       newAccount: !!temporaryPassword, temporaryPassword: temporaryPassword || undefined,
       enrollmentId: enrollment.id
     });
@@ -64,7 +64,7 @@ router.post('/bulk-enroll', authenticate, requireRole('INSTITUTION'), async (req
   const institution = await prisma.user.findUnique({ where: { id: req.user.sub }, select: { name: true } });
   mailer.notify(
     `Institution bulk enrollment: ${course.title}`,
-    `Institution: ${institution ? institution.name : req.user.sub}\nCourse: ${course.title}\nTrainees processed: ${results.length}\n\n${results.map(r => `- ${r.name} (${r.nationalId}): ${r.status}${r.newAccount ? ' [new account]' : ''}`).join('\n')}`
+    `Institution: ${institution ? institution.name : req.user.sub}\nCourse: ${course.title}\nTrainees processed: ${results.length}\n\n${results.map(r => `- ${r.name} (${r.email}): ${r.status}${r.newAccount ? ' [new account]' : ''}`).join('\n')}`
   );
 
   res.status(201).json({ results });
@@ -75,7 +75,7 @@ router.get('/roster', authenticate, requireRole('INSTITUTION'), async (req, res)
   const enrollments = await prisma.enrollment.findMany({
     where: { sponsorId: req.user.sub },
     include: {
-      user: { select: { id: true, name: true, nationalId: true, phone: true } },
+      user: { select: { id: true, name: true, email: true, phone: true } },
       course: { select: { id: true, title: true, titleAr: true } },
       progress: true
     },

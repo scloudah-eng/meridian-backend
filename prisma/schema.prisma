@@ -18,7 +18,8 @@ enum Role {
 
 model User {
   id            String       @id @default(uuid())
-  nationalId    String       @unique
+  nationalId    String?      @unique // legacy identifier, optional now that email is primary
+  email         String?      @unique // primary login identifier going forward
   name          String
   phone         String?
   passwordHash  String
@@ -171,6 +172,18 @@ model Certificate {
   userId       String
 }
 
+// One password reset token. A request creates a row here and emails the
+// token to the user; the reset endpoint consumes it (marks used) so it
+// can never be replayed, and it expires after a short window regardless.
+model PasswordReset {
+  id        String   @id @default(uuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
 model Payment {
   id        String   @id @default(uuid())
   user      User     @relation(fields: [userId], references: [id])
@@ -292,9 +305,9 @@ model Subscription {
 model ProviderApplication {
   id           String    @id @default(uuid())
   name         String
-  nationalId   String
+  nationalId   String?
   phone        String
-  email        String?
+  email        String
   nationality  String?
   appliedRole  Role      // TRAINER or CONSULTANT
   bio          String

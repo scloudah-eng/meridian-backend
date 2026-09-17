@@ -41,10 +41,10 @@ router.post('/', authenticate, requireRole('TRAINEE'), async (req, res) => {
     recordReferral({ refCode, buyerId: req.user.sub, saleType: 'enrollment', saleAmount: confirmedPayment.amount, paymentId: confirmedPayment.id });
   }
 
-  const trainee = await prisma.user.findUnique({ where: { id: req.user.sub }, select: { name: true, nationalId: true, phone: true } });
+  const trainee = await prisma.user.findUnique({ where: { id: req.user.sub }, select: { name: true, email: true, phone: true } });
   mailer.notify(
     `New course enrollment: ${course.title}`,
-    `Course: ${course.title} (${course.titleAr || ''})\n\nTrainee: ${trainee ? trainee.name : req.user.sub}\nNational ID: ${trainee ? trainee.nationalId : '-'}\nPhone: ${(trainee && trainee.phone) || '-'}\nPayment: ${subscribed ? 'Covered by active subscription' : 'Paid (paymentId ' + paymentId + ')'}`
+    `Course: ${course.title} (${course.titleAr || ''})\n\nTrainee: ${trainee ? trainee.name : req.user.sub}\nEmail: ${trainee ? trainee.email : '-'}\nPhone: ${(trainee && trainee.phone) || '-'}\nPayment: ${subscribed ? 'Covered by active subscription' : 'Paid (paymentId ' + paymentId + ')'}`
   );
 
   res.status(201).json({ enrollment });

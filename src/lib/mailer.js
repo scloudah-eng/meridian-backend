@@ -53,4 +53,30 @@ async function notify(subject, text) {
   }
 }
 
-module.exports = { notify };
+/**
+ * Sends directly to a specific recipient — used when the email needs to
+ * reach an actual user (e.g. a password reset link), not the company's
+ * shared inbox. Same silent-no-SMTP / never-throw behavior as notify().
+ * @param {string} to
+ * @param {string} subject
+ * @param {string} text
+ */
+async function sendTo(to, subject, text) {
+  const t = getTransporter();
+  if (!t) {
+    console.warn(`[mailer] SMTP not configured — skipped email to ${to}: "${subject}"`);
+    return;
+  }
+  try {
+    await t.sendMail({
+      from: process.env.SMTP_FROM || process.env.SMTP_USER,
+      to,
+      subject,
+      text
+    });
+  } catch (err) {
+    console.error('[mailer] Failed to send email to', to, ':', err.message);
+  }
+}
+
+module.exports = { notify, sendTo };

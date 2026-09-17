@@ -57,7 +57,7 @@ router.get('/', authenticate, requireRole('ADMIN'), async (req, res) => {
   const results = await Promise.all(marketers.map(async m => {
     const referrals = await prisma.referral.findMany({ where: { marketerId: m.id } });
     return {
-      id: m.id, name: m.name, nationalId: m.nationalId, phone: m.phone,
+      id: m.id, name: m.name, email: m.email, phone: m.phone,
       referralCode: m.referralCode, commissionRate: m.commissionRate,
       totals: summarize(referrals)
     };

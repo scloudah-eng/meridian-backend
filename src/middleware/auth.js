@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 // Verifies the Bearer token on the request and attaches the decoded
-// payload ({ sub: userId, role, nationalId }) to req.user.
+// payload ({ sub: userId, role, email }) to req.user.
 function authenticate(req, res, next) {
   const header = req.headers.authorization;
   if (!header || !header.startsWith('Bearer ')) {
