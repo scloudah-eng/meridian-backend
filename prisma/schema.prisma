@@ -54,6 +54,7 @@ model User {
   sponsoredEnrollments Enrollment[]      @relation("InstitutionSponsoredEnrollments")
   coursesTaught      Course[]            @relation("InstructorCourses")
   certificates       Certificate[]
+  courseReviews      CourseReview[]
   payments           Payment[]
   subscriptions      Subscription[]
   consultingServices ConsultingService[] @relation("ConsultantServices")
@@ -118,6 +119,7 @@ model Course {
   enrollments      Enrollment[]
   payments         Payment[]
   liveSessions     LiveSession[]
+  reviews          CourseReview[]
   createdAt        DateTime      @default(now())
 }
 
@@ -192,6 +194,22 @@ model PasswordReset {
   expiresAt DateTime
   used      Boolean  @default(false)
   createdAt DateTime @default(now())
+}
+
+// A trainee's rating and optional written review for a course they're
+// enrolled in. One review per trainee per course (enforced by the
+// unique constraint) — resubmitting updates the existing one.
+model CourseReview {
+  id        String   @id @default(uuid())
+  course    Course   @relation(fields: [courseId], references: [id])
+  courseId  String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  rating    Int      // 1-5
+  comment   String?
+  createdAt DateTime @default(now())
+
+  @@unique([courseId, userId])
 }
 
 model Payment {

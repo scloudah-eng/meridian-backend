@@ -10,19 +10,33 @@ const mailer = require('../lib/mailer');
 const router = express.Router();
 
 const registerSchema = z.object({
+  role: z.enum(['TRAINEE', 'MARKETER', 'INSTITUTION']).default('TRAINEE'),
   email: z.string().email(),
   name: z.string().min(2),
+  nameEn: z.string().optional(),
   phone: z.string().optional(),
+  whatsapp: z.string().optional(),
+  nationality: z.string().optional(),
+  address: z.string().optional(),
+  socialLinks: z.string().optional(),
+  academicSpecialization: z.string().optional(),
+  academicSpecializationAr: z.string().optional(),
+  wantsMarketingIncome: z.boolean().optional(),
+  referralCode: z.string().optional(), // a code the new user was referred by — separate from role-based referralCode below
   password: z.string().min(8)
 });
 
 // POST /api/auth/register
 //
-// SECURITY NOTE: this route always creates a TRAINEE account. TRAINER
-// and CONSULTANT accounts can only be created by an admin approving a
-// ProviderApplication; MARKETER and INSTITUTION accounts can only be
-// created directly by an admin (see applications.routes.js and
-// admin-accounts.routes.js). There is no other path to those roles.
+// SECURITY NOTE: this route only ever creates TRAINEE, MARKETER, or
+// INSTITUTION accounts directly from the role field — those are the
+// self-service roles. TRAINER and CONSULTANT accounts can never be
+// created here: they must go through an admin approving a
+// ProviderApplication (see applications.routes.js), because those roles
+// deliver paid courses/consulting and carry real reputational and
+// financial trust — instant self-service signup for them would let
+// anyone claim to be a vetted trainer. ADMIN is never reachable from
+// any registration path.
 //
 // Login identifier: email + password you choose here. (This platform
 // previously used the Saudi national ID as the login identifier, kept
@@ -31,15 +45,28 @@ const registerSchema = z.object({
 router.post('/register', async (req, res) => {
   const parsed = registerSchema.safeParse(req.body);
   if (!parsed.success) return res.status(400).json({ error: parsed.error.flatten() });
-  const { email, name, phone, password } = parsed.data;
+  const { email, name, password, referralCode, ...profileFields } = parsed.data;
 
   const existing = await prisma.user.findUnique({ where: { email } });
   if (existing) return res.status(409).json({ error: 'An account with this email already exists' });
 
   const passwordHash = await bcrypt.hash(password, 12);
   const user = await prisma.user.create({
-    data: { email, name, phone, passwordHash, role: 'TRAINEE' }
+    data: { email, name, passwordHash, ...profileFields }
   });
+
+  if (profileFields.wantsMarketingIncome) {
+    mailer.notify(
+      'New sign-up interested in marketing income',
+      `${user.name} (${user.email}, role: ${user.role}) checked "interested in additional income through marketing" at registration. Consider following up about the marketer program.`
+    );
+  }
+
+  mailer.sendTo(
+    user.email,
+    'Welcome to Mada Alhyat Training Center',
+    `Hello ${user.name},\n\nWelcome! Your account has been created successfully.\n\nYou can now log in at ${process.env.PUBLIC_SITE_URL || 'https://app.lltc.sa'} using this email address and the password you chose.\n\nIf you have any questions, reach us at info@lltc.sa or +966 561 919 110.\n\nWishing you a great learning journey,\nMada Alhyat Training Center`
+  );
 
   res.status(201).json({ token: signToken(user), user: publicUser(user) });
 });

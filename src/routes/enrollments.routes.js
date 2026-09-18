@@ -46,6 +46,13 @@ router.post('/', authenticate, requireRole('TRAINEE'), async (req, res) => {
     `New course enrollment: ${course.title}`,
     `Course: ${course.title} (${course.titleAr || ''})\n\nTrainee: ${trainee ? trainee.name : req.user.sub}\nEmail: ${trainee ? trainee.email : '-'}\nPhone: ${(trainee && trainee.phone) || '-'}\nPayment: ${subscribed ? 'Covered by active subscription' : 'Paid (paymentId ' + paymentId + ')'}`
   );
+  if (trainee && trainee.email) {
+    mailer.sendTo(
+      trainee.email,
+      `You're enrolled: ${course.title}`,
+      `Hello ${trainee.name},\n\nYou're now enrolled in "${course.title}".\n\nYou can start learning any time from your dashboard: ${process.env.PUBLIC_SITE_URL || 'https://app.lltc.sa'}\n\nGood luck with the course!\nMada Alhyat Training Center`
+    );
+  }
 
   res.status(201).json({ enrollment });
 });
