@@ -29,6 +29,7 @@
     "seed:curricula8": "node prisma/seed-course-curricula8.js",
     "seed:listing": "node prisma/seed-listing-readiness.js",
     "seed:backfill-emails": "node prisma/seed-backfill-emails.js",
+    "seed:blog5": "node prisma/seed-blog5.js",
     "seed:fixdemo": "node prisma/seed-fix-demo-category.js"
   },
   "dependencies": {
