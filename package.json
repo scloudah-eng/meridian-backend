@@ -30,6 +30,7 @@
     "seed:listing": "node prisma/seed-listing-readiness.js",
     "seed:backfill-emails": "node prisma/seed-backfill-emails.js",
     "seed:blog5": "node prisma/seed-blog5.js",
+    "seed:migrate-bank": "node prisma/seed-migrate-bank.js",
     "seed:fixdemo": "node prisma/seed-fix-demo-category.js"
   },
   "dependencies": {

@@ -244,15 +244,35 @@ model PlatformSettings {
   addressRiyadhAr String? @default("مكتب الرياض - طريق الملك فهد، العليا، مقابل برج المملكة، فوق مطعم إكليل لبنان، الرياض، المملكة العربية السعودية")
   addressCairo    String? @default("Cairo Office — Makram Ebeid St., Nasr City, Cairo, Egypt")
   addressCairoAr  String? @default("مكتب القاهرة - شارع مكرم عبيد، مدينة نصر، القاهرة، مصر")
-  taxNumber       String? // VAT / CR registration number
-  bankName        String?
-  bankAccountName String?
-  bankIban        String?
-  bankSwift       String?
+  taxNumber       String? // VAT registration number (Mada Alhyat)
+  crNumber        String? // Commercial Registration number (Mada Alhyat)
+  socialLinkedin  String?
+  socialTwitter   String?
+  socialInstagram String?
+  socialFacebook  String?
+  sclCompanyName   String? @default("Smart Compliance Leap")
+  sclCompanyNameAr String? @default("قفزة الامتثال الذكي")
+  sclTaxNumber     String? // VAT registration number (SCL, separate legal entity)
+  sclCrNumber      String? // Commercial Registration number (SCL)
   visionEn        String?
   visionAr        String?
   missionEn       String?
   missionAr       String?
+}
+
+// A bank account shown in the site footer for wire transfers. Multiple
+// accounts are supported (e.g. one for Mada Alhyat, one for SCL) —
+// label distinguishes them for the visitor; order controls display order.
+model BankAccount {
+  id            String   @id @default(uuid())
+  label         String   // e.g. "Mada Alhyat Training Center" or "Smart Compliance Leap"
+  labelAr       String?
+  bankName      String
+  accountName   String
+  iban          String
+  swift         String?
+  order         Int      @default(0)
+  createdAt     DateTime @default(now())
 }
 
 // A scheduled live video class for a course, backed by a video-conferencing
