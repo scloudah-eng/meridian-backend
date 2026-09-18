@@ -231,6 +231,7 @@ model Referral {
 // string "platform" so there is only ever one row.
 model PlatformSettings {
   id            String  @id @default("platform")
+  maintenanceMode Boolean @default(false)
   siteName      String  @default("Mada Alhyat Training Center")
   siteNameAr    String  @default("مركز مدى الحياة للتدريب")
   description   String  @default("Structured professional training in business, safety and digital skills.")

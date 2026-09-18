@@ -16,6 +16,7 @@ router.get('/', async (req, res) => {
 });
 
 const settingsSchema = z.object({
+  maintenanceMode: z.boolean().optional(),
   siteName: z.string().min(1).optional(),
   siteNameAr: z.string().min(1).optional(),
   description: z.string().optional(),
