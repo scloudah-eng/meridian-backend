@@ -28,6 +28,7 @@ const marketersRoutes = require('./routes/marketers.routes');
 const institutionRoutes = require('./routes/institution.routes');
 const adminAccountsRoutes = require('./routes/admin-accounts.routes');
 const bankAccountsRoutes = require('./routes/bank-accounts.routes');
+const combinedInquiryRoutes = require('./routes/combined-inquiry.routes');
 
 const app = express();
 app.set('trust proxy', 1); // Railway sits behind one reverse proxy — needed for express-rate-limit to read X-Forwarded-For correctly
@@ -67,6 +68,7 @@ app.use('/api/marketers', marketersRoutes);
 app.use('/api/institution', institutionRoutes);
 app.use('/api/admin-accounts', adminAccountsRoutes);
 app.use('/api/bank-accounts', bankAccountsRoutes);
+app.use('/api/combined-inquiry', combinedInquiryRoutes);
 
 app.use((req, res) => res.status(404).json({ error: 'Not found' }));
 
