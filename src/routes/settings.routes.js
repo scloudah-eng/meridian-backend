@@ -21,6 +21,7 @@ const settingsSchema = z.object({
   description: z.string().optional(),
   descriptionAr: z.string().optional(),
   logoUrl: z.string().url().optional(),
+  sclLogoUrl: z.string().url().optional(),
   primaryColor: z.string().regex(/^#[0-9A-Fa-f]{6}$/, 'Must be a hex color like #8A6A34').optional(),
   phone: z.string().optional(),
   email: z.string().email().optional(),
@@ -84,6 +85,22 @@ router.post('/logo', authenticate, requireRole('ADMIN'), logoUpload.single('logo
     where: { id: SETTINGS_ID },
     update: { logoUrl },
     create: { id: SETTINGS_ID, logoUrl }
+  });
+  res.json({ settings });
+});
+
+// POST /api/settings/scl-logo   (multipart/form-data, field "logo")   (admin only)
+// A separate logo for the Smart Compliance Leap (SCL) brand, shown
+// alongside consulting services and business solutions listings —
+// distinct from the main Mada Alhyat logo.
+router.post('/scl-logo', authenticate, requireRole('ADMIN'), logoUpload.single('logo'), async (req, res) => {
+  if (!req.file) return res.status(400).json({ error: 'No image file received (field name must be "logo")' });
+
+  const sclLogoUrl = `/uploads/branding/${req.file.filename}`;
+  const settings = await prisma.platformSettings.upsert({
+    where: { id: SETTINGS_ID },
+    update: { sclLogoUrl },
+    create: { id: SETTINGS_ID, sclLogoUrl }
   });
   res.json({ settings });
 });

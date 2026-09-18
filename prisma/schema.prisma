@@ -21,13 +21,23 @@ model User {
   nationalId    String?      @unique // legacy identifier, optional now that email is primary
   email         String?      @unique // primary login identifier going forward
   name          String
+  nameEn        String?      // English form of the name, collected separately at registration
   phone         String?
+  whatsapp      String?
+  nationality   String?
+  address       String?
+  socialLinks   String?      // free-text list of social profile links
+  academicSpecialization   String?
+  academicSpecializationAr String?
+  wantsMarketingIncome     Boolean? // "interested in earning via referrals" checkbox at signup — a lead flag, not a role grant
   passwordHash  String
   role          Role         @default(TRAINEE)
   createdAt     DateTime     @default(now())
 
   // Trainer/consultant public profile fields — shown on the trainer's
   // public profile page. Optional and irrelevant for TRAINEE/ADMIN roles.
+  // title/titleAr double as "training specialization" collected at
+  // registration for TRAINER/CONSULTANT applicants.
   bio           String?
   bioAr         String?
   title         String?      // professional title/headline, e.g. "Senior GRC Consultant"
@@ -226,6 +236,7 @@ model PlatformSettings {
   description   String  @default("Structured professional training in business, safety and digital skills.")
   descriptionAr String  @default("تدريب مهني منظم في الأعمال والسلامة والمهارات الرقمية.")
   logoUrl       String?
+  sclLogoUrl    String? // separate logo for the Smart Compliance Leap (SCL) brand, shown on consulting/solutions listings
   primaryColor  String  @default("#8A6A34")
   phone         String? @default("+966 561 919 110")
   email         String? @default("info@lltc.sa")
@@ -305,15 +316,22 @@ model Subscription {
 model ProviderApplication {
   id           String    @id @default(uuid())
   name         String
+  nameEn       String?
   nationalId   String?
   phone        String
+  whatsapp     String?
   email        String
   nationality  String?
+  address      String?
+  socialLinks  String?
   appliedRole  Role      // TRAINER or CONSULTANT
   bio          String
   bioAr        String?
-  specialization   String
+  specialization   String   // training specialization
   specializationAr String?
+  academicSpecialization   String?
+  academicSpecializationAr String?
+  wantsMarketingIncome Boolean?
   photoUrl     String?
   cvUrl        String?
   portfolioUrl String?
