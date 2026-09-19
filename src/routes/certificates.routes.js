@@ -6,24 +6,37 @@ const { authenticate, requireRole } = require('../middleware/auth');
 const router = express.Router();
 
 // POST /api/certificates/:enrollmentId/issue
-// Refuses unless every lesson in the course has been completed
-// (see the 80%-watched gate in enrollments.routes.js).
+// Eligibility depends on the course's deliveryType:
+//   RECORDED  — every lesson must be completed (video-watch based).
+//   LIVE / IN_PERSON — every scheduled session must be marked attended
+//   (by the trainer, or automatically for LIVE via the video call —
+//   see live.routes.js). A course with zero sessions scheduled yet is
+//   not eligible, since there is nothing to have attended.
 router.post('/:enrollmentId/issue', authenticate, requireRole('TRAINEE'), async (req, res) => {
   const enrollment = await prisma.enrollment.findUnique({
     where: { id: req.params.enrollmentId },
     include: {
-      course: { include: { modules: { include: { lessons: true } } } },
+      course: { include: { modules: { include: { lessons: true } }, liveSessions: true } },
       progress: true,
+      sessionAttendance: true,
       certificate: true
     }
   });
   if (!enrollment || enrollment.userId !== req.user.sub) return res.status(404).json({ error: 'Enrollment not found' });
   if (enrollment.certificate) return res.json({ certificate: enrollment.certificate });
 
-  const totalLessons = enrollment.course.modules.reduce((n, m) => n + m.lessons.length, 0);
-  const completedLessons = enrollment.progress.filter((p) => p.completed).length;
-  if (totalLessons === 0 || completedLessons < totalLessons) {
-    return res.status(400).json({ error: 'All lessons must be completed before a certificate can be issued' });
+  if (enrollment.course.deliveryType === 'RECORDED') {
+    const totalLessons = enrollment.course.modules.reduce((n, m) => n + m.lessons.length, 0);
+    const completedLessons = enrollment.progress.filter((p) => p.completed).length;
+    if (totalLessons === 0 || completedLessons < totalLessons) {
+      return res.status(400).json({ error: 'All lessons must be completed before a certificate can be issued' });
+    }
+  } else {
+    const totalSessions = enrollment.course.liveSessions.length;
+    const attendedSessions = enrollment.sessionAttendance.filter((a) => a.attended).length;
+    if (totalSessions === 0 || attendedSessions < totalSessions) {
+      return res.status(400).json({ error: 'All scheduled sessions must be attended before a certificate can be issued' });
+    }
   }
 
   const refCode = `MAH-${enrollment.courseId.slice(0, 6).toUpperCase()}-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;

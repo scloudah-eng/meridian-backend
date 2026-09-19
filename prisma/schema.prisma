@@ -110,6 +110,10 @@ model Course {
   categoryEn       String?
   description      String
   descriptionAr    String?
+  deliveryType     String        @default("RECORDED") // RECORDED | LIVE | IN_PERSON
+  locationName     String?       // IN_PERSON only — venue name
+  locationNameAr   String?
+  locationAddress  String?       // IN_PERSON only — full address
   previewVideoUrl  String?       // free marketing/preview video — public, no enrollment required
   price            Decimal       @db.Decimal(10, 2)
   instructor       User          @relation("InstructorCourses", fields: [instructorId], references: [id])
@@ -156,6 +160,7 @@ model Enrollment {
   sponsorId   String?
   enrolledAt  DateTime          @default(now())
   progress    LessonProgress[]
+  sessionAttendance SessionAttendance[]
   certificate Certificate?
 
   @@unique([userId, courseId])
@@ -299,6 +304,9 @@ model BankAccount {
 // provider room (Daily.co by default — see src/lib/dailyco.js). joinUrl is
 // only ever returned to the course's own trainer/admin and to trainees
 // enrolled in the course, never on the public course listing.
+// A scheduled session for a LIVE (Daily.co video) or IN_PERSON course.
+// LIVE sessions have a real roomName/joinUrl; IN_PERSON sessions leave
+// those null since attendance is taken in person instead of via video.
 model LiveSession {
   id              String   @id @default(uuid())
   course          Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
@@ -306,10 +314,27 @@ model LiveSession {
   title           String
   scheduledAt     DateTime
   durationMinutes Int      @default(60)
-  provider        String   @default("daily")
-  roomName        String
-  joinUrl         String
+  provider        String   @default("daily") // "daily" | "in_person"
+  roomName        String?
+  joinUrl         String?
+  attendance      SessionAttendance[]
   createdAt       DateTime @default(now())
+}
+
+// One trainee's attendance record for one session of a LIVE or IN_PERSON
+// course — marked by the trainer (in person) or inferred from the video
+// call (live), and used instead of LessonProgress (which is for recorded
+// video lessons) to decide certificate eligibility for these course types.
+model SessionAttendance {
+  id           String      @id @default(uuid())
+  session      LiveSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  sessionId    String
+  enrollment   Enrollment  @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  enrollmentId String
+  attended     Boolean     @default(false)
+  markedAt     DateTime    @default(now())
+
+  @@unique([sessionId, enrollmentId])
 }
 
 // ---------------------------------------------------------------------

@@ -76,6 +76,10 @@ const courseSchema = z.object({
   categoryEn: z.string().optional(),
   description: z.string().min(10),
   descriptionAr: z.string().optional(),
+  deliveryType: z.enum(['RECORDED', 'LIVE', 'IN_PERSON']).default('RECORDED'),
+  locationName: z.string().optional(),
+  locationNameAr: z.string().optional(),
+  locationAddress: z.string().optional(),
   price: z.number().positive()
 });
 
