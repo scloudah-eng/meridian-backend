@@ -1,26 +1,55 @@
-// Sends a plain-text notification email to the company inbox whenever a
-// contact message, consulting request, business solution request, or
-// course enrollment comes in. Requires real SMTP credentials set as
-// environment variables — without them, this logs a warning and does
-// nothing (it never throws, so a missing/broken mail config never
-// breaks the actual request that triggered it).
+// Sends notification/transactional emails. Two paths:
 //
-// Required environment variables (set these on Railway):
-//   SMTP_HOST       e.g. smtp.gmail.com, smtp.office365.com, smtp.sendgrid.net
-//   SMTP_PORT       e.g. 587 (TLS) or 465 (SSL)
-//   SMTP_SECURE     "true" for port 465, "false" for 587/other (default: false)
-//   SMTP_USER       the mailbox / API username to authenticate as
-//   SMTP_PASS       the mailbox password or API key
-//   SMTP_FROM       the "from" address shown on the email (defaults to SMTP_USER)
-//   NOTIFY_EMAIL    where notifications are sent (defaults to info@lltc.sa)
+//   1. SendGrid HTTP API (preferred) — set SENDGRID_API_KEY. This sends
+//      over a normal HTTPS request (port 443), the same kind of request
+//      the app already makes constantly, so it is NOT affected by
+//      platforms (like Railway) that block outbound SMTP ports
+//      (25/465/587). Use this if SMTP gave "Connection timeout" errors.
+//
+//   2. SMTP (fallback) — set SMTP_HOST/SMTP_USER/SMTP_PASS as before.
+//      Only used if SENDGRID_API_KEY is not set. Kept for hosts that
+//      don't block outbound SMTP.
+//
+// Neither path ever throws — a broken/missing mail config only logs a
+// warning and never breaks the request that triggered it.
+//
+// Required environment variables — SendGrid path (recommended):
+//   SENDGRID_API_KEY   starts with "SG."
+//   SMTP_FROM          the verified "from" address in SendGrid (e.g. info@lltc.sa)
+//   NOTIFY_EMAIL       where notifications are sent (defaults to info@lltc.sa)
+//
+// Required environment variables — SMTP fallback path:
+//   SMTP_HOST, SMTP_PORT, SMTP_SECURE, SMTP_USER, SMTP_PASS, SMTP_FROM, NOTIFY_EMAIL
 
 const nodemailer = require('nodemailer');
+
+const FROM = process.env.SMTP_FROM || process.env.SMTP_USER || 'info@lltc.sa';
+const NOTIFY_TO = process.env.NOTIFY_EMAIL || 'info@lltc.sa';
+
+async function sendViaSendGrid(to, subject, text) {
+  const res = await fetch('https://api.sendgrid.com/v3/mail/send', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${process.env.SENDGRID_API_KEY}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      personalizations: [{ to: [{ email: to }] }],
+      from: { email: FROM },
+      subject,
+      content: [{ type: 'text/plain', value: text }]
+    })
+  });
+  if (!res.ok) {
+    const body = await res.text().catch(() => '');
+    throw new Error(`SendGrid ${res.status}: ${body.slice(0, 300)}`);
+  }
+}
 
 let transporter = null;
 function getTransporter() {
   if (transporter) return transporter;
   if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS) return null;
-
   transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: Number(process.env.SMTP_PORT || 587),
@@ -30,53 +59,36 @@ function getTransporter() {
   return transporter;
 }
 
-/**
- * @param {string} subject
- * @param {string} text  plain-text body
- */
-async function notify(subject, text) {
+async function send(to, subject, text) {
+  if (process.env.SENDGRID_API_KEY) {
+    try {
+      await sendViaSendGrid(to, subject, text);
+      return;
+    } catch (err) {
+      console.error('[mailer] SendGrid send failed:', err.message);
+      return;
+    }
+  }
   const t = getTransporter();
   if (!t) {
-    console.warn(`[mailer] SMTP not configured — skipped notification: "${subject}"`);
+    console.warn(`[mailer] No mail provider configured — skipped email to ${to}: "${subject}"`);
     return;
   }
   try {
-    await t.sendMail({
-      from: process.env.SMTP_FROM || process.env.SMTP_USER,
-      to: process.env.NOTIFY_EMAIL || 'info@lltc.sa',
-      subject,
-      text
-    });
+    await t.sendMail({ from: FROM, to, subject, text });
   } catch (err) {
-    // Never let a mail failure break the request that triggered it.
-    console.error('[mailer] Failed to send notification:', err.message);
+    console.error('[mailer] SMTP send failed:', err.message);
   }
 }
 
-/**
- * Sends directly to a specific recipient — used when the email needs to
- * reach an actual user (e.g. a password reset link), not the company's
- * shared inbox. Same silent-no-SMTP / never-throw behavior as notify().
- * @param {string} to
- * @param {string} subject
- * @param {string} text
- */
+/** @param {string} subject @param {string} text */
+async function notify(subject, text) {
+  await send(NOTIFY_TO, subject, text);
+}
+
+/** Sends directly to a specific recipient (e.g. a password reset link). */
 async function sendTo(to, subject, text) {
-  const t = getTransporter();
-  if (!t) {
-    console.warn(`[mailer] SMTP not configured — skipped email to ${to}: "${subject}"`);
-    return;
-  }
-  try {
-    await t.sendMail({
-      from: process.env.SMTP_FROM || process.env.SMTP_USER,
-      to,
-      subject,
-      text
-    });
-  } catch (err) {
-    console.error('[mailer] Failed to send email to', to, ':', err.message);
-  }
+  await send(to, subject, text);
 }
 
 module.exports = { notify, sendTo };

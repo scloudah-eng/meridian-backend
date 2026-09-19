@@ -551,6 +551,23 @@ model BusinessSolutionRequest {
   createdAt DateTime         @default(now())
 }
 
+// A lead for the combined "Consulting + Training" inquiry form — general
+// interest in both business lines together, not tied to one specific
+// ConsultingService or Course. Persisted here (in addition to the email
+// notification) so it's never lost if mail delivery fails.
+model CombinedInquiry {
+  id               String   @id @default(uuid())
+  name             String
+  email            String
+  phone            String?
+  company          String?
+  wantsConsulting  Boolean  @default(false)
+  wantsTraining    Boolean  @default(false)
+  message          String
+  status           String   @default("new") // new | contacted | closed
+  createdAt        DateTime @default(now())
+}
+
 // ---------------------------------------------------------------------
 // General "Contact Us" messages — separate from consulting/corporate
 // inquiries, for anyone who just wants to reach the company directly.
