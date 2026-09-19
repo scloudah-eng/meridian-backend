@@ -5,16 +5,18 @@ const multer = require('multer');
 const { z } = require('zod');
 const prisma = require('../lib/prisma');
 const { authenticate, requireRole } = require('../middleware/auth');
+const mailer = require('../lib/mailer');
 
 const router = express.Router();
 
 // GET /api/courses?category=Business&q=excel   (public catalog, no auth needed)
 router.get('/', async (req, res) => {
-  const { category, q } = req.query;
+  const { category, q, status } = req.query;
   const courses = await prisma.course.findMany({
     where: {
       ...(category && category !== 'All' ? { category: String(category) } : {}),
-      ...(q ? { title: { contains: String(q), mode: 'insensitive' } } : {})
+      ...(q ? { title: { contains: String(q), mode: 'insensitive' } } : {}),
+      ...(status ? { status: String(status) } : {})
     },
     include: {
       instructor: { select: { id: true, name: true } },
@@ -77,6 +79,7 @@ const courseSchema = z.object({
   categoryEn: z.string().optional(),
   description: z.string().min(10),
   descriptionAr: z.string().optional(),
+  status: z.enum(['ACTIVE', 'CATALOG']).default('ACTIVE'),
   deliveryType: z.enum(['RECORDED', 'LIVE', 'IN_PERSON']).default('RECORDED'),
   maxSeats: z.number().int().positive().optional(),
   locationName: z.string().optional(),
@@ -97,6 +100,43 @@ router.post('/', authenticate, requireRole('TRAINER', 'ADMIN'), async (req, res)
 });
 
 // PATCH /api/courses/:id   (the owning trainer, or any admin)
+const courseRequestSchema = z.object({
+  name: z.string().min(2),
+  email: z.string().email(),
+  phone: z.string().optional(),
+  message: z.string().optional()
+});
+
+// POST /api/courses/:id/request   (public — no account required)
+// A visitor expressing interest in a CATALOG (not-yet-active) course.
+// Also works for an ACTIVE course (harmless — just recorded as a signal).
+router.post('/:id/request', async (req, res) => {
+  const course = await prisma.course.findUnique({ where: { id: req.params.id } });
+  if (!course) return res.status(404).json({ error: 'Course not found' });
+  const parsed = courseRequestSchema.safeParse(req.body);
+  if (!parsed.success) return res.status(400).json({ error: parsed.error.flatten() });
+
+  const request = await prisma.courseRequest.create({
+    data: { courseId: course.id, ...parsed.data }
+  });
+  mailer.notify(
+    `Course interest: ${course.title}`,
+    `Name: ${parsed.data.name}\nEmail: ${parsed.data.email}\nPhone: ${parsed.data.phone || '-'}\nCourse: ${course.title}\n\nMessage:\n${parsed.data.message || '-'}`
+  );
+  res.status(201).json({ request });
+});
+
+// GET /api/courses/:id/requests   (the owning trainer, or any admin)
+router.get('/:id/requests', authenticate, requireRole('TRAINER', 'ADMIN'), async (req, res) => {
+  const course = await prisma.course.findUnique({ where: { id: req.params.id } });
+  if (!course) return res.status(404).json({ error: 'Course not found' });
+  if (req.user.role !== 'ADMIN' && course.instructorId !== req.user.sub) {
+    return res.status(403).json({ error: 'You can only view requests for your own courses' });
+  }
+  const requests = await prisma.courseRequest.findMany({ where: { courseId: course.id }, orderBy: { createdAt: 'desc' } });
+  res.json({ requests });
+});
+
 router.patch('/:id', authenticate, requireRole('TRAINER', 'ADMIN'), async (req, res) => {
   const course = await prisma.course.findUnique({ where: { id: req.params.id } });
   if (!course) return res.status(404).json({ error: 'Course not found' });
