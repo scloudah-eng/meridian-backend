@@ -24,7 +24,7 @@
 const nodemailer = require('nodemailer');
 
 const FROM = 'notifications@app.lltc.sa'; // must match the SendGrid-verified domain (app.lltc.sa) — hardcoded since the SMTP_FROM env var kept reverting in Railway's UI
-const NOTIFY_TO = process.env.NOTIFY_EMAIL || 'info@lltc.sa';
+const NOTIFY_TO = 'lltc.notifications@gmail.com'; // hardcoded for the same reason as FROM above — the Railway env var kept reverting
 
 async function sendViaSendGrid(to, subject, text) {
   const res = await fetch('https://api.sendgrid.com/v3/mail/send', {
