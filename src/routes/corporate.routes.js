@@ -42,7 +42,7 @@ const inquirySchema = z.object({
   companyName: z.string().min(2),
   contactName: z.string().min(2),
   email: z.string().email(),
-  phone: z.string().optional(),
+  phone: z.string().min(9, 'Phone number is required'),
   seats: z.number().int().positive().optional(),
   message: z.string().min(5)
 });
