@@ -18,11 +18,42 @@ router.get('/', async (req, res) => {
     },
     include: {
       instructor: { select: { id: true, name: true } },
-      modules: { include: { lessons: true }, orderBy: { order: 'asc' } }
+      modules: { include: { lessons: true }, orderBy: { order: 'asc' } },
+      _count: { select: { enrollments: true } }
     },
     orderBy: { createdAt: 'desc' }
   });
   res.json({ courses });
+});
+
+// GET /api/courses/my/students   (TRAINER only) — every trainee enrolled across
+// this trainer's own courses, with per-trainee progress, so a trainer can see
+// who is taking their courses and how far along they are (mirrors the
+// institution roster at /api/institution/roster).
+router.get('/my/students', authenticate, requireRole('TRAINER'), async (req, res) => {
+  const enrollments = await prisma.enrollment.findMany({
+    where: { course: { instructorId: req.user.sub } },
+    include: {
+      user: { select: { id: true, name: true, email: true, phone: true } },
+      course: { select: { id: true, title: true, titleAr: true } },
+      progress: true
+    },
+    orderBy: { enrolledAt: 'desc' }
+  });
+
+  const roster = enrollments.map(e => {
+    const total = e.progress.length;
+    const completed = e.progress.filter(p => p.completed).length;
+    return {
+      enrollmentId: e.id,
+      trainee: e.user,
+      course: e.course,
+      enrolledAt: e.enrolledAt,
+      lessonsCompleted: completed,
+      lessonsStarted: total
+    };
+  });
+  res.json({ roster });
 });
 
 // GET /api/courses/:id
