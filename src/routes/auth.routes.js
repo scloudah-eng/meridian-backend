@@ -14,7 +14,7 @@ const registerSchema = z.object({
   email: z.string().email(),
   name: z.string().min(2),
   nameEn: z.string().optional(),
-  phone: z.string().optional(),
+  phone: z.string().min(9, 'Phone number is required'),
   whatsapp: z.string().optional(),
   nationality: z.string().optional(),
   address: z.string().optional(),
