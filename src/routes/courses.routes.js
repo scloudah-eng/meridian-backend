@@ -62,7 +62,8 @@ router.get('/:id', async (req, res) => {
     where: { id: req.params.id },
     include: {
       instructor: { select: { id: true, name: true } },
-      modules: { include: { lessons: { orderBy: { order: 'asc' } } }, orderBy: { order: 'asc' } }
+      modules: { include: { lessons: { orderBy: { order: 'asc' } } }, orderBy: { order: 'asc' } },
+      _count: { select: { enrollments: true } }
     }
   });
   if (!course) return res.status(404).json({ error: 'Course not found' });
@@ -77,6 +78,7 @@ const courseSchema = z.object({
   description: z.string().min(10),
   descriptionAr: z.string().optional(),
   deliveryType: z.enum(['RECORDED', 'LIVE', 'IN_PERSON']).default('RECORDED'),
+  maxSeats: z.number().int().positive().optional(),
   locationName: z.string().optional(),
   locationNameAr: z.string().optional(),
   locationAddress: z.string().optional(),

@@ -18,6 +18,16 @@ router.post('/', authenticate, requireRole('TRAINEE'), async (req, res) => {
   const course = await prisma.course.findUnique({ where: { id: courseId } });
   if (!course) return res.status(404).json({ error: 'Course not found' });
 
+  if (course.deliveryType === 'IN_PERSON' && course.maxSeats != null) {
+    const existing = await prisma.enrollment.findUnique({ where: { userId_courseId: { userId: req.user.sub, courseId } } });
+    if (!existing) {
+      const seatsTaken = await prisma.enrollment.count({ where: { courseId } });
+      if (seatsTaken >= course.maxSeats) {
+        return res.status(409).json({ error: 'This in-person course is fully booked' });
+      }
+    }
+  }
+
   const subscribed = await hasActiveSubscription(req.user.sub);
   let confirmedPayment = null;
   if (!subscribed) {

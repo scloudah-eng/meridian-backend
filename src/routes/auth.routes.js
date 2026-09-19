@@ -2,12 +2,25 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
+const rateLimit = require('express-rate-limit');
 const { z } = require('zod');
 const prisma = require('../lib/prisma');
 const { authenticate } = require('../middleware/auth');
 const mailer = require('../lib/mailer');
 
 const router = express.Router();
+
+// Stricter than the global rate limit — login attempts are the main
+// brute-force target, so this caps them at 10 tries per 15 minutes per
+// IP, independent of the account being targeted (keyed by IP, not
+// email, so it can't be used to enumerate whether an email exists).
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many login attempts. Please try again in a few minutes.' }
+});
 
 const registerSchema = z.object({
   role: z.enum(['TRAINEE', 'MARKETER', 'INSTITUTION']).default('TRAINEE'),
@@ -77,13 +90,13 @@ const loginSchema = z.object({
 });
 
 // POST /api/auth/login
-router.post('/login', async (req, res) => {
+router.post('/login', loginLimiter, async (req, res) => {
   const parsed = loginSchema.safeParse(req.body);
   if (!parsed.success) return res.status(400).json({ error: parsed.error.flatten() });
   const { email, password } = parsed.data;
 
   const user = await prisma.user.findUnique({ where: { email } });
-  if (!user) return res.status(401).json({ error: 'Invalid email or password' });
+  if (!user || user.deletedAt) return res.status(401).json({ error: 'Invalid email or password' });
 
   const passwordOk = await bcrypt.compare(password, user.passwordHash);
   if (!passwordOk) return res.status(401).json({ error: 'Invalid email or password' });
@@ -96,7 +109,7 @@ const forgotSchema = z.object({ email: z.string().email() });
 // POST /api/auth/forgot-password   { email }
 // Always responds the same way whether or not the email exists, so this
 // endpoint can never be used to check which emails are registered.
-router.post('/forgot-password', async (req, res) => {
+router.post('/forgot-password', loginLimiter, async (req, res) => {
   const parsed = forgotSchema.safeParse(req.body);
   if (!parsed.success) return res.status(400).json({ error: parsed.error.flatten() });
 
@@ -149,6 +162,43 @@ router.get('/me', authenticate, async (req, res) => {
   const user = await prisma.user.findUnique({ where: { id: req.user.sub } });
   if (!user) return res.status(404).json({ error: 'User not found' });
   res.json({ user: publicUser(user) });
+});
+
+// DELETE /api/auth/me   { password }
+// Self-service account deletion, required for password confirmation so a
+// hijacked session can't be used to delete the account silently. This is
+// a soft delete: personal fields are anonymized and the account can no
+// longer log in, but payment/enrollment/certificate records are kept
+// intact (unmodified) since they're financial and academic records the
+// business needs to retain — only the identifying fields on User change.
+router.delete('/me', authenticate, async (req, res) => {
+  const { password } = req.body;
+  const user = await prisma.user.findUnique({ where: { id: req.user.sub } });
+  if (!user || user.deletedAt) return res.status(404).json({ error: 'Account not found' });
+
+  const passwordOk = password && await bcrypt.compare(password, user.passwordHash);
+  if (!passwordOk) return res.status(401).json({ error: 'Incorrect password' });
+
+  await prisma.user.update({
+    where: { id: user.id },
+    data: {
+      deletedAt: new Date(),
+      name: 'Deleted user',
+      nameEn: null,
+      email: `deleted-${user.id}@deleted.lltc.sa`,
+      nationalId: null,
+      phone: null,
+      whatsapp: null,
+      nationality: null,
+      address: null,
+      socialLinks: null,
+      photoUrl: null,
+      bio: null,
+      bioAr: null,
+      referralCode: null
+    }
+  });
+  res.status(204).send();
 });
 
 function signToken(user) {

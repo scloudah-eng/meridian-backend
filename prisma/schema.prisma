@@ -18,6 +18,7 @@ enum Role {
 
 model User {
   id            String       @id @default(uuid())
+  deletedAt     DateTime?    // set when the user deletes their own account — see auth.routes.js DELETE /me. Personal fields are anonymized at that point; financial/enrollment records are kept intact for accounting.
   nationalId    String?      @unique // legacy identifier, optional now that email is primary
   email         String?      @unique // primary login identifier going forward
   name          String
@@ -111,6 +112,7 @@ model Course {
   description      String
   descriptionAr    String?
   deliveryType     String        @default("RECORDED") // RECORDED | LIVE | IN_PERSON
+  maxSeats         Int?          // IN_PERSON only — enrollment is blocked once reached; null = unlimited
   locationName     String?       // IN_PERSON only — venue name
   locationNameAr   String?
   locationAddress  String?       // IN_PERSON only — full address
