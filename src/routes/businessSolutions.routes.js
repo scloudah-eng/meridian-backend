@@ -55,7 +55,7 @@ const requestSchema = z.object({
   solutionId: z.string(),
   name: z.string().min(2),
   email: z.string().email(),
-  phone: z.string().optional(),
+  phone: z.string().min(9, 'Phone number is required'),
   company: z.string().optional(),
   message: z.string().min(5)
 });
