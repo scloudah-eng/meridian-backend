@@ -16,6 +16,36 @@ router.get('/stats', authenticate, requireRole('ADMIN'), async (req, res) => {
   res.json({ courseCount, traineeCount, trainerCount, revenue });
 });
 
+// GET /api/admin/payments   — every payment ever created, newest first, for
+// bookkeeping/reconciliation. Shows what it was for (a course, or a
+// subscription plan via its linked Subscription) since Payment itself
+// only has a direct relation to Course.
+router.get('/payments', authenticate, requireRole('ADMIN'), async (req, res) => {
+  const payments = await prisma.payment.findMany({
+    include: {
+      user: { select: { name: true, email: true } },
+      course: { select: { title: true, titleAr: true } },
+      subscription: { include: { plan: { select: { name: true, nameAr: true } } } }
+    },
+    orderBy: { createdAt: 'desc' }
+  });
+  res.json({
+    payments: payments.map(p => ({
+      id: p.id,
+      buyer: p.user,
+      amount: p.amount,
+      method: p.method,
+      status: p.status,
+      createdAt: p.createdAt,
+      for: p.course
+        ? { type: 'course', title: p.course.title, titleAr: p.course.titleAr }
+        : p.subscription
+          ? { type: 'subscription', title: p.subscription.plan.name, titleAr: p.subscription.plan.nameAr }
+          : { type: 'unknown' }
+    }))
+  });
+});
+
 // GET /api/admin/courses   (full catalog with instructor + enrollment counts)
 router.get('/courses', authenticate, requireRole('ADMIN'), async (req, res) => {
   const courses = await prisma.course.findMany({

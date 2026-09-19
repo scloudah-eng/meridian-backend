@@ -54,9 +54,6 @@ router.post('/subscriptions', authenticate, requireRole('TRAINEE'), async (req, 
   let confirmedPayment = null;
   if (paymentId) {
     const payment = await prisma.payment.findUnique({ where: { id: paymentId } });
-    // Subscription payments reuse the Payment table with courseId left
-    // pointing at nothing meaningful — in production, give Payment a
-    // nullable courseId and a polymorphic reference instead.
     const valid = payment && payment.status === 'succeeded' && payment.userId === req.user.sub;
     if (!valid) return res.status(402).json({ error: 'Payment not confirmed for this subscription' });
     confirmedPayment = payment;

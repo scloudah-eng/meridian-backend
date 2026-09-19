@@ -4,7 +4,7 @@ const { authenticate, requireRole } = require('../middleware/auth');
 
 const router = express.Router();
 
-// POST /api/payments   { courseId, method }
+// POST /api/payments   { courseId, method } OR { planId, method }
 // method is one of: card, mada, applepay, stcpay, paypal, bank
 //
 // This creates a payment record in 'pending' status and returns its id.
@@ -21,15 +21,25 @@ const router = express.Router();
 // The /:id/confirm route below is a stand-in for that webhook so the
 // full flow is testable without a real gateway account.
 router.post('/', authenticate, requireRole('TRAINEE'), async (req, res) => {
-  const { courseId, method } = req.body;
+  const { courseId, planId, method } = req.body;
   if (!['card', 'mada', 'applepay', 'stcpay', 'paypal', 'bank'].includes(method)) {
     return res.status(400).json({ error: 'Unsupported payment method' });
   }
-  const course = await prisma.course.findUnique({ where: { id: courseId } });
-  if (!course) return res.status(404).json({ error: 'Course not found' });
+  if (!courseId && !planId) return res.status(400).json({ error: 'courseId or planId is required' });
+
+  let amount;
+  if (courseId) {
+    const course = await prisma.course.findUnique({ where: { id: courseId } });
+    if (!course) return res.status(404).json({ error: 'Course not found' });
+    amount = course.price;
+  } else {
+    const plan = await prisma.subscriptionPlan.findUnique({ where: { id: planId } });
+    if (!plan) return res.status(404).json({ error: 'Plan not found' });
+    amount = plan.price;
+  }
 
   const payment = await prisma.payment.create({
-    data: { userId: req.user.sub, courseId, amount: course.price, method, status: 'pending' }
+    data: { userId: req.user.sub, courseId: courseId || null, amount, method, status: 'pending' }
   });
   res.status(201).json({ payment });
 });
